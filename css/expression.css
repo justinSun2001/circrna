@@ -408,7 +408,7 @@ a {
   font-size: 20px;
   color: #333333;
   font-weight: 600;
-  background-image: url("./images/warning.png");
+  background-image: url("../images/warning.png");
   background-position: 10px 50%;
   background-size: auto 30px;
   background-repeat: no-repeat;
@@ -462,7 +462,7 @@ a {
       font-size: 20px;
       color: #333333;
       font-weight: 600;
-      background-image: url("./images/warning.svg");
+      background-image: url("../images/warning.svg");
       background-position: 10px 50%;
       background-size: auto 30px;
       background-repeat: no-repeat;

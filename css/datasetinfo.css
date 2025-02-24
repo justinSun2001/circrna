@@ -145,7 +145,7 @@ body {
   width: 200px;
   height: 90px;
   margin: 5px;
-  background-image: url(./images/1.png);
+  background-image: url(../images/1.png);
   background-position: center center;
   /* margin: 0 20px; */
   background-size: contain;
@@ -412,7 +412,7 @@ a {
   font-size: 20px;
   color: #333333;
   font-weight: 600;
-  background-image: url("./images/warning.png");
+  background-image: url("../images/warning.png");
   background-position: 10px 50%;
   background-size: auto 30px;
   background-repeat: no-repeat;
@@ -464,7 +464,7 @@ a {
       font-size: 20px;
       color: #333333;
       font-weight: 600;
-      background-image: url("./images/warning.svg");
+      background-image: url("../images/warning.svg");
       background-position: 10px 50%;
       background-size: auto 30px;
       background-repeat: no-repeat;

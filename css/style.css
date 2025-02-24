@@ -159,7 +159,7 @@ body {
   width: 200px;
   height: 90px;
   margin: 5px;
-  background-image: url(./images/1.png);
+  background-image: url(../images/1.png);
   background-position: center center;
   /* margin: 0 20px; */
   background-size: contain;
@@ -542,7 +542,7 @@ a {
 .bott {
   width: 100%;
   /* background-color: #E8EFF2; */
-  background-image: url("./images/6570.jpg");
+  background-image: url("../images/6570.jpg");
   margin-bottom: -100px;
   padding-top: 20px;
   background-size: cover;

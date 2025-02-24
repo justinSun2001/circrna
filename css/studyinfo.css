@@ -145,7 +145,7 @@ body {
   width: 200px;
   height: 90px;
   margin: 5px;
-  background-image: url(./images/1.png);
+  background-image: url(../images/1.png);
   background-position: center center;
   /* margin: 0 20px; */
   background-size: contain;
