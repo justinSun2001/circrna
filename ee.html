@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>datasetinfo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/expression.css">
+    <link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
+    <link rel="icon" href="images/1_1.png" type="image/x-icon">
+
+    <script src="js/vue.js"></script>
+    <script src="js/elementui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/header-component.js"></script>
+    <script src="js/footer-component.js"></script>
+</head>
+<style>
+    .title-link {
+        text-decoration: none;
+        color: #1FA3C6;
+    }
+
+    .title-link:hover {
+        text-decoration: underline;
+        /* 其他悬停时的样式 */
+    }
+
+    .img1_container {
+        width: 100%;
+        /* 容器的宽度 */
+        overflow-x: auto;
+        /* 启用水平滚动条 */
+        white-space: nowrap;
+        /* 防止图片换行 */
+        /* border: 1px solid #ccc;  */
+        display: flex;
+        align-items: end;
+        /*justify-content: center;*/
+    }
+</style>
+
+<body>
+<div id="app" :class="{ loaded: isLoaded }">
+    <!-- 使用定义的 header 组件 -->
+    <app-header></app-header>
+
+    <div class="main">
+        <div class="left">
+            <el-card>
+                <p style="padding-top: 10px;">Disease:</p>
+                <el-select v-model="selectedDisease" @change="fetchPhenotypes" placeholder="Select Disease"
+                           style="width: 100%">
+                    <el-option v-for="disease in diseases" :key="disease" :label="disease"
+                               :value="disease"></el-option>
+                </el-select>
+
+                <p style="padding-top: 10px;">Phenotype:</p>
+                <el-select v-model="selectedPhenotypes" @change="fetchDatasets" multiple
+                           placeholder="Select Phenotype" style="width: 100%">
+                    <el-option v-for="phenotype in phenotypes" :key="phenotype" :label="phenotype"
+                               :value="phenotype"></el-option>
+                </el-select>
+
+                <p style="padding-top: 10px;">Dataset:</p>
+                <el-select v-model="selectedDatasets" @change="fetchGroups" multiple placeholder="Select Dataset"
+                           style="width: 100%">
+                    <el-option v-for="dataset in datasets" :key="dataset" :label="dataset"
+                               :value="dataset"></el-option>
+                </el-select>
+
+                <p style="padding-top: 10px;">Group:</p>
+                <el-input type="textarea" :rows="1" v-model="groupsDisplay" readonly placeholder="Groups"
+                          style="width: 100%"></el-input>
+
+                <div style="display: flex; padding-top: 20px;">
+                    <el-button type="primary" @click="get_plots()">Submit</el-button>
+                    <el-button type="primary" @click="reset()">Reset</el-button>
+                </div>
+
+            </el-card>
+        </div>
+
+        <div class="right">
+            <div class="sec1">
+                circRNA profile
+            </div>
+            <div class="sec2">
+                <div class="header">
+                    <span> CircRNA Differential Expression</span>
+                </div>
+                <el-card>
+                    <!-- 上方按钮显示主体 -->
+                    <el-select v-model="selectedimages1" @change="selectimage1" placeholder="Select Dataset"
+                               style="width: 20%">
+                        <el-option v-for="dataset in datasets" :key="dataset" :label="dataset"
+                                   :value="dataset"></el-option>
+                    </el-select>
+                    <!-- 图显示主体 -->
+                    <div v-loading="loading1" element-loading-text="Loading"
+                         element-loading-spinner="el-icon-loading"
+                         element-loading-background="rgba(255, 255, 255, 0.8)" style="text-align: center;"
+                         style="padding:20px;">
+                        <div v-for="([datasetname, image], index) in Object.entries(showimages1)" :key="datasetname"
+                             style="height: 450px;">
+                            <div class="img1_container">
+                                <img :src="image" style="height: 450px;width:auto;" alt="">
+                                <div class="top_btn">
+                                    <el-button type="primary"
+                                               style="width:150px; margin-left: 20px; margin-top: 20px;">Export
+                                        Image</el-button>
+                                    <el-button type="primary"
+                                               style="width:150px; margin-left: 20px; margin-top: 20px;">Export
+                                        Data</el-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </el-card>
+            </div>
+            <div class="sec1" style="margin-top: 50px;">
+                circRNA vs mRNA
+            </div>
+            <div class="sec2">
+                <div class="header">
+                    <span>circRNA Count&FPKM in group</span>
+                </div>
+                <el-card>
+                    <!-- 上方按钮显示主体 -->
+                    <el-select v-model="selectedimages2" @change="selectimage2" placeholder="Select Dataset"
+                               style="width: 20%">
+                        <el-option v-for="dataset in datasets" :key="dataset" :label="dataset"
+                                   :value="dataset"></el-option>
+                    </el-select>
+                    <!-- 图显示主体 -->
+                    <div v-loading="loading1" element-loading-text="Loading"
+                         element-loading-spinner="el-icon-loading"
+                         element-loading-background="rgba(255, 255, 255, 0.8)" style="text-align: center;"
+                         style="padding:20px;">
+                        <div v-for="([datasetname, image], index) in Object.entries(showimages2)" :key="datasetname"
+                             style="height: 450px;">
+                            <div class="img1_container">
+                                <img :src="image" style="height: 450px;width:auto;" alt="">
+                                <div class="top_btn">
+                                    <el-button type="primary"
+                                               style="width:150px; margin-left: 20px; margin-top: 20px;">Export
+                                        Image</el-button>
+                                    <el-button type="primary"
+                                               style="width:150px; margin-left: 20px; margin-top: 20px;">Export
+                                        Data</el-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </el-card>
+            </div>
+            <div class="sec2">
+                <div class="header" style="background-color: #8ABCCC">
+                    <span>Fold Change</span>
+                </div>
+                <el-card>
+                    <!-- 上方按钮显示主体 -->
+                    <el-select v-model="selectedimages3" @change="selectimage3" placeholder="Select Dataset"
+                               style="width: 20%">
+                        <el-option v-for="dataset in datasets" :key="dataset" :label="dataset"
+                                   :value="dataset"></el-option>
+                    </el-select>
+                    <!-- 图显示主体 -->
+                    <div v-loading="loading3" element-loading-text="Loading"
+                         element-loading-spinner="el-icon-loading"
+                         element-loading-background="rgba(255, 255, 255, 0.8)" style="text-align: center;"
+                         style="padding:20px;">
+                        <div v-for="([datasetname, image], index) in Object.entries(showimages3)" :key="datasetname"
+                             style="height: 450px;">
+                            <div class="img1_container">
+                                <img :src="image" style="height: 450px;width:auto;" alt="">
+                                <div class="top_btn">
+                                    <el-button type="primary"
+                                               style="width:150px; margin-left: 20px; margin-top: 20px;">Export
+                                        Image</el-button>
+                                    <el-button type="primary"
+                                               style="width:150px; margin-left: 20px; margin-top: 20px;">Export
+                                        Data</el-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </el-card>
+            </div>
+        </div>
+    </div>
+    <!-- 使用定义的 footer 组件 -->
+    <app-footer></app-footer>
+</div>
+</body>
+
+<!-- vue相关js -->
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                isLoaded: false,
+                loading1: false,
+                loading2: false,
+                loading3: false,
+                loading4: false,
+                images1: {},
+                images2: {},
+                images3: {},
+                images4: {},
+                datasetname: [],
+
+                diseases: [],
+                phenotypes: [],
+                datasets: [],
+                groups: [],
+                selectedDisease: '',
+                selectedPhenotypes: [],
+                selectedDatasets: [],
+                groupsDisplay: '',
+
+                selectedimages1: [],
+                selectedimages2: [],
+                selectedimages3: [],
+                selectedimages4: [],
+
+
+                showimages1: {},
+                showimages2: {},
+                showimages3: {},
+                showimages4: {},
+            }
+        },
+        computed: {
+
+        },
+        mounted() {
+            this.isLoaded = true;
+            this.fetchDiseases();
+        },
+        methods: {
+            selectimage1() {
+                // 处理选择图片逻辑
+                console.log(this.selectedimages1);
+                this.showimages1 = Object.fromEntries(
+                    Object.entries(this.images1).filter(([datasetname, image]) => this.selectedimages1.includes(datasetname))
+                );
+            },
+            selectimage2() {
+                // 处理选择图片逻辑
+                console.log(this.selectedimages2);
+                this.showimages2 = Object.fromEntries(
+                    Object.entries(this.images2).filter(([datasetname, image]) => this.selectedimages2.includes(datasetname))
+                );
+            },
+            selectimage3() {
+                // 处理选择图片逻辑
+                console.log(this.selectedimages3);
+                this.showimages3 = Object.fromEntries(
+                    Object.entries(this.images3).filter(([datasetname, image]) => this.selectedimages3.includes(datasetname))
+                );
+            },
+            selectimage4() {
+                // 处理选择图片逻辑
+                console.log(this.selectedimages4);
+                this.showimages4 = Object.fromEntries(
+                    Object.entries(this.images4).filter(([datasetname, image]) => this.selectedimages4.includes(datasetname))
+                );
+            },
+            fetchDiseases() {
+                axios.get('./interface/dataset_select.php?action=getDiseases')
+                    .then(response => {
+                        console.log(response.data);
+                        this.diseases = response.data;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching diseases:', error);
+                    });
+            },
+            fetchPhenotypes() {
+                this.phenotypes = [];
+                this.selectedPhenotypes = [];
+                this.datasets = [];
+                this.selectedDatasets = [];
+                this.groups = [];
+                this.groupsDisplay = '';
+                if (this.selectedDisease) {
+                    axios.get(`./interface/dataset_select.php?action=getPhenotypes&disease=${this.selectedDisease}`)
+                        .then(response => {
+                            console.log(response.data);
+                            this.phenotypes = response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching phenotypes:', error);
+                        });
+                }
+            },
+            fetchDatasets() {
+                this.datasets = [];
+                this.selectedDatasets = [];
+                this.groups = [];
+                this.groupsDisplay = '';
+                if (this.selectedPhenotypes.length) {
+                    const phenotypes = this.selectedPhenotypes.join(',');
+                    axios.get(`./interface/dataset_select.php?action=getDatasets&phenotypes=${phenotypes}`)
+                        .then(response => {
+                            console.log(response.data);
+                            this.datasets = response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching datasets:', error);
+                        });
+                }
+            },
+            fetchGroups() {
+                this.groups = [];
+                this.groupsDisplay = '';
+                if (this.selectedDisease && this.selectedPhenotypes.length && this.selectedDatasets.length) {
+                    const phenotypes = this.selectedPhenotypes.join(',');
+                    const datasets = this.selectedDatasets.join(',');
+                    axios.get(`./interface/dataset_select.php?action=getGroups&disease=${this.selectedDisease}&phenotypes=${phenotypes}&datasets=${datasets}`)
+                        .then(response => {
+                            console.log(response.data);
+                            this.groups = response.data;
+                            this.groupsDisplay = this.groups.join(', ');
+                        })
+                        .catch(error => {
+                            console.error('Error fetching groups:', error);
+                        });
+                }
+            },
+            convertSVGBase64ToUrl(base64) {
+                const byteString = atob(base64);
+                const ab = new ArrayBuffer(byteString.length);
+                const ia = new Uint8Array(ab);
+                for (let i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+                const blob = new Blob([ia], { type: 'image/svg+xml' });
+                return URL.createObjectURL(blob);
+            },
+            get_plots() {
+                console.log("图数据");
+
+                this.loading1 = true;
+                this.loading2 = true;
+                this.loading3 = true;
+                this.loading4 = true;
+
+                const datasetnames = this.selectedDatasets; // 获取参数的值
+                console.log(datasetnames);
+
+                this.selectedimages1 = this.selectedDatasets[0];
+                this.selectedimages2 = this.selectedDatasets[0];
+                this.selectedimages3 = this.selectedDatasets[0];
+                this.selectedimages4 = this.selectedDatasets[0];
+
+                // 初始化图像对象
+                this.images1 = {};
+                this.images2 = {};
+                this.images3 = {};
+                this.images4 = {};
+
+                // 默认错误图像的base64编码（替换为你的错误图像）
+                const defaultErrorImage = './images/errorpic.jpeg';
+                const fetchImage = (datasetname, mode) => {
+                    const FormData = { datasetname: datasetname };
+                    console.log(FormData);
+                    const url = './interface/' + mode + '.php';
+                    console.log(url);
+                    return axios.post(url, {}, { params: FormData })
+                        .then(response => {
+                            const imageData = response.data.image1;
+                            if (imageData) {
+                                // 将base64数据转换为Blob URL
+                                const url = this.convertSVGBase64ToUrl(imageData1);
+                                return url;
+                            } else {
+                                return defaultErrorImage; // 返回默认错误图像
+                            }
+                        })
+                        .catch(error => {
+                            console.error(`Error fetching image for ${datasetname} with mode ${mode}:`, error);
+                            return defaultErrorImage; // 处理错误，返回默认错误图像
+                        });
+                };
+                const fetchImages = (datasetname, mode) => {
+                    const FormData = { datasetname: datasetname };
+                    console.log(FormData);
+                    const url = './interface/' + mode + '.php';
+                    console.log(url);
+                    return axios.post(url, {}, { params: FormData })
+                        .then(response => {
+                            const imageData1 = response.data.image1;
+                            const imageData2 = response.data.image2;
+
+                            if (imageData1 && imageData2) {
+                                // 将base64数据转换为Blob URL
+                                const url1 = this.convertSVGBase64ToUrl(imageData1);
+                                const url2 = this.convertSVGBase64ToUrl(imageData2);
+                                return [url1, url2];
+                            } else {
+                                return [defaultErrorImage,defaultErrorImage]; // 返回默认错误图像
+                            }
+                        })
+                        .catch(error => {
+                            console.error(`Error fetching image for ${datasetname} with mode ${mode}:`, error);
+                            return [defaultErrorImage,defaultErrorImage]; // 处理错误，返回默认错误图像
+                        });
+                };
+
+                // 使用Promise.allSettled来处理所有的异步请求
+                Promise.allSettled(datasetnames.map((datasetname, index) => {
+                    return Promise.all([
+                        fetchImages(datasetname, 'differential_expression_1'),
+                        fetchImage(datasetname, 'differential_expression_2'),
+                        fetchImage(datasetname, 'differential_expression_3'),
+                    ]).then(results => {
+                        this.images1[index] = results[0][0];
+                        this.images2[index] = results[1];
+                        this.images3[index] = results[0][1];
+                        this.images4[index] = results[2];
+                    });
+                })).then(() => {
+                    console.log(this.images1);
+                    console.log(this.images2);
+                    console.log(this.images3);
+                    console.log(this.images4);
+                    this.showimages1 = this.images1;
+                    this.showimages2 = this.images2;
+                    this.showimages3 = this.images3;
+                    this.showimages4 = this.images4;
+                    this.selectimage1();
+                    this.selectimage2();
+                    this.selectimage3();
+                    this.selectimage4();
+                    this.loading1 = false;
+                    this.loading2 = false;
+                    this.loading3 = false;
+                    this.loading4 = false;
+                }).catch(error => {
+                    console.error('Error in fetching images:', error);
+                    alert('Failed to fetch images. Please check the console for more details.');
+                    this.loading1 = false;
+                    this.loading2 = false;
+                    this.loading3 = false;
+                    this.loading4 = false;
+                });
+            },
+            reset() {
+                this.diseases = [];
+                this.selectedDisease = '';
+                this.phenotypes = [];
+                this.selectedPhenotypes = [];
+                this.datasets = [];
+                this.selectedDatasets = [];
+                this.groups = [];
+                this.groupsDisplay = '';
+
+                this.fetchDiseases();
+            },
+        }
+    })
+</script>
+
+</html>

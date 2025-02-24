@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>BloodCircR</title>
+	<link rel="stylesheet" href="src/css/layui.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/browse.css">
+	<link rel="stylesheet" href="css/search.css">
+	<link rel="stylesheet" href="css/circRNA.css">
+	<link rel="stylesheet" href="src/animate.css">
+	<link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
+	<link rel="icon" href="images/1_1.png" type="image/x-icon">
+	<script src="js/vue.js"></script>
+	<script src="js/elementui.js"></script>
+	<script src="src/layui.js"></script>
+	<script src="src/wow.js"></script>
+	<script src="js/header-component.js"></script>
+	<script src="js/footer-component.js"></script>
+</head>
+<body>
+	<div id="app" :class="{ loaded: isLoaded }">
+		<!-- 使用定义的 header 组件 -->
+		<app-header></app-header>
+
+
+	<div class="line search_line" style="margin-top: 100px;">
+		Search by ID
+	</div>
+
+
+	<div class="search_body">
+		<div class="search_way1">
+			<p>Enter required ID </p>
+			<form action="search_result.html">
+				<textarea name="search_any" id="search_any" placeholder="Please use a plus sign (;) to separate multiple entries. eg:circAAGAB_00007+AMFR
+
+eg: BloodCircR_ID: circAAGAB_00007, circA2M-AS1_00006
+host_gene: AMMECR1, AMFR
+ensembl_id: ENSG00000159461, ENSG00000169621
+BSJ_ID: 1:33307351|33307513_-, 1:33320931|33321130_-"></textarea>
+				<div class="examples">
+					<div>eg：BloodCircR_ID:<span>circAAGAB_00007</span>,<span>circA2M-AS1_00006</span><br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;host_gene:<span>AMMECR1</span>,<span>AMFR</span><br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ensembl_id:<span>ENSG00000159461</span>,<span>ENSG00000169621</span><br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BSJ_ID:<span>1:33307351|33307513_-</span>,<span>1:33320931|33321130_-</span><br>
+					</div>
+				</div>
+				<div class="btnbox">
+					<button>search</button>
+					<button type="reset">reset</button>
+				</div>
+			</form>
+		</div>
+		<div class="search_way2">
+			<p>Advanced filter</p>
+			<form action="search_result.html"> 
+				<div class="row">
+					<span>Chromosome</span>
+					<select name="chr" required>
+						<option value="chr1">chr1</option>
+						<option value="chr2">chr2</option>
+						<option value="chr">chr3</option>
+						<option value="chr4">chr4</option>
+						<option value="chr5">chr5</option>
+						<option value="chr6">chr6</option>
+						<option value="chr7">chr7</option>
+						<option value="chr8">chr8</option>
+						<option value="chr9">chr9</option>
+						<option value="chr10">chr10</option>
+						<option value="chr11">chr11</option>
+						<option value="chr12">chr12</option>
+						<option value="chr13">chr13</option>
+						<option value="chr14">chr14</option>
+						<option value="chr15">chr15</option>
+						<option value="chr16">chr16</option>
+						<option value="chr17">chr17</option>
+						<option value="chr18">chr18</option>
+						<option value="chr19">chr19</option>
+						<option value="chr20">chr20</option>
+						<option value="chr21">chr21</option>
+						<option value="chr22">chr22</option>
+						<option value="chrMT">chrMT</option>
+						<option value="chrX">chrX</option>
+						<option value="chrY">chrY</option>
+					</select>
+					<span></span>
+				</div>
+				<div class="row" id="circRNA_start">
+					<span>circRNA_start</span>
+					<input name="circRNA_start" required type="text" placeholder="e.g., 89113725"/>
+					<span class="eg">e.g.,<em>89113725</em></span>
+				</div>
+				<div class="row" id="circRNA_end">
+					<span>circRNA_end</span>
+					<input name="circRNA_end" required type="text" placeholder="e.g., 89116521"/>
+					<span class="eg">e.g.,<em>89116521</em></span>
+				</div>
+				<div class="btnbox">
+					<button>search</button>
+					<button type="reset">reset</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+		<app-footer></app-footer>
+	</div>
+</body>
+<script src="src/layui.js"></script>
+<script>
+	layui.use(['table','form'], function(){
+		var table = layui.table,form = layui.form,$ = layui.$;
+		const examples = document.querySelectorAll('.examples span');
+        const textarea = document.getElementById('search_any');
+
+        examples.forEach((span) => {
+            span.addEventListener('click', () => {
+                const spanText = span.textContent;
+                const textareaValue = textarea.value;
+
+                if (textareaValue) {
+                    // 如果textarea中已有内容，添加一个";"号隔开
+                    textarea.value = textareaValue + ';' + spanText;
+                } else {
+                    // 如果textarea中没有内容，直接插入span的内容
+                    textarea.value = spanText;
+                }
+            });
+        });
+		const circRNA_start_eg = document.querySelector('#circRNA_start .eg em');
+        const circRNA_start_input = document.querySelector('#circRNA_start input');
+		circRNA_start_eg.addEventListener('click', () => {
+			circRNA_start_input.value = circRNA_start_eg.textContent;
+        });
+		const circRNA_end_eg = document.querySelector('#circRNA_end .eg em');
+        const circRNA_end_input = document.querySelector('#circRNA_end input');
+		circRNA_end_eg.addEventListener('click', () => {
+			circRNA_end_input.value = circRNA_end_eg.textContent;
+        });
+	});
+</script>
+<script>
+	new Vue({
+		el: '#app',
+		data() {
+			return {
+				isLoaded: false,
+			}
+		},
+		mounted() {
+			this.isLoaded = true;
+		}
+	})
+</script>
+</html>

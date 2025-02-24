@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>BloodCircR</title>
+	<link rel="stylesheet" href="src/css/layui.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/browse.css">
+	<link rel="stylesheet" href="css/circRNA.css">
+	<link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
+	<link rel="icon" href="images/1_1.png" type="image/x-icon">
+	<script src="js/vue.js"></script>
+	<script src="js/elementui.js"></script>
+	<script src="js/header-component.js"></script>
+	<script src="js/footer-component.js"></script>
+	<style>
+	td[data-field="BloodCircR_ID"] {
+		color: #B94A4A;
+		cursor: pointer; /* 鼠标悬浮时显示小手光标 */
+	}
+	td[data-field="BloodCircR_ID"]:hover {
+	  text-decoration: underline; /* 添加下划线 */
+	  cursor: pointer; /* 鼠标悬浮时显示小手光标 */
+	}
+	.el-card {
+		margin:0;
+	}
+	</style>
+</head>
+
+<body>
+	<div id="app" :class="{ loaded: isLoaded }" style="display: flex;flex-direction: column;min-height: 100vh;margin: 0;">
+		<div style="flex:1">
+			<!-- 使用定义的 header 组件 -->
+			<app-header></app-header>
+			<div style="display: flex; align-items: center; flex-wrap: nowrap;flex-direction: column;">
+				<div class="line" style="margin-top: 120px; width: calc(100% - 50px);">
+					Browse by
+				</div>
+				<el-card style="width: calc(100% - 50px);">
+					
+					<div class="browse1" style="margin:0;width: 100% !important;margin-left: 20px !important;margin-top: 20px;">
+						<table class="layui-table" id="demo">
+						</table>
+					</div>
+					<div class="search_box" >
+						<div style="float: right;margin-bottom: 10px;">
+							<el-button id="exportBtn" type="primary">Export Data</el-button>
+						</div>
+					</div>
+				</el-card>
+			</div>
+		</div>
+		<!-- 使用定义的 footer 组件 -->
+		<app-footer></app-footer>
+
+	</div>
+</body>
+<style>
+	.layui-table-header {
+		overflow: visible;
+	}
+
+	th[data-field='circRNA_start'] {
+		position: relative;
+		overflow: visible;
+	}
+
+	th[data-field='circRNA_start']:hover::after {
+		color: #fff;
+		background: #cccccc;
+		content: 'Starting from 1';
+		border-radius: 8px;
+		position: absolute;
+		top: 30px;
+		left: 20%;
+		z-index: 99;
+		padding: 10px 8px;
+	}
+</style>
+<script src="src/layui.js"></script>
+<script>
+	// 动态计算宽度
+	var width = window.innerWidth - 120; // 获取页面宽度减去 50px
+	var urlParams = new URLSearchParams(window.location.search);
+	var dataset = urlParams.get('Dataset');
+	document.addEventListener('DOMContentLoaded', function () {
+		layui.use(['table', 'form'], function () {
+			var table = layui.table, form = layui.form, $ = layui.$;
+			var cirRNAs = table.render({
+				elem: '#demo'
+				, page: true
+				, width: width
+				, url: './interface/dataset_browse_circRNA_API.php'
+				, page: true //开启分页
+				, id: 'cirRNAs'
+				, limits: [10, 30, 50, 100]
+				, cols: [[ //表头
+					{ field: 'BloodCircR_ID', title: 'BloodCircR ID', event: 'go_circ', sort: true, align: 'center',width:180 } // 调整为 200
+					, { field: 'BSJ_ID', title: 'BSJ ID', sort: true, align: 'center',width:240}
+					, { field: 'chr', title: 'chr', sort: true, align: 'center' ,width:80} // 调整为 100
+					, { field: 'circRNA_start', title: 'circRNA start', sort: true, align: 'center' }
+					, { field: 'circRNA_end', title: 'circRNA end', sort: true, align: 'center' }
+					, { field: 'circRNA_type', title: 'circRNA type', sort: true, align: 'center' }
+					, { field: 'host_gene', title: 'host gene', sort: true, align: 'center', width:130}
+					, { field: 'ensembl_id', title: 'Ensembl ID', sort: true, align: 'center',width:180 }
+					, { field: 'ConfidenceRank', title: 'Confidence', sort: true, align: 'center',width:130}
+				]]
+				, where: { Dataset: dataset } // 初始时传递空对象，获取所有数据
+			});
+
+			// 监听导出按钮点击事件
+			document.getElementById('exportBtn').addEventListener('click', function () {
+				// 获取表格的所有数据
+				var allData = table.cache.cirRNAs; // 'cirRNAs' 是表格的 id
+				if (allData) {
+					// 导出数据
+					table.exportFile(cirRNAs.config.id, allData, 'xls'); // 'xls' 可以改为 'csv'
+				} else {
+					alert('没有数据可以导出');
+				}
+			});
+			var searchColumn = '';
+			var searchValue = '';
+			var lastSortField = ''; // 上一次的排序字段
+			var lastSortOrder = ''; // 上一次的排序顺序
+			table.on('sort(cirRNAs)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+				console.log(obj.field); //当前排序的字段名
+				console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+				console.log(this); //当前排序的 th 对象
+
+				// 判断是否需要重新加载数据
+				if (obj.field !== lastSortField || obj.type !== lastSortOrder) {
+					// 保存当前排序字段和排序顺序
+					lastSortField = obj.field;
+					lastSortOrder = obj.type;
+					console.log('reload');
+					// 重新加载数据
+					table.reload('cirRNAs', {
+						where: {
+							Dataset: dataset,
+							search_column: searchColumn,
+							search_value: searchValue,
+							field: obj.field, //排序字段
+							order: obj.type //排序方式
+						}
+					});
+				}
+			});
+			table.on('tool(cirRNAs)', function (obj) {
+				let event = obj.event;
+				if (event === "go_circ") {
+					window.location.href = 'circRNA.html?BloodCircR_ID=' + encodeURIComponent($(this).find('div').html());
+				}
+			});
+			var data1 = form.val("search_form");
+			form.on('submit(search_submit)', function (data) {
+				data1 = form.val("search_form");
+				if (data1['item_name'] !== "All" && data1['search_value'] !== '' && lastSortField !== '') {
+					searchColumn = data1['item_name'];
+					searchValue = data1['search_value'];
+					cirRNAs.reload({
+						url: './interface/dataset_browse_circRNA_API.php'
+						, where: {
+							Dataset: dataset,
+							search_column: searchColumn,
+							search_value: searchValue,
+							field: lastSortField, //排序字段
+							order: lastSortOrder //排序方式
+						}
+						, page: {
+							curr: 1 //重新从第 1 页开始
+						}
+					});
+				}
+				else if (data1['item_name'] !== "All" && data1['search_value'] !== '') {
+					searchColumn = data1['item_name'];
+					searchValue = data1['search_value'];
+					cirRNAs.reload({
+						url: './interface/dataset_browse_circRNA_API.php'
+						, where: {
+							Dataset: dataset,
+							search_column: searchColumn,
+							search_value: searchValue,
+						}
+						, page: {
+							curr: 1 //重新从第 1 页开始
+						}
+					});
+				} else {
+					searchColumn = '';
+					searchValue = '';
+					cirRNAs.reload({
+						url: './interface/dataset_browse_circRNA_API.php'
+						, where: {
+							Dataset: dataset
+						}
+						, page: {
+							curr: 1 //重新从第 1 页开始
+						}
+					});
+				}
+				return false;
+			});
+
+
+			// 添加鼠标事件，用于移除 title 属性
+			$('[title]').each(function () {
+				$(this).removeAttr('title');
+			});
+		});
+	});
+
+</script>
+<!-- vue相关js -->
+<script>
+	new Vue({
+		el: '#app',
+		data() {
+			return {
+				isLoaded: false,
+			}
+		},
+		mounted() {
+			this.isLoaded = true;
+		}
+	})
+</script>
+
+</html>

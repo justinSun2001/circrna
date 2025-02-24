@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>datasetinfo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/expression.css">
+    <link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
+    <link rel="icon" href="images/1_1.png" type="image/x-icon">
+
+    <script src="js/vue.js"></script>
+    <script src="js/elementui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/header-component.js"></script>
+    <script src="js/footer-component.js"></script>
+</head>
+<style>
+    .title-link {
+        text-decoration: none;
+        color: #1FA3C6;
+    }
+
+    .title-link:hover {
+        text-decoration: underline;
+        /* 其他悬停时的样式 */
+    }
+    .el-button:hover {
+    color: #1FA3C6;
+    border-color: #c6e2ff;
+    background-color: #ecf5ff;
+}
+.el-button:active {
+    color: #1FA3C6;
+    border-color: #c6e2ff;
+    background-color: #ecf5ff;
+}
+.el-button:focus {
+    color: #1FA3C6;
+    border-color: #c6e2ff;
+    background-color: #ecf5ff;
+}
+.el-button:active {
+    color: #1FA3C6;
+    border-color: #c6e2ff;
+    background-color: #ecf5ff;
+}
+.el-button:focus {
+    color: #1FA3C6;
+    border-color: #c6e2ff;
+    background-color: #ecf5ff;
+}
+
+    .img_container {
+        width: 100%;
+        /* 容器的宽度 */
+        overflow-x: auto;
+        /* 启用水平滚动条 */
+        white-space: nowrap;
+        /* 防止图片换行 */
+        /* border: 1px solid #ccc;  */
+        /* display: flex;
+        align-items: end;
+        justify-content: center; */
+        text-align: center
+    }
+</style>
+
+<body>
+    <div id="app" :class="{ loaded: isLoaded }">
+        <!-- 使用定义的 header 组件 -->
+        <app-header></app-header>
+
+        <div class="main" style="margin-top: 100px;">
+            <div class="left">
+                <el-card>
+                    <p style="padding-top: 10px;">Disease:</p>
+                    <el-select v-model="selectedDiseases" @change="fetchPhenotypes" multiple
+                        placeholder="Select Disease" style="width: 100%">
+                        <el-option v-for="disease in diseases" :key="disease" :label="disease"
+                            :value="disease"></el-option>
+                    </el-select>
+
+                    <p style="padding-top: 10px;">Phenotype:</p>
+                    <el-select v-model="selectedPhenotypes" @change="fetchDatasets" multiple
+                        placeholder="Select Phenotype" style="width: 100%">
+                        <el-option v-for="phenotype in phenotypes" :key="phenotype" :label="phenotype"
+                            :value="phenotype"></el-option>
+                    </el-select>
+
+                    <p style="padding-top: 10px;">Dataset:</p>
+                    <el-select v-model="selectedDatasets"  multiple placeholder="Select Dataset"
+                        style="width: 100%">
+                        <el-option v-for="dataset in datasets" :key="dataset" :label="dataset"
+                            :value="dataset"></el-option>
+                    </el-select>
+
+                    <!-- <p style="padding-top: 10px;">Group:</p>
+                    <el-input type="textarea" :rows="1" v-model="groupsDisplay" readonly placeholder="Groups"
+                        style="width: 100%"></el-input> -->
+
+                    <div style="display: flex; padding-top: 20px;">
+                        <el-button type="primary" @click="get_plots()">Submit</el-button>
+                        <el-button type="primary" @click="reset()">Reset</el-button>
+                    </div>
+
+                </el-card>
+            </div>
+
+            <div class="right">
+                <div class="sec1">
+                    Gene Level
+                </div>
+                <div class="sec2">
+                    <div class="header">
+                        <span>Gene Differential Expression</span>
+                    </div>
+                    <el-card>
+                        <div v-loading="loading1" element-loading-text="Loading"
+                            element-loading-spinner="el-icon-loading"
+                            element-loading-background="rgba(255, 255, 255, 0.8)" style="text-align: center;"
+                            style="padding:20px;">
+                            <!-- 上方按钮显示主体 -->
+                            <div style="display: flex; justify-content: start; flex-wrap:nowrap; margin-bottom:20px;">
+                                <el-select v-model="selectedimages1" @change="selectimage1" placeholder="Please Select Dataset"
+                                    style="width: 250px;margin-right: 20px; display: block;">
+                                    <el-option v-for="dataset in selectedDatasets" :key="dataset" :label="dataset"
+                                        :value="dataset"></el-option>
+                                </el-select>
+                                <el-select v-model="selectedCompare1" placeholder="Select Compare"
+                                    style="width: 200px; margin-right: 20px; display: block;">
+                                    <el-option v-for="compare1 in compares1" :key="compare1" :label="compare1"
+                                        :value="compare1"></el-option>
+                                </el-select>
+                            </div>
+                            <div style="display: flex;justify-content: end; align-items: center; margin-bottom: 20px;">
+                                PValue:<el-input v-model="pvalue1" placeholder="pvalue" type="number" step="0.05"
+                                    style="width: 100px; margin: 0 20px;"></el-input>
+                                FoldChange:<el-input v-model="FoldChange1" placeholder="FoldChange" type="number"
+                                    style="width: 100px;  margin-left: 20px;"></el-input>
+                                <el-button type="primary" style="width:100px; margin-left: 20px;"
+                                    @click="get_plot1()">Go</el-button>
+                            </div>
+                            <!-- 图显示主体 -->
+                            <div v-for="([datasetname, image], index) in Object.entries(showimages1)"
+                                :key="datasetname">
+                                <div class="img_container">
+                                    <!-- <img :src="image" style="height: 450px;width:auto;" alt=""> -->
+                                    <img :src="image" :style="styles[datasetname]"
+                                        @load="onImageLoad(datasetname, $event, 1)" alt="">
+                                </div>
+                                <div class="top_btn">
+                                    <el-button type="primary" @click="export_image(1)"
+                                        style="width:150px; margin-left: 20px;margin-top: 20px;">Export
+                                        Image</el-button>
+                                    <el-button type="primary" @click="export_data(1)"
+                                        style="width:150px; margin-left: 20px; margin-top: 20px;">Export
+                                        Data</el-button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </el-card>
+                </div>
+                <div class="sec2">
+                    <div class="header">
+                        <span>Enrichments</span>
+                    </div>
+                    <el-card>
+                        <div v-loading="loading2" element-loading-text="Loading"
+                            element-loading-spinner="el-icon-loading"
+                            element-loading-background="rgba(255, 255, 255, 0.8)" style="text-align: center;"
+                            style="padding:20px;">
+                            <!-- 上方按钮显示主体 -->
+                            <div style="display: flex; justify-content: start; flex-wrap:nowrap; margin-bottom:20px;">
+                                <el-select v-model="selectedimages2" @change="selectimage2" placeholder="Please Select Dataset"
+                                    style="width: 250px; margin-right: 20px; display: block;">
+                                    <el-option v-for="dataset in selectedDatasets" :key="dataset" :label="dataset"
+                                        :value="dataset"></el-option>
+                                </el-select>
+                                <el-select v-model="selectedCompare2" placeholder="Select Compare"
+                                    style="width: 200px; margin-right: 20px; display: block;">
+                                    <el-option v-for="compare2 in compares2" :key="compare2" :label="compare2"
+                                        :value="compare2"></el-option>
+                                </el-select>
+                                <el-select v-model="selectedType2" placeholder="Select Type"
+                                    style="width: 150px; margin-right: 20px; display: block;">
+                                    <el-option v-for="type2 in types2" :key="type2" :label="type2"
+                                        :value="type2"></el-option>
+                                </el-select>
+                            </div>
+                            <div style="display: flex;justify-content: end; align-items: center; margin-bottom: 20px;">
+                                PValue:<el-input v-model="pvalue2" placeholder="pvalue" type="number" step="0.05"
+                                    style="width: 100px; margin: 0 20px;"></el-input>
+                                FoldChange:<el-input v-model="FoldChange2" placeholder="FoldChange" type="number"
+                                    style="width: 100px;  margin: 0 20px;"></el-input>
+                                detectR:<el-input v-model="detectR2" placeholder="detectR" type="number" step="0.1"
+                                    style="width: 100px; margin: 0 20px;"></el-input>
+                                Number:<el-input v-model="Number2" placeholder="Number" type="number"
+                                    style="width: 100px;  margin-left: 20px;"></el-input>
+                                <el-button type="primary" style="width:100px; margin-left: 20px;"
+                                    @click="get_plot2()">Go</el-button>
+                            </div>
+                            <!-- 图显示主体 -->
+                            <div v-for="([datasetname, image], index) in Object.entries(showimages2)"
+                                :key="datasetname">
+                                <div class="img_container">
+                                    <!-- <img :src="image" style="height: 450px;width:auto;" alt=""> -->
+                                    <img :src="image" :style="styles[datasetname]"
+                                        @load="onImageLoad(datasetname, $event, 2)" alt="">
+                                </div>
+                                <div class="top_btn">
+                                    <el-button type="primary" @click="export_image(2)"
+                                        style="width:150px; margin-left: 20px;margin-top: 20px;">Export
+                                        Image</el-button>
+                                    <el-button type="primary" @click="export_data(2)"
+                                        style="width:150px; margin-left: 20px; margin-top: 20px;">Export
+                                        Data</el-button>
+                                </div>
+                            </div>
+                        </div>
+                    </el-card>
+                </div>
+                <div class="sec1" style="margin-top: 50px;">
+                    circRNA VS mRNA
+                </div>
+                <div class="sec2">
+                    <div class="header">
+                        <span>Differential Expression Comparison</span>
+                    </div>
+                    <el-card>
+                        <div v-loading="loading3" element-loading-text="Loading"
+                            element-loading-spinner="el-icon-loading"
+                            element-loading-background="rgba(255, 255, 255, 0.8)" style="text-align: center;"
+                            style="padding:20px;">
+                            <!-- 上方按钮显示主体 -->
+                            <div style="display: flex; justify-content: start; flex-wrap:nowrap; margin-bottom:20px;">
+                                <el-select v-model="selectedimages3" @change="selectimage3" placeholder="Please Select Dataset"
+                                    style="width: 250px;margin-right: 20px;display: block;">
+                                    <el-option v-for="dataset in selectedDatasets" :key="dataset" :label="dataset"
+                                        :value="dataset"></el-option>
+                                </el-select>
+                                <el-select v-model="selectedCompare3" placeholder="Select Compare"
+                                    style="width: 200px; margin-right: 20px; display: block;">
+                                    <el-option v-for="compare3 in compares3" :key="compare3" :label="compare3"
+                                        :value="compare3"></el-option>
+                                </el-select>
+                            </div>
+                            <div style="display: flex;justify-content: end; align-items: center; margin-bottom: 20px;">
+                                <el-button type="primary" style="width:100px; margin-left: 20px;"
+                                    @click="get_plot3()">Go</el-button>
+                            </div>
+                            <!-- 图显示主体 -->
+                            <div v-for="([datasetname, image], index) in Object.entries(showimages3)"
+                                :key="datasetname">
+                                <div class="img_container">
+                                    <!-- <img :src="image" style="height: 450px;width:auto;" alt=""> -->
+                                    <img :src="image" :style="styles[datasetname]"
+                                        @load="onImageLoad(datasetname, $event, 3)" alt="">
+                                </div>
+                                <div class="top_btn">
+                                    <el-button type="primary" @click="export_image(3)"
+                                        style="width:150px; margin-left: 20px;margin-top: 20px;">Export
+                                        Image</el-button>
+                                    <el-button type="primary" @click="export_data(3)"
+                                        style="width:150px; margin-left: 20px; margin-top: 20px;">Export
+                                        Data</el-button>
+                                </div>
+                            </div>
+                        </div>
+                    </el-card>
+                </div>
+                <div class="sec2">
+                    <div class="header">
+                        <span>Enrichments</span>
+                    </div>
+                    <el-card>
+                        <div v-loading="loading4" element-loading-text="Loading"
+                            element-loading-spinner="el-icon-loading"
+                            element-loading-background="rgba(255, 255, 255, 0.8)" style="text-align: center;"
+                            style="padding:20px;">
+                            <!-- 上方按钮显示主体 -->
+                            <div style="display: flex; justify-content: start; flex-wrap:nowrap; margin-bottom:20px;">
+                                <el-select v-model="selectedimages4" @change="selectimage4" placeholder="Please Select Dataset"
+                                    style="width: 250px; margin-right: 20px;display: block;">
+                                    <el-option v-for="dataset in selectedDatasets" :key="dataset" :label="dataset"
+                                        :value="dataset"></el-option>
+                                </el-select>
+                                <el-select v-model="selectedCompare" placeholder="Select Compare"
+                                    style="width: 200px; margin-right: 20px;display: block;">
+                                    <el-option v-for="compare in compares" :key="compare" :label="compare"
+                                        :value="compare"></el-option>
+                                </el-select>
+                                <el-select v-model="selectedType" placeholder="Select Type"
+                                    style="width: 150px;display: block;">
+                                    <el-option v-for="type in types" :key="type" :label="type"
+                                        :value="type"></el-option>
+                                </el-select>
+                            </div>
+                            <div style="display: flex;justify-content: end; align-items: center; margin-bottom: 20px;">
+                                PValue:<el-input v-model="pvalue4" placeholder="pvalue" type="number" step="0.05"
+                                    style="width: 100px; margin: 0 20px;"></el-input>
+                                FoldChange:<el-input v-model="FoldChange4" placeholder="FoldChange" type="number"
+                                    style="width: 100px;  margin: 0 20px;"></el-input>
+                                detectR:<el-input v-model="detectR4" placeholder="detectR" type="number" step="0.1"
+                                    style="width: 100px; margin: 0 20px;"></el-input>
+                                Number:<el-input v-model="Number4" placeholder="Number" type="number"
+                                    style="width: 100px;  margin-left: 20px;"></el-input>
+                                <el-button type="primary" style="width:100px; margin-left: 20px;"
+                                    @click="get_plot4()">Go</el-button>
+                            </div>
+                            <!-- 图显示主体 -->
+                            <div v-for="([datasetname, image], index) in Object.entries(showimages4)"
+                                :key="datasetname">
+                                <div class="img_container">
+                                    <!-- <img :src="image" style="height: 450px;width:auto;" alt=""> -->
+                                    <img :src="image" :style="styles[datasetname]"
+                                        @load="onImageLoad(datasetname, $event, 4)" alt="">
+                                </div>
+                                <div class="top_btn">
+                                    <el-button type="primary" @click="export_image(4)"
+                                        style="width:150px; margin-left: 20px;margin-top: 20px;">Export
+                                        Image</el-button>
+                                    <el-button type="primary" @click="export_data(4)"
+                                        style="width:150px; margin-left: 20px; margin-top: 20px;">Export
+                                        Data</el-button>
+                                </div>
+                            </div>
+                            <!-- 显示主体 -->
+                            <!-- <el-table :data="tableData">
+                                <el-table-column v-for="column in tableColumns" :key="column.prop" :prop="column.prop"
+                                    :label="column.label">
+                                </el-table-column>
+                            </el-table>
+                            <el-pagination @size-change="handleSizeChange1" @current-change="handleCurrentChange1"
+                                :current-page="currentPage1" :page-sizes="pageSizes1" :page-size="pageSize1"
+                                layout="total, sizes, prev, pager, next, jumper" :total="total1"
+                                style="margin-top: 20px" :i18n="paginationI18n">
+                            </el-pagination> -->
+
+                        </div>
+                    </el-card>
+                </div>
+            </div>
+        </div>
+        <!-- 使用定义的 footer 组件 -->
+        <app-footer></app-footer>
+    </div>
+</body>
+
+<!-- vue相关js -->
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                isLoaded: false,
+                loading1: false,
+                loading2: false,
+                loading3: false,
+                loading4: false,
+
+                datasetname: [],
+
+                diseases: [],
+                phenotypes: [],
+                datasets: [],
+                groups: [],
+                selectedDiseases: [],
+                selectedPhenotypes: [],
+                selectedDatasets: [],
+                groupsDisplay: '',
+
+                selectedimages1: [],
+                selectedimages2: [],
+                selectedimages3: [],
+                selectedimages4: [],
+
+
+                showimages1: {},
+                showimages2: {},
+                showimages3: {},
+                showimages4: {},
+
+                pvalue1: 0.05,
+                FoldChange1: 2,
+                detectR1: 0.2,
+
+                pvalue2: 0.05,
+                FoldChange2: 2,
+                detectR2: 0.2,
+                Number2: 10,
+
+                pvalue4: 0.05,
+                FoldChange4: 2,
+                detectR4: 0.2,
+                Number4: 10,
+
+                selectedCompare1: '',
+                compares1: [],
+
+                selectedCompare3: '',
+                compares3: [],
+
+                selectedCompare2: '',
+                compares2: [],
+                selectedType2: '',
+                types2: ['BP', 'CC', 'MF', 'KEGG', 'Reactome', 'GSEA'],
+
+                selectedCompare: '',
+                compares: [],
+                selectedType: '',
+                types: ['BP', 'CC', 'MF', 'KEGG', 'Reactome', 'GSEA'],
+
+                tableData: [], // 表格数据
+                tableColumns: [], // 表格列配置
+                jsonData: [],
+                currentPage1: 1, // 当前页码
+                pageSizes1: [10], //页码数选项
+                pageSize1: 10, // 每页显示的条数
+                total1: 0, // 数据总数
+                paginationI18n: {
+                    navigateTo: 'Go to',
+                    pageSize: '/page',
+                    total: 'Total {total} items', // 注意这里的 {total} 不会被替换为实际的总数，你需要手动替换
+                    pageClassifier: 'of', // 用于 "current page of total pages" 的格式化字符串
+                },
+                styles: {},
+
+                csvData1:null,
+                csvData2:null,
+                csvData3:null,
+                csvData4:null,
+                imageUrl1:'',
+                imageUrl2:'',
+                imageUrl3:'',
+                imageUrl4:'',
+                email: JSON.parse(localStorage.getItem('user')) || null,
+
+                defaultErrorImage: ''
+            }
+        },
+        computed: {
+
+        },
+        mounted() {
+            this.isLoaded = true;
+            if(this.email){
+                this.email = this.email.email;
+            }else{
+                this.email = '';
+            }
+            this.fetchDiseases();
+            const svgContent = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="400" height="200">
+            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="24" fill="#cccccc">
+                No data available!
+            </text>
+            </svg>`;
+
+            const base64SVG = btoa(svgContent);
+            this.defaultErrorImage = 'data:image/svg+xml;base64,' + base64SVG;
+        },
+        methods: {
+            export_data(index) {
+                let tablename, datasetname;
+                const get_data = (csvData,tablename,datasetname,index) =>{
+                    if (csvData) {
+                        const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+                        const link = document.createElement('a');
+                        const url = URL.createObjectURL(blob);
+                        link.setAttribute('href', url);
+                        link.setAttribute('download', tablename + '_' + datasetname + '_data.csv');
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    } else {
+                        console.error('CSV数据尚未获取');
+                    }
+                };
+                switch (index) {
+                    case 1:
+                        tablename = 'differential_expression_1'; // 替换为实际的表格名
+                        datasetname = this.selectedimages1; // 替换为实际的数据集名称
+                        get_data(this.csvData1,tablename,datasetname,index)
+                        break;
+                    case 2:
+                        tablename = 'differential_expression_2'; // 替换为实际的表格名
+                        datasetname = this.selectedimages2; // 替换为实际的数据集名称
+                        get_data(this.csvData2,tablename,datasetname,index)
+                        break;
+                    case 3:
+                        tablename = 'differential_expression_3'; // 替换为实际的表格名
+                        datasetname = this.selectedimages3; // 替换为实际的数据集名称
+                        get_data(this.csvData3,tablename,datasetname,index)
+                        break;
+                    case 4:
+                        tablename = 'differential_expression_4'; // 替换为实际的表格名
+                        datasetname = this.selectedimages4; // 替换为实际的数据集名称
+                        get_data(this.csvData4,tablename,datasetname,index)
+                        break;
+                    default:
+                        console.error('Invalid index:', index);
+                        return;
+                }
+            },
+            export_image(index) {
+                let tablename, datasetname;
+                const get_image = (imageUrl,tablename,datasetname,index) =>{
+                    if (imageUrl) {
+                        const link = document.createElement('a');
+                        link.href = imageUrl;
+                        link.setAttribute('download', tablename + '_' + datasetname + '.svg'); // 修改下载的文件名
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    } else {
+                        console.error('image数据尚未获取');
+                    }
+                };
+                // 根据index的值设置tablename和datasetname
+                switch (index) {
+                    case 1:
+                        tablename = 'differential_expression_1'; // 替换为实际的表格名
+                        datasetname = this.selectedimages1; // 替换为实际的数据集名称
+                        get_image(this.imageUrl1,tablename,datasetname,index)
+                        break;
+                    case 2:
+                        tablename = 'differential_expression_2'; // 替换为实际的表格名
+                        datasetname = this.selectedimages2; // 替换为实际的数据集名称
+                        get_image(this.imageUrl2,tablename,datasetname,index)
+                        break;
+                    case 3:
+                        tablename = 'differential_expression_3'; // 替换为实际的表格名
+                        datasetname = this.selectedimages3; // 替换为实际的数据集名称
+                        get_image(this.imageUrl3,tablename,datasetname,index)
+                        break;
+                    case 4:
+                        tablename = 'differential_expression_4'; // 替换为实际的表格名
+                        datasetname = this.selectedimages4; // 替换为实际的数据集名称
+                        get_image(this.imageUrl4,tablename,datasetname,index)
+                        break;
+                    default:
+                        console.error('Invalid index:', index);
+                        return;
+                }
+            },
+            onImageLoad(datasetname, event, index) {
+                this[`loading${index}`] = true;
+                const img = event.target;
+                const containerWidth = img.parentElement.clientWidth;
+                const imgWidth = img.naturalWidth;
+
+                if (imgWidth > containerWidth) {
+                    this.$set(this.styles, datasetname, {
+                        height: '450px',
+                        width: 'auto'
+                    });
+                } else {
+                    this.$set(this.styles, datasetname, {
+
+                        height: 'auto',
+                        width: '60%'
+                    });
+                }
+                this[`loading${index}`] = false;
+            },
+            selectimage1() {
+                this.loading1=true;
+                // 处理选择图片逻辑
+                console.log(this.selectedimages1);
+                const datasetname = this.selectedimages1;
+                axios.post('./interface/differential_compare_get.php', {}, { params: { datasetname: datasetname } })
+                    .then(response => {
+                        console.log('test1:', response.data);
+                        this.compares1 = response.data.data;
+                        this.selectedCompare1 = this.compares1[0];
+                        this.loading1=false;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching diseases:', error);
+                        this.loading1=false;
+                    });
+            },
+            selectimage2() {
+                this.loading2=true;
+                console.log(this.selectedimages2);
+                const datasetname = this.selectedimages2;
+                axios.post('./interface/differential_compare_get.php', {}, { params: { datasetname: datasetname } })
+                    .then(response => {
+                        console.log('test:', response.data);
+                        this.compares2 = response.data.data;
+                        this.selectedCompare2 = this.compares2[0];
+                        this.selectedType2 = 'BP';
+                        this.loading2=false;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching diseases:', error);
+                        this.loading2=false;
+                    });
+            },
+            selectimage3() {
+                this.loading3=true;
+                // 处理选择图片逻辑
+                console.log(this.selectedimages3);
+                const datasetname = this.selectedimages3;
+                axios.post('./interface/differential_compare_get.php', {}, { params: { datasetname: datasetname } })
+                    .then(response => {
+                        console.log('test3:', response.data);
+                        this.compares3 = response.data.data;
+                        this.selectedCompare3 = this.compares3[0];
+                        this.loading3=false;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching diseases:', error);
+                        this.loading3=false;
+                    });
+            },
+            selectimage4() {
+                this.loading4=true;
+                // 处理选择图片逻辑
+                console.log(this.selectedimages4);
+                const datasetname = this.selectedimages4;
+                axios.post('./interface/differential_compare_get.php', {}, { params: { datasetname: datasetname } })
+                    .then(response => {
+                        console.log('test:', response.data);
+                        this.compares = response.data.data;
+                        this.selectedCompare = this.compares[0];
+                        this.selectedType = 'BP';
+                        this.loading4=false;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching diseases:', error);
+                        this.loading4=false;
+                    });
+            },
+            fetchDiseases() {
+                axios.get(`./interface/dataset_select_diff.php?action=getDiseases&email=${this.email}`)
+                    .then(response => {
+                        console.log(response.data);
+                        this.diseases = response.data;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching diseases:', error);
+                    });
+            },
+            fetchPhenotypes() {
+                this.phenotypes = [];
+                this.selectedPhenotypes = [];
+                this.datasets = [];
+                this.selectedDatasets = [];
+                this.groups = [];
+                this.groupsDisplay = '';
+                if (this.selectedDiseases.length) {
+                    const diseases = this.selectedDiseases.join(',');
+                    axios.get(`./interface/dataset_select_diff.php?action=getPhenotypes&diseases=${diseases}&email=${this.email}`)
+                        .then(response => {
+                            console.log(response.data);
+                            this.phenotypes = response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching phenotypes:', error);
+                        });
+                }
+            },
+            fetchDatasets() {
+                this.datasets = [];
+                this.selectedDatasets = [];
+                this.groups = [];
+                this.groupsDisplay = '';
+                if (this.selectedPhenotypes.length) {
+                    const phenotypes = this.selectedPhenotypes.join(',');
+                    axios.get(`./interface/dataset_select_diff.php?action=getDatasets&phenotypes=${phenotypes}&email=${this.email}`)
+                        .then(response => {
+                            console.log(response.data);
+                            this.datasets = response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching datasets:', error);
+                        });
+                }
+            },
+            // fetchGroups() {
+            //     this.groups = [];
+            //     this.groupsDisplay = '';
+            //     if (this.selectedDiseases.length && this.selectedPhenotypes.length && this.selectedDatasets.length) {
+            //         const diseases = this.selectedDiseases.join(',');
+            //         const phenotypes = this.selectedPhenotypes.join(',');
+            //         const datasets = this.selectedDatasets.join(',');
+            //         axios.get(`./interface/dataset_select_diff.php?action=getGroups&diseases=${diseases}&phenotypes=${phenotypes}&datasets=${datasets}&email=${this.email}`)
+            //             .then(response => {
+            //                 console.log(response.data);
+            //                 this.groups = response.data;
+            //                 this.groupsDisplay = this.groups.join(', ');
+            //             })
+            //             .catch(error => {
+            //                 console.error('Error fetching groups:', error);
+            //             });
+            //     }
+            // },
+            convertSVGBase64ToUrl(base64) {
+                const byteString = atob(base64);
+                const ab = new ArrayBuffer(byteString.length);
+                const ia = new Uint8Array(ab);
+                for (let i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+                const blob = new Blob([ia], { type: 'image/svg+xml' });
+                return URL.createObjectURL(blob);
+            },
+            get_plots() {
+                if (this.selectedDiseases.length === 0) {
+                    this.$message.error('Please select at least one Disease.');
+                    return;
+                }
+                if (this.selectedPhenotypes.length === 0) {
+                    this.$message.error('Please select at least one Phenotype.');
+                    return;
+                }
+                if (this.selectedDatasets.length === 0) {
+                    this.$message.error('Please select at least one Dataset.');
+                    return;
+                }
+                console.log("图数据");
+
+                const datasetnames = this.selectedDatasets; // 获取参数的值
+                console.log(datasetnames);
+
+                this.selectedimages1 = this.selectedDatasets[0];
+                this.selectedimages2 = this.selectedDatasets[0];
+                this.selectedimages3 = this.selectedDatasets[0];
+                this.selectedimages4 = this.selectedDatasets[0];
+                try {
+                    // 等待 selectimage 函数全部执行完毕
+
+                    this.selectimage1();
+                    this.selectimage3();
+                    this.selectimage2();
+                    this.selectimage4();
+
+
+
+                    setTimeout(() => {
+                        this.get_plot1();
+                        this.get_plot3();
+                        this.get_plot4();
+                        this.get_plot2();
+                    }, 4000);
+                    console.log("All functions executed successfully");
+                } catch (error) {
+                    console.error("An error occurred:", error);
+                }
+
+                // 如果需要在所有异步操作完成后执行其他操作，可以在这里添加
+            },
+
+            get_plot1() {
+                console.log("图数据");
+                this.showimages1 = {};
+                this.csvData1=null;
+                this.imageUrl1='';
+                this.loading1 = true;
+                console.log(this.selectedimages1);
+                console.log(this.selectedCompare1);
+                console.log(this.detectR1);
+                console.log(this.pvalue1);
+                console.log(this.FoldChange1);
+
+                
+
+                const FormData = { datasetname: this.selectedimages1, compare: this.selectedCompare1, pvalue: this.pvalue1, FoldChange: this.FoldChange1, detectR: this.detectR1 };
+                console.log(FormData);
+                axios.post('./interface/differential_expression_1.php', {}, { params: FormData })
+                    .then(response => {
+                        this.loading1 = false;
+                        const imageData = response.data.image1;
+                        if (imageData) {
+                            // 将base64数据转换为Blob URL
+                            const url = this.convertSVGBase64ToUrl(imageData);
+                            console.log(url);
+                            this.imageUrl1=url;
+                            this.showimages1[this.selectedimages1] = url;
+                        } else {
+                            this.showimages1[this.selectedimages1] = this.defaultErrorImage; // 返回默认错误图像
+                            console.error('Error:', response.data.error);
+                        }
+                        if (response.data.data1) {
+                            this.csvData1 = atob(response.data.data1);
+                        } else {
+                            console.error('Error:', response.data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching diseases:', error);
+                        this.showimages1[this.selectedimages1] = this.defaultErrorImage;
+                        this.loading1 = false;
+                    });
+            },
+            get_plot2() {
+                console.log('test2');
+                console.log(this.selectedimages2);
+                console.log(this.selectedCompare2);
+                console.log(this.selectedType2);
+                console.log(this.pvalue2);
+                console.log(this.FoldChange2);
+                this.showimages2 = {};
+                this.csvData2=null;
+                this.imageUrl2='';
+                this.loading2 = true;
+                
+                const FormData = { datasetname: this.selectedimages2, compare: this.selectedCompare2, type: this.selectedType2, pvalue: this.pvalue2, FoldChange: this.FoldChange2, detectR: this.detectR2, number: this.Number2 };
+                axios.post('./interface/differential_expression_2.php', {}, { params: FormData })
+                    .then(response => {
+                        this.loading2 = false;
+                        const imageData = response.data.image1;
+                        if (imageData) {
+                            // 将base64数据转换为Blob URL
+                            const url = this.convertSVGBase64ToUrl(imageData);
+                            console.log(url);
+                            this.imageUrl2=url;
+                            this.showimages2[this.selectedimages2] = url;
+                        } else {
+                            this.showimages2[this.selectedimages2] = this.defaultErrorImage; // 返回默认错误图像
+                        }
+                        if (response.data.data1) {
+                            this.csvData2 = atob(response.data.data1);
+                        } else {
+                            console.error('Error:', response.data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching diseases:', error);
+                        this.showimages2[this.selectedimages2] = this.defaultErrorImage;
+                        this.loading2 = false;
+                    });
+            },
+            get_plot3() {
+                console.log("图数据");
+                this.showimages3 = {};
+                this.csvData3=null;
+                this.imageUrl3='';
+                this.loading3 = true;
+                console.log(this.selectedimages3);
+                console.log(this.selectedCompare3);
+
+                
+
+                const FormData = { datasetname: this.selectedimages3, compare: this.selectedCompare3 };
+                console.log(FormData);
+                axios.post('./interface/differential_expression_3.php', {}, { params: FormData })
+                    .then(response => {
+                        this.loading3 = false;
+                        const imageData = response.data.image1;
+                        if (imageData) {
+                            // 将base64数据转换为Blob URL
+                            const url = this.convertSVGBase64ToUrl(imageData);
+                            console.log(url);
+                            this.imageUrl3=url;
+                            this.showimages3[this.selectedimages3] = url;
+                        } else {
+                            this.showimages3[this.selectedimages3] = this.defaultErrorImage; // 返回默认错误图像
+                        }
+                        if (response.data.data1) {
+                            this.csvData3 = atob(response.data.data1);
+                        } else {
+                            console.error('Error:', response.data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching diseases:', error);
+                        this.showimages3[this.selectedimages3] = this.defaultErrorImage;
+                        this.loading3 = false;
+                    });
+            },
+            get_plot4() {
+                console.log('test');
+                console.log(this.selectedimages4);
+                console.log(this.selectedCompare);
+                console.log(this.selectedType);
+                console.log(this.pvalue4);
+                console.log(this.FoldChange4);
+                this.showimages4 = {};
+                this.loading4 = true;
+                this.csvData4=null;
+                this.imageUrl4='';
+                
+                const FormData = { datasetname: this.selectedimages4, compare: this.selectedCompare, type: this.selectedType, pvalue: this.pvalue4, FoldChange: this.FoldChange4, detectR: this.detectR4, number: this.Number4 };
+                axios.post('./interface/differential_expression_4.php', {}, { params: FormData })
+                    .then(response => {
+                        this.loading4 = false;
+                        const imageData = response.data.image1;
+                        if (imageData) {
+                            // 将base64数据转换为Blob URL
+                            const url = this.convertSVGBase64ToUrl(imageData);
+                            console.log(url);
+                            this.imageUrl4=url;
+                            this.showimages4[this.selectedimages4] = url;
+                        } else {
+                            this.showimages4[this.selectedimages4] = this.defaultErrorImage; // 返回默认错误图像
+                        }
+                        if (response.data.data1) {
+                            this.csvData4 = atob(response.data.data1);
+                        } else {
+                            console.error('Error:', response.data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching diseases:', error);
+                        this.showimages4[this.selectedimages4] = this.defaultErrorImage;
+                        this.loading4 = false;
+                    });
+                // const FormData = { datasetname: this.selectedimages4, compare: this.selectedCompare, type: this.selectedType, pvalue: this.pvalue4, FoldChange: this.FoldChange4 };
+                // axios.post('./interface/differential_expression_4.php', {}, { params: FormData })
+                //     .then(response => {
+                //         console.log('111:', response.data);
+                //         this.loading4 = false;
+                //         this.jsonData = JSON.parse(response.data.json_data.json_data);
+                //         this.jsonData = this.jsonData.map(item => {
+                //             // 创建一个新对象来保持属性顺序
+                //             const newItem = Object.keys(item).reduce((acc, key) => {
+                //                 // 如果属性是 'p.adjust'，重命名为 'padjust'
+                //                 if (key === 'p.adjust') {
+                //                     acc['padjust'] = item[key];
+                //                 } else {
+                //                     acc[key] = item[key];
+                //                 }
+                //                 return acc;
+                //             }, {});
+                //             return newItem;
+                //         });
+                //         console.log('222:', this.jsonData);
+                //         if (this.jsonData.length > 0) {
+                //             this.tableColumns = Object.keys(this.jsonData[0]).map(key => ({
+                //                 prop: key,
+                //                 label: key
+                //             }));
+                //             console.log(this.tableColumns);
+                //             this.tableData = this.jsonData;
+                //             this.total1 = this.jsonData.length;
+                //             if (this.total1 < 10) {
+                //                 this.pageSize1 = this.total1;
+                //                 this.pageSizes1 = [this.total1, 10, 20]
+                //             } else {
+                //                 this.pageSize1 = 10;
+                //                 this.pageSizes1 = [10, 20, this.total1]
+                //             }
+                //             this.updateDisplayData1();
+                //         }
+                //     })
+                //     .catch(error => {
+                //         console.error('Error fetching diseases:', error);
+                //         this.loading4 = false;
+                //     });
+            },
+            updateDisplayData1(method) {
+                console.log(this.currentPage1);
+                console.log(this.pageSize1);
+                // 计算起始索引和结束索引
+                const startIndex = (this.currentPage1 - 1) * this.pageSize1;
+                const endIndex = startIndex + this.pageSize1;
+                // 截取数据
+                this.tableData = this.jsonData.slice(startIndex, endIndex);
+            },
+            handleSizeChange1(newSize) {
+                // 每页显示条数改变时触发
+                this.pageSize1 = newSize;
+                this.currentPage1 = 1; // 重置当前页码
+                this.updateDisplayData1(); // 更新显示数据
+            },
+            handleCurrentChange1(newPage) {
+                // 当前页码改变时触发
+                this.currentPage1 = newPage;
+                this.updateDisplayData1(); // 更新显示数据
+            },
+            reset() {
+                this.diseases = [];
+                this.selectedDiseases = [];
+                this.phenotypes = [];
+                this.selectedPhenotypes = [];
+                this.datasets = [];
+                this.selectedDatasets = [];
+                this.groups = [];
+                this.groupsDisplay = '';
+
+                this.fetchDiseases();
+            },
+        }
+    })
+</script>
+
+</html>

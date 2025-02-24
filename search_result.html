@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>BloodCircR</title>
+	<link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
+	<script src="js/vue.js"></script>
+	<script src="js/elementui.js"></script>
+	<script src="js/header-component.js"></script>
+	<script src="js/footer-component.js"></script>
+	<link rel="stylesheet" href="src/css/layui.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/browse.css">
+	<link rel="icon" href="images/1_1.png" type="image/x-icon">
+
+	<style>
+		td[data-field="BloodCircR_ID"] {
+			color: #B94A4A !important;
+			;
+			cursor: pointer;
+			/* 鼠标悬浮时显示小手光标 */
+		}
+
+		td[data-field="BloodCircR_ID"]:hover {
+			text-decoration: underline;
+			/* 添加下划线 */
+			cursor: pointer;
+			/* 鼠标悬浮时显示小手光标 */
+		}
+
+		.layui-table td,
+		.layui-table th {
+			color: #333333;
+		}
+
+		/* 增强选择器优先级，确保覆盖默认样式 */
+		.layui-laypage .layui-laypage-curr {
+			background-color: #B94A4A !important;
+			/* 红色背景 */
+
+			border: 1px solid #B94A4A !important;
+			/* 红色边框 */
+		}
+
+		/* 如果 em 标签的背景颜色也需要设置 */
+		.layui-laypage .layui-laypage-curr em {
+			background-color: #B94A4A !important;
+			/* 红色背景 */
+
+		}
+
+		th[data-field='circRNA_start']:hover::after {
+			color: #fff;
+			background: #cccccc;
+			content: 'Starting from 1';
+			border-radius: 8px;
+			position: absolute;
+			top: 30px;
+			left: 10%;
+			z-index: 99;
+			padding: 10px 8px;
+		}
+		.el-card {
+			margin:0;
+		}
+		body {
+			min-width: 1100px;
+			overflow: auto;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" :class="{ loaded: isLoaded }" style="display: flex;flex-direction: column;min-height: 100vh;margin: 0;">
+		<!-- 使用定义的 header 组件 -->
+
+		 <div style="flex:1">
+			<app-header></app-header>
+			<div style="display: flex; align-items: center; flex-wrap: nowrap;flex-direction: column; margin-top: 120px;">
+				<div class="line flag" style="width: calc(100% - 50px);">
+					Search result : <span id="search_val"></span>
+				</div>
+				<el-card style="width: calc(100% - 50px);">
+					<div class="browse1">
+						<table class="layui-table" id="demo">
+						</table>
+					</div>
+				</el-card>
+			</div>
+		</div>
+		<app-footer></app-footer>
+	</div>
+
+
+</body>
+<script>
+	new Vue({
+		el: '#app',
+		data() {
+			return {
+				isLoaded: false,
+			}
+		},
+		mounted() {
+			this.isLoaded = true;
+		}
+	})
+</script>
+<script src="src/layui.js"></script>
+<script>
+	layui.use(['table', 'form'], function () {
+		var table = layui.table, form = layui.form, $ = layui.$;
+		
+		const urlParams = new URLSearchParams(window.location.search);
+		const index_search = urlParams.get("index_search");//首页的
+		const search_any = urlParams.get("search_any");//搜索大框多内容混合搜索
+
+		const chr = urlParams.get("chr");//chr
+		const circRNA_start = urlParams.get("circRNA_start");//circRNA_start
+		const circRNA_end = urlParams.get("circRNA_end");//circRNA_end
+		var width;
+		const container = document.querySelector('.browse1');
+		if (container) {
+			width = container.clientWidth;
+		}
+		// 定义列配置
+		var columns = [
+        { field: 'BloodCircR_ID', title: 'BloodCircR ID', event: 'go_circ', sort: true, align: 'center', width: 200 },
+        { field: 'BSJ_ID', title: 'BSJ ID', sort: true, align: 'center', width: 240 },
+        { field: 'chr', title: 'chr', sort: true, align: 'center', width: 80 },
+        { field: 'circRNA_start', title: 'Start', sort: true, align: 'center', width: 160 },
+        { field: 'circRNA_end', title: 'End', sort: true, align: 'center', width: 160 },
+        { field: 'circRNA_type', title: 'circRNA type', sort: true, align: 'center', width: 160 },
+        { field: 'host_gene', title: 'Host gene', sort: true, align: 'center', width: 130 },
+        { field: 'ensembl_id', title: 'Ensembl ID', sort: true, align: 'center', width: 180 },
+        { field: 'ConfidenceRank', title: 'Confidence', sort: true, align: 'center', width: 140 }
+    ];
+		// 计算当前总宽度
+    var totalWidth = columns.reduce((sum, col) => sum + col.width, 0)+8;
+
+    // 如果总宽度小于设定的宽度，按比例分配额外宽度
+    if (totalWidth < width) {
+        var extraWidth = width - totalWidth; // 需要增加的宽度
+        columns.forEach(col => {
+            col.width += (col.width / totalWidth) * extraWidth; // 按比例分配
+        });
+    }
+		if (index_search) {
+			document.getElementById("search_val").innerHTML = index_search;
+			let cirRNAs = table.render({
+				elem: '#demo'
+				, page: true
+				// , width: width
+				, where: { index_search: index_search }
+				, url: './interface/circRNA_index_search_API.php'
+				, page: true //开启分页
+				, id: 'cirRNAs'
+				, limits: [10, 50, 100]
+				, cols: [columns]
+			});
+			table.on('tool(cirRNAs)', function (obj) {
+				let event = obj.event;
+				if (event === "go_circ") {
+					window.location.href = 'circRNA.html?BloodCircR_ID=' + encodeURIComponent($(this).find('div').html());
+				}
+			});
+		} else if (search_any) {
+			document.getElementById("search_val").innerHTML = search_any;
+			let cirRNAs = table.render({
+				elem: '#demo'
+				, page: true
+				// , width: width
+				, where: { search_any: search_any }
+				, url: './interface/search_any_API.php'
+				, page: true //开启分页
+				, id: 'cirRNAs'
+				, limits: [10, 50, 100]
+				, cols: [columns]
+			});
+			table.on('tool(cirRNAs)', function (obj) {
+				let event = obj.event;
+				if (event === "go_circ") {
+					window.location.href = 'circRNA.html?BloodCircR_ID=' + encodeURIComponent($(this).find('div').html());
+				}
+			});
+		} else if (chr && circRNA_start && circRNA_end) {
+			document.getElementById("search_val").innerHTML = 'chr:' + chr + ';' + 'circRNA_start:' + circRNA_start + ';' + 'circRNA_end:' + circRNA_end + ';';
+			let cirRNAs = table.render({
+				elem: '#demo'
+				, page: true
+				// , width: width
+				, where: { chr: chr, circRNA_start: circRNA_start, circRNA_end: circRNA_end }
+				, url: './interface/search_three_API.php'
+				, page: true //开启分页
+				, id: 'cirRNAs'
+				, limits: [10, 50, 100]
+				, cols: [columns]
+			});
+			table.on('tool(cirRNAs)', function (obj) {
+				let event = obj.event;
+				if (event === "go_circ") {
+					window.location.href = 'circRNA.html?BloodCircR_ID=' + encodeURIComponent($(this).find('div').html());
+				}
+			});
+		} else {
+			document.getElementById("search_val").innerHTML = 'Input format is not recognized!'
+		}
+
+	});
+
+</script>
+
+</html>
+
+
+<script>/*
+$(document).ready(function() {
+// 从URL中获取搜索条件
+
+if (index_search) {
+	// 发送AJAX请求到PHP文件
+	$.ajax({
+		type: "POST",
+		url: "search.php",
+		data: { index_search: index_search },
+		dataType: "json",
+		success: function(data) {
+			// 处理后端返回的数据并显示在页面上
+			if (data.length > 0) {
+				console.log(data);
+			} else {
+				$("#searchResultsList").html("没有找到匹配的数据");
+			}
+		}
+	});
+}
+});*/
+</script>

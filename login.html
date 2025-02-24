@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodCircR</title>
+    <!-- 不联网版本 -->
+    <!-- 引入elementui样式 -->
+    <link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
+    <!-- 加载本页面css样式 -->
+    <link rel="stylesheet" type="text/css" href="css/login.css" />
+    <link rel="icon" href="images/1_1.png" type="image/x-icon">
+    <script src="js/vue.js"></script>
+    <script src="js/elementui.js"></script>
+    <script src="js/axios.min.js"></script>
+    <style>
+        /* 自定义样式让 "Forget password?" 文字显示在右下角 */
+        .forget-password-link {
+            display: block;
+            text-align: right;
+            margin-top: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #B94A4A;
+            /* 可调整颜色 */
+            text-decoration: underline;
+        }
+
+        .el-form-item__content {
+            line-height: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" :class="{ loaded: isLoaded }">
+        <div class="container">
+            <div class="header">
+                <div class="logo">
+                    <img src="images/1_1.png" alt="logo">
+                </div>
+                <div class="title">
+                    <h1>BloodCircR</h1>
+                </div>
+            </div>
+            <div class="box">
+                <div v-if="showLoginForm" class="inner_box">
+                    <div class="box_main_container">
+                        <div class="box_main">
+                            <el-form ref="form_login" :model="form_login" :rules="rules_login" label-position="top">
+                                <!-- 登录表单内容 -->
+                                <el-form-item label="Email:" prop="email_login">
+                                    <el-input v-model="form_login.email_login"></el-input>
+                                </el-form-item>
+                                <el-form-item label="Password:" prop="password_login">
+                                    <el-input type="password" v-model="form_login.password_login"></el-input>
+                                    <!-- 右下方的 "Forget password?" 链接 -->
+                                    <span class="forget-password-link" @click="openDialog">Forget password?</span>
+                                </el-form-item>
+                                <el-form-item label="Captcha:" prop="captcha">
+                                    <el-input v-model="form_login.captcha"></el-input>
+                                    <canvas id="captchaCanvas" @click="drawCaptcha" width="120" height="30"
+                                        style="margin-top: 10px; width: 50%;"></canvas>
+                                </el-form-item>
+                            </el-form>
+                        </div>
+                    </div>
+                </div>
+                <div v-else class="inner_box">
+                    <div class="box_title">
+
+                    </div>
+                    <div class="box_main_container">
+                        <div class="box_main">
+                            <el-form ref="form_reg" :model="form_reg" :rules="rules_reg" label-position="top">
+                                <!-- 注册表单内容 -->
+                                <el-form-item label="Email:" prop="email_reg">
+                                    <el-input v-model="form_reg.email_reg"></el-input>
+                                </el-form-item>
+                                <el-form-item label="Password:" prop="password_reg">
+                                    <el-input type="password" v-model="form_reg.password_reg"></el-input>
+                                </el-form-item>
+                                <el-form-item label="Password Confirm:" prop="confirmPassword">
+                                    <el-input type="password" v-model="form_reg.confirmPassword"></el-input>
+                                </el-form-item>
+                                <el-form-item label="Verification Code:" prop="code">
+                                    <el-input v-model="form_reg.code" class="code-input">
+                                        <!-- 右侧的 "Get Code" 按钮 -->
+                                        <template slot="append">
+                                            <el-button :disabled="isButtonDisabled" @click="getCode(1)" size="small">{{
+                                                buttonText
+                                                }}</el-button>
+                                        </template>
+                                    </el-input>
+                                </el-form-item>
+                            </el-form>
+                        </div>
+                    </div>
+                </div>
+                <div style="padding-bottom: 20px;">
+                    <el-button type="info" @click="toggleForm">{{ showLoginForm ? 'Do not have an account? Sign up' :
+                        'Already have an account? Log in' }}</el-button>
+                    <el-button type="primary" @click="submitForm">{{btnName}}</el-button>
+                </div>
+
+
+                <!-- 弹出的修改密码对话框 -->
+                <el-dialog title="Reset Password" :visible.sync="dialogVisible" width="30%">
+                    <el-form ref="form_reset" :model="form_reset" :rules="rules_reset" label-position="top">
+                        <el-form-item label="Email:" prop="email_reset">
+                            <el-input v-model="form_reset.email_reset"></el-input>
+                        </el-form-item>
+                        <el-form-item label="New Password:" prop="new_password">
+                            <el-input type="password" v-model="form_reset.new_password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Confirm Password:" prop="confirm_password">
+                            <el-input type="password" v-model="form_reset.confirm_password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Verification Code:" prop="code">
+                            <el-input v-model="form_reset.code" class="code-input">
+                                <!-- 右侧的 "Get Code" 按钮 -->
+                                <template slot="append">
+                                    <el-button :disabled="isButtonDisabled" @click="getCode(2)" size="small">{{
+                                        buttonText
+                                        }}</el-button>
+                                </template>
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @click="dialogVisible = false">Cancel</el-button>
+                        <el-button type="primary" @click="submitReset">Submit</el-button>
+                    </span>
+                </el-dialog>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+<!-- vue相关js -->
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                form_reg: {
+                    email_reg: '',
+                    password_reg: '',
+                    confirmPassword: '',
+                    code: ''
+                },
+                form_login: {
+                    email_login: '',
+                    password_login: '',
+                    captcha: '', // 用户输入的Captcha
+                },
+                form_reset: {
+                    email_reset: '',
+                    new_password: '',
+                    confirm_password: '',
+                    code: ''
+                },
+                verification_code: '123456', // 后端生成的验证码
+                isButtonDisabled: false,  // 按钮是否禁用
+                buttonText: 'Get Code',   // 按钮文字
+                timer: null,              // 用于倒计时的计时器
+                countdown: 60,             // 倒计时时间
+                dialogVisible: false, // 控制对话框显示
+                showLoginForm: true, // 控制显示登录表单还是注册表单
+                isLoaded: false,
+                captcha: '',
+                btnName: 'Log in',
+                rules_reg: {
+                    email_reg: [{ required: true, message: '', trigger: 'blur' }, { type: 'email', message: '', trigger: 'blur' }],
+                    password_reg: [{ required: true, message: '', trigger: 'blur' }],
+                    confirmPassword: [{ required: true, message: '', trigger: 'blur' }, { validator: this.validateConfirmPassword, trigger: 'blur' }],
+                    code: [{ required: true, message: '', trigger: 'blur' }]
+                },
+                rules_login: {
+                    email_login: [{ required: true, message: '', trigger: 'blur' }, { type: 'email', message: '', trigger: 'blur' }],
+                    password_login: [{ required: true, message: '', trigger: 'blur' }],
+                    captcha: [{ required: true, message: '', trigger: 'blur' }]
+                },
+                rules_reset: {
+                    // 重置密码表单的校验规则
+                    email_reset: [{ required: true, message: '', trigger: 'blur' }, { type: 'email', message: '', trigger: 'blur' }],
+                    new_password: [{ required: true, message: '', trigger: 'blur' }],
+                    confirm_password: [{ required: true, message: '', trigger: 'blur' }, { validator: this.validateResetPassword, trigger: 'blur' }],
+                    code: [{ required: true, message: '', trigger: 'blur' }]
+                }
+            }
+        },
+        mounted() {
+            this.isLoaded = true;
+            this.drawCaptcha();
+        },
+        methods: {
+            getCode(num) {
+                if (num === 1) {
+                    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+                    this.verification_code = verificationCode;
+                    console.log("verification_Code1_1:", this.verification_code);
+                    axios.post('./interface/get_code.php', {}, {
+                        params: {
+                            email: this.form_reg.email_reg,
+                            verification_code: this.verification_code,
+                            action: 'register'
+                        }
+                    })
+                        .then(response => {
+                            console.log(response);
+                            // 处理响应
+                            if (response.data.status === 'success') {
+                                this.$message.success(response.data.message);
+                                // 模拟发送验证码操作
+                                this.isButtonDisabled = true;    // 禁用按钮
+                                this.buttonText = `${this.countdown}s`;  // 显示倒计时
+
+                                // 启动倒计时
+                                this.timer = setInterval(() => {
+                                    this.countdown--;
+                                    if (this.countdown > 0) {
+                                        this.buttonText = `${this.countdown}s`;
+                                    } else {
+                                        this.resetButton();  // 倒计时结束后重置按钮
+                                    }
+                                }, 1000);
+                            } else {
+                                this.$message.error(response.data.message);
+                            }
+                        })
+                        .catch(error => {
+                            // 处理请求错误
+                            this.$message.error('An error occurred while processing the request.');
+                        });
+                } else if (num === 2) {
+                    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+                    this.verification_code = verificationCode;
+                    console.log("verification_Code1_2:", this.verification_code);
+                    axios.post('./interface/get_code.php', {}, {
+                        params: {
+                            email: this.form_reset.email_reset,
+                            verification_code: this.verification_code,
+                            action: 'reset_password'
+                        }
+                    })
+                        .then(response => {
+                            console.log(response);
+                            // 处理响应
+                            if (response.data.status === 'success') {
+                                this.$message.success(response.data.message);
+                                // 模拟发送验证码操作
+                                this.isButtonDisabled = true;    // 禁用按钮
+                                this.buttonText = `${this.countdown}s`;  // 显示倒计时
+
+                                // 启动倒计时
+                                this.timer = setInterval(() => {
+                                    this.countdown--;
+                                    if (this.countdown > 0) {
+                                        this.buttonText = `${this.countdown}s`;
+                                    } else {
+                                        this.resetButton();  // 倒计时结束后重置按钮
+                                    }
+                                }, 1000);
+                            } else {
+                                this.$message.error(response.data.message);
+                            }
+                        })
+                        .catch(error => {
+                            // 处理请求错误
+                            this.$message.error('An error occurred while processing the request.');
+                        });
+                }
+
+            },
+            resetButton() {
+                clearInterval(this.timer);  // 清除计时器
+                this.isButtonDisabled = false;  // 启用按钮
+                this.buttonText = 'Get Code';   // 恢复按钮文字
+                this.countdown = 60;            // 重置倒计时时间
+            },
+
+            openDialog() {
+                this.dialogVisible = true; // 打开对话框
+            },
+            submitReset() {
+                // 提交重置密码逻辑
+                this.$refs.form_reset.validate((valid) => {
+                    if (valid) {
+                        console.log("verificationCode1_2:", this.verification_code);
+                        console.log("verificationCode2:", this.form_reset.code);
+                        if (this.verification_code == this.form_reset.code) {
+                            // 执行重置密码操作
+                            axios.post('./interface/reset_password.php', {}, {
+                                params: {
+                                    email: this.form_reset.email_reset,
+                                    password: this.form_reset.new_password
+                                }
+                            })
+                                .then(response => {
+                                    console.log(response);
+                                    // 处理响应
+                                    if (response.data.status === 'success') {
+                                        this.dialogVisible = false;
+                                        this.$message.success(response.data.message);
+                                    } else {
+                                        this.$message.error(response.data.message);
+                                    }
+                                })
+                                .catch(error => {
+                                    // 处理请求错误
+                                    this.$message.error('An error occurred while processing the request.');
+                                });
+                        } else {
+                            this.$message.error('please enter the correct code');
+                        }
+                    } else {
+                        this.$message.error('please enter the correct email or password');
+                    }
+                });
+            },
+            generateRandomCode(length) {
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let result = '';
+                for (let i = 0; i < length; i++) {
+                    const randomIndex = Math.floor(Math.random() * characters.length);
+                    result += characters.charAt(randomIndex);
+                }
+                return result;
+            },
+            drawCaptcha() {
+                const canvas = document.getElementById('captchaCanvas');
+                const ctx = canvas.getContext('2d');
+
+                // 生成随机背景色
+                const randomColor = () => {
+                    const r = Math.floor(Math.random() * 256);
+                    const g = Math.floor(Math.random() * 256);
+                    const b = Math.floor(Math.random() * 256);
+                    return `rgb(${r},${g},${b})`;
+                };
+
+                ctx.fillStyle = randomColor();
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const code = this.generateRandomCode(6);
+                ctx.font = '20px Arial';
+                ctx.fillStyle = 'black';
+                ctx.fillText(code, 25, 25);
+                this.captcha = code;
+
+                // 可以将 code 保存到 localStorage 或者其他地方
+            },
+            toggleForm() {
+                // Reset the form validation state
+                if (this.showLoginForm) {
+                    this.$refs.form_login.resetFields();
+                } else {
+                    this.$refs.form_reg.resetFields();
+                }
+                // Toggle the form display
+                this.showLoginForm = !this.showLoginForm;
+                if (this.showLoginForm === true) {
+                    this.btnName = 'Log in';
+                    this.$nextTick(() => {
+                        this.drawCaptcha();
+                    });
+                } else {
+                    this.btnName = 'Sign up';
+                }
+            },
+            validateConfirmPassword(rule, value) {
+                if (value !== this.form_reg.password_reg) {
+                    return Promise.reject('The two passwords you entered were inconsistent');
+                } else {
+                    return Promise.resolve();
+                }
+            },
+            validateResetPassword(rule, value) {
+                if (value !== this.form_reset.new_password) {
+                    return Promise.reject('The two passwords you entered were inconsistent');
+                } else {
+                    return Promise.resolve();
+                }
+            },
+            // 提交表单的方法
+            submitForm() {
+                if (this.showLoginForm) {
+                    console.log("登录");
+                    // 提交登录表单
+                    this.$refs.form_login.validate((valid) => {
+                        if (valid) {
+                            // 登录表单验证通过，执行登录逻辑
+                            if (this.captcha.toLowerCase() === this.form_login.captcha.toLowerCase()) {
+                                axios.post('./interface/login.php', {},
+                                    {
+                                        params: {
+                                            email: this.form_login.email_login,
+                                            password: this.form_login.password_login,
+                                        }
+                                    })
+                                    .then(response => {
+                                        console.log(response);
+                                        // 处理响应
+                                        if (response.data.status === 'success') {
+                                            this.$message.success(response.data.message);
+                                            // 存储用户信息到 localStorage
+                                            localStorage.setItem('user', JSON.stringify({
+                                                email: this.form_login.email_login,
+                                            }));
+                                            window.location.href = 'manage_data.html';
+                                        } else {
+                                            this.$message.error(response.data.message);
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // 处理请求错误
+                                        this.$message.error('An error occurred while processing the request.');
+                                    });
+                            } else {
+                                this.$message.error('Please enter the correct captcha');
+                            }
+                        }else{
+                            this.$message.error('Please enter the correct email or password');
+                        }
+                    });
+                } else {
+                    // 提交注册表单
+                    console.log("注册");
+                    this.$refs.form_reg.validate((valid) => {
+                        console.log("verificationCode1_1:", this.verification_code);
+                        console.log("verificationCode1:", this.form_reg.code);
+                        if (valid && this.verification_code == this.form_reg.code) {
+                            axios.post('./interface/register.php', {}, {
+                                params: {
+                                    email: this.form_reg.email_reg,
+                                    password: this.form_reg.password_reg
+                                }
+                            })
+                                .then(response => {
+                                    console.log(response);
+                                    // 处理响应
+                                    if (response.data.status === 'success') {
+                                        this.$message.success('Sign up successful!');
+                                        this.showLoginForm = true;
+                                        this.btnName = 'Log in';
+                                        this.$nextTick(() => {
+                                            this.drawCaptcha();
+                                        });
+                                    } else if (response.data.message == 'Email already exists!') {
+                                        this.$message.error('Email already exists!');
+                                    } else if (response.data.message == 'Failed to send email.') {
+                                        this.$message.warning('Failed to send confirmation email.');
+                                    } else {
+                                        this.$message.error('Failed to register user.');
+                                    }
+                                })
+                                .catch(error => {
+                                    // 处理请求错误
+                                    this.$message.error('An error occurred while processing the request.');
+                                });
+                        }else {
+                            this.$message.error('please check your input in thr form.');
+                        }
+                    });
+                }
+            }
+        }
+    })
+</script>
+<script>
+    // 获取 header 元素
+    const header = document.querySelector('.header');
+
+    // 添加点击事件
+    header.addEventListener('click', function() {
+        // 跳转到指定的 URL
+        window.location.href = 'index.html'; // 替换为你的目标 URL
+    });
+</script>
+</html>

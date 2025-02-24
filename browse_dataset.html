@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Atlas</title>
+	<link rel="stylesheet" href="src/css/layui.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/browse.css">
+	<link rel="stylesheet" href="css/circRNA.css">
+	<link rel="stylesheet" href="css/dataset.css">
+	<link rel="icon" href="images/1_1.png" type="image/x-icon">
+</head>
+<body>
+<div class="header">
+	<div class="header_center">
+			<div style="height:100px; display:flex">
+				<div class="logo">
+					<a href="index.html"> </a>
+				</div>
+				<div class="nav">
+					<ul>
+						<li class="key1">
+							<a href="browse_circRNA.html">circRNA</a>
+						</li>
+						<li><a href="study_dataset.html">Data</a></li>
+						<li><a href="Expression">Expression</a></li>
+						<li><a href="differential_expression.html">Differential Expression</a></li>
+						<li><a href="#">Help</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="nav_right">
+				<span><a href="contact.html">Contact us</a></span>
+				<span class="separator">|</span>
+				<span><a href="login.html">Log in</a></span>
+			 	<a id="search_btn" href="#" style="padding-left: 10px;"><img src="images/search.svg"></a>
+			</div>
+		</div>
+</div>
+	<div class="line dataset_line">
+		Browse by dataset
+	</div>
+	<div class="dataset_select">
+		<p> <b>Dataset: </b>
+			<select id="Dataset_select">
+				<option value="">choose Dataset..</option>
+			</select>
+		</p>
+	</div>
+	<div class="box box1">
+		<h3>Samples</h3>
+		<div class="table_out">
+			<table class="layui-table" id="Samples"></table>
+		</div>
+	</div>
+	<div class="box box1">
+		<h3>State</h3>
+		<div class="table_out">
+			<div class="echarts_box" id="State_echarts">
+			</div>
+		</div>
+	</div>
+	<div class="box box1">
+		<h3>Exonic and Length distribution</h3>
+		<div class="table_out">
+			<div class="flexcenter">
+				<div style="width:729px;height:500px" id="Exonic_echarts1">
+				</div>
+				<div style="width:729px;height:500px;" id="Length_echarts2">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="box box1">
+		<h3>Expression proportion</h3>
+		<div class="table_out">
+			<div class="flexcenter">
+				<div style="width:486px;height:400px" id="proportion_echarts3">
+				</div>
+				<div style="width:486px;height:400px;" id="proportion_echarts4">
+				</div>
+				<div style="width:486px;height:400px;" id="proportion_echarts5">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="box box1" style="overflow:visible">
+		<h3>CircRNA</h3>
+		<div class="table_out" id="CircRNA_tableout" style="position:relative;overflow:visible">
+			<table class="layui-table" id="dataset_CircRNA">
+			</table>
+		</div>
+	</div>
+	
+	<style>
+	</style>
+	<div class="footer">
+		<div class="footer_center">
+			<div class="flogo">
+			</div>
+			<div class="footer_menu">
+				<div class="menulist">
+					<h3>Related Databases</h3>
+					<ul>
+						<li>circAtlas</li>
+						<li>circBase</li>
+						<li>circPedia</li>
+						<li>Transcirc</li>
+						<li>circBank</li>
+						<li>PltDB</li>
+						<li>exorBase</li>
+					</ul>
+				</div>
+				<div class="menulist">
+					<h3>Legal</h3>
+					<ul>
+						<li>Cited policy</li>
+						<li>Private policy</li>
+					</ul>
+				</div>
+				<div class="menulist">
+					<h3>About</h3>
+					<ul>
+						<li>Help</li>
+						<li>Download</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<p>Copyright © 2023 The Gu Lab. All Rights Reserved.</p>
+	</div>
+</body>
+	<script src="src/layui.js"></script>
+    <script src="js/echarts5.4.3.js"></script>
+	<script src="js/dataset.js"></script>
+	<script>
+	</script>
+</html>

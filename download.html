@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Atlas</title>
+	<link rel="stylesheet" href="src/css/layui.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/browse.css">
+	<link rel="icon" href="images/1_1.png" type="image/x-icon">
+</head>
+<body>
+	<div class="header">
+		<div class="header_center">
+			<div style="height:100px; display:flex">
+				<div class="logo">
+					<a href="index.html"> </a>
+				</div>
+				<div class="nav">
+					<ul>
+						<li class="key1">
+							<a href="browse_circRNA.html">circRNA</a>
+						</li>
+						<li><a href="study_dataset.html">Data</a></li>
+						<li><a href="expression.html">Expression</a></li>
+						<li><a href="differential_expression.html">Differential Expression</a></li>
+						<li><a href="#">Help</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="nav_right">
+				<span><a href="contact.html">Contact us</a></span>
+				<span class="separator">|</span>
+				<span><a href="login.html">Log in</a></span>
+			 	<a id="search_btn" href="#" style="padding-left: 10px;"><img src="images/search.svg"></a>
+			</div>
+		</div>
+	</div>
+	<div class="line">
+		Browse by
+	</div>
+	<div class="search_box">
+		<div class="browse_search1">
+			<form class="layui-form" id="search_form" lay-filter="search_form">
+				<input lay-ignore type="text" placeholder="Item value..." name="search_value" lay-filter="search_value">
+				<select lay-ignore required name="item_name" lay-filter="item_name">
+					<option value="">Please select...</option>
+					<option value="AtlasID">AtlasID</option>
+					<option value="chr">chr</option>
+					<option value="circRNA_start">circRNA_start</option>
+					<option value="circRNA_end">circRNA_end</option>
+					<option value="circRNA_type">circRNA_type</option>
+					<option value="host_gene">host_gene</option>
+					<option value="ensembl_id">ensembl_id</option>
+				</select>
+				<button lay-ignore lay-submit lay-filter="search_submit" id="search_submit"></button>
+			</form>
+		</div>
+	</div>
+	<div class="browse1">
+		<table class="layui-table" id="demo">
+		</table>
+	</div>
+	<div class="footer">
+		<div class="footer_center">
+			<div class="flogo">
+			</div>
+			<div class="footer_menu">
+				<div class="menulist">
+					<h3>Related Databases</h3>
+					<ul>
+						<li>circAtlas</li>
+						<li>circBase</li>
+						<li>circPedia</li>
+						<li>Transcirc</li>
+						<li>circBank</li>
+						<li>PltDB</li>
+						<li>exorBase</li>
+					</ul>
+				</div>
+				<div class="menulist">
+					<h3>Legal</h3>
+					<ul>
+						<li>Cited policy</li>
+						<li>Private policy</li>
+					</ul>
+				</div>
+				<div class="menulist">
+					<h3>About</h3>
+					<ul>
+						<li>Help</li>
+						<li>Download</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<p>Copyright © 2023 The Gu Lab. All Rights Reserved.</p>
+	</div>
+</body>
+	<script src="src/layui.js"></script>
+	<script>
+	layui.use(['table','form'], function(){
+	  var table = layui.table,form = layui.form;
+	  
+	  //第一个实例
+		var cirRNAs = table.render({
+			elem: '#demo'
+			,page: true
+			,width:1500
+			,url: './interface/circRNA_search_API.php'
+			,page: true //开启分页
+			,id : 'cirRNAs'
+			,cols: [[ //表头
+			  {field: 'AtlasID', title: 'AtlasID'}
+			  ,{field: 'chr', title: 'chr', sort: true}
+			  ,{field: 'circRNA_start', title: 'circRNA_start', sort: true}
+			  ,{field: 'circRNA_end', title: 'circRNA_end'} 
+			  ,{field: 'circRNA_type', title: 'circRNA_type'}
+			  ,{field: 'host_gene', title: 'host_gene', sort: true}
+			  ,{field: 'ensembl_id', title: 'ensembl_id', sort: true}
+			]]
+		});
+		var data1 = form.val("search_form");
+		form.on('submit(search_submit)', function(data){
+			data1 = form.val("search_form");
+			var obj1 = {search_column: data1['item_name'], search_value:data1['search_value']};
+			console.log(obj1)
+			cirRNAs.reload({
+				  url : './interface/circRNA_search_API.php'
+				  ,where: obj1
+				  ,page: {
+					curr: 1 //重新从第 1 页开始
+				  }
+				});
+			return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+		});
+	});
+	
+	</script>
+</html>

@@ -1,0 +1,2100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>BloodCircR</title>
+	<link rel="stylesheet" href="src/css/layui.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/circRNA.css">
+	<link rel="icon" href="images/1_1.png" type="image/x-icon">
+	<!-- 引入elementui样式 -->
+	<link rel="stylesheet" type="text/css" href="./elementui/theme-chalk/index.css" />
+	<script src="js/vue.js"></script>
+	<script src="js/elementui.js"></script>
+	<!-- Include Axios from CDN -->
+	<script src="js/axios.min.js"></script>
+	<script src="js/header-component.js"></script>
+	<script src="js/footer-component.js"></script>
+	<!-- Include qs from CDN -->
+	<script src="js/qs.js"></script>
+	<!-- Embed the STRING's javascript -->
+	<script type="text/javascript" src="https://string-db.org/javascript/combined_embedded_network_v2.0.4.js"></script>
+
+	<style>
+		#app.loaded {
+			opacity: 1;
+			transition: opacity 0.5s ease-in-out;
+		}
+
+		#app:not(.loaded) {
+			opacity: 0;
+		}
+
+		/* 整体容器布局 */
+		.mycontainer {
+			display: flex;
+			justify-content: center;
+			align-items: flex-start;
+			/* height: 100vh; */
+			/* overflow: hidden; */
+			/* 隐藏子容器溢出部分 */
+		}
+
+		.mybox {
+			text-align: center;
+			width: 100%;
+		
+			/* 子容器的最大高度等于父容器的高度 */
+			overflow-y: auto;
+			/* 允许子容器在超过父容器高度时出现滚动条 */
+		}
+
+		.box_top {
+			width: 100%;
+			display: flex;
+			flex-wrap: nowrap;
+			align-items: end;
+			justify-content: space-between;
+		}
+
+		.box_image {
+			width: 650px;
+			height: 720px;
+		}
+
+		.enrichments {
+			width: 800px;
+		}
+
+		.box_main_container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			/* background-color: white; */
+		}
+
+		.box_main {
+			width: 100%;
+			text-align: left;
+			padding-bottom: 15px;
+			margin-left: 10px;
+			
+		}
+		/* 样式 */
+		.button-row {
+			display: flex;
+			justify-content: center;
+		}
+
+		.el-button {
+			background-color: #E6B7B7;
+			border-color: #E6B7B7;
+			color: white;
+				border: 1px solid #d6d6d6;
+		}
+		
+       .el-button:hover{
+		  background-color: #F7F7F7; /* 设置悬停时的背景色为紫色 */
+		  border-radius: 3px; /* 设置按钮四个角为圆角 */
+		  color:#B94A4A;
+		  	border: 1px solid #d6d6d6;
+	   }
+	   
+		.inputs {
+			display: flex;
+			flex-wrap: wrap;
+			padding: 0 10px;
+		}
+
+		.inputs>div {
+			flex: 0 0 calc(100% - 10px);
+			/* 占满整个宽度，减去内边距 */
+			margin: 5px;
+			/* 可以根据需要调整间距 */
+			text-align: left;
+			border: 1px solid #d6d6d6;
+			border-radius: 3px;
+			padding: 5px;
+			box-sizing: border-box;
+			/* 内边距和边框包含在宽度内 */
+		}
+
+		.input_container {
+			display: flex;
+			justify-content: space-between;
+			/* 左右对齐 */
+			align-items: center;
+			/* 垂直居中 */
+		}
+
+		.left-text {
+			flex: 1;
+			/* 左侧占据可用空间的比例 */
+			text-align: left;
+			/* 左对齐 */
+			padding-left: 15px;
+
+		}
+
+		.right-text {
+			flex: 5;
+			/* 右侧占据可用空间的比例 */
+			text-align: right;
+			/* 右对齐 */
+		}
+
+		.partners {
+			display: flex;
+			flex-wrap: wrap;
+			padding: 0 10px;
+			width: 100%;
+		}
+
+		.partner {
+			flex: 0 0 calc(100% - 10px);
+			/* 占满整个宽度，减去内边距 */
+			margin: 5px;
+			/* 可以根据需要调整间距 */
+			text-align: left;
+			/* border: 1px solid #d6d6d6;
+    border-radius: 3px;
+    padding: 10px; */
+			box-sizing: border-box;
+			/* 内边距和边框包含在宽度内 */
+			width: 100%;
+		}
+
+		.organisms {
+			padding: 0 10px;
+		}
+
+		.organism {
+			margin: 5px;
+			/* 可以根据需要调整间距 */
+			text-align: left;
+			border: 1px solid #d6d6d6;
+			border-radius: 3px;
+			padding: 5px;
+		}
+
+		/* 文字样式 */
+		.text_label {
+			color: rgb(64, 64, 64);
+			font-family: roboto, sans-serif;
+			font-size: 14px;
+			font-weight: 700;
+		}
+
+		.text_title {
+			color: rgb(64, 64, 64);
+			font-family: roboto, sans-serif;
+			font-size: 13px;
+			font-weight: 400;
+		}
+
+		.text_main {
+			color: rgb(128, 128, 128);
+			font-family: roboto, sans-serif;
+			font-size: 11.5px;
+			font-weight: 400;
+			font-style: italic;
+		}
+
+		.text_main .text_main_flex {
+			display: flex;
+			align-items: center;
+		}
+
+		.img_part {
+			padding: 5px 10px;
+		}
+
+		.itembox {
+			padding-top: 100px;
+			/* 100px是导航栏高度 */
+			margin-top: -100px;
+		}
+
+	.background {
+		background-image: url(../images/u666.png);
+		background-repeat: no-repeat;
+		background-size: cover;
+		width: 100%;
+		height: 500px;
+		min-width: 1500px;
+	}
+	.footer {
+		min-width: 1500px;
+	}
+	.footer .footer_center {
+		min-width: 1500px;
+	}
+
+.el-tabs__item{
+	font-size: 18px !important;
+	
+}
+	
+	</style>
+	
+	<style>
+		.image-with-text {
+			position: relative;
+		}
+
+
+.text-overlay {
+			position: absolute;
+			top: 15%;
+			left:15%;
+			right:15%;
+			bottom:15%;
+			
+			/* padding: 80px 20px; */
+			width: 70%;
+			height: 70%;
+		}
+
+.text-overlay .text {
+			font-size: 1.5vw;
+			font-weight: bold;
+			color: white !important;
+		}
+		/* 默认情况下，表格所有行的背景色为白色 */
+		.layui-table[lay-even] tbody tr {
+		    background-color: #ffffff !important;
+		}
+		
+		/* 当鼠标悬浮在任意一行时，该行的背景色变为特定颜色 */
+		.layui-table[lay-even] tbody tr:hover {
+		    background-color: #F7EFEF !important;
+		}
+
+
+
+	</style>
+<style>
+  .layui-table td {
+ white-space: normal !important;
+ /* 允许文字换行 */
+ word-wrap: break-word !important;
+ /* 长单词换行处理 */
+ overflow-wrap: break-word !important;
+ /* 处理其他换行情况 */
+ word-break: keep-all !important;
+ 
+ /* 保持单词完整，不随意断开 */
+  }
+</style>
+<style>
+	.el-tabs__item {
+  pointer-events: all; /* 允许整个标签接收点击事件 */
+}
+</style>
+<style>
+	body{
+		min-width: 1500px;
+		overflow: auto;
+	}
+</style>
+</head>
+
+<body>
+	<div id="app1" :class="{ loaded: isLoaded }">
+		<!-- 使用定义的 header 组件 -->
+		<app-header></app-header>
+		<div class="background" style="margin-top: 100px; margin-bottom: 0;">
+			<div class="image-with-text">
+				<div class="text-overlay">
+						<div style="display: flex;justify-content: center; flex-direction: column; height: 100%; ">
+							<div class="text" style="font-size: 7.5vw;text-align: center;font-family: Arial Rounded MT Bold;color:white;margin-top: 430px;">CIRCRNA DETAILS</div>
+							  
+				</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<div class="menu" style="margin-top: 30px;">
+		<div>
+			<a href="#box1">General infomation</a>
+			<a href="#box2">Structure</a>
+			<a href="#box4">CircRNA Aliases</a>
+			<a href="#box4_5">Supporting Evidence</a>
+			<div class="menu_1">
+				<a href="#box6">
+					Functions
+				</a>
+				<!-- <div class="menu_2">
+
+					<a href="#box6">RBP Binding</a>
+					<a href="#box7">miRNA Binding</a>
+					<a href="#box5_1">Regulatory network</a>
+					<a href="#box5">Protein-protein interaction network</a>
+
+				</div> -->
+			</div>
+			<a href="#box8">Expression</a>
+		</div>
+	</div>
+	<div class="box box1">
+		<!-- <a name="box1"></a> -->
+		<div id="box1" class="itembox"></div>
+		<h3><span>General infomation</span><i class="xiala"></i></h3>
+		<div class="table_out">
+			<table class="layui-table" style="width: 100%; table-layout: auto;" lay-even>
+				<tr>
+					<td width="30%" style="text-align: left;left; padding: 10px;"><b>BloodCircR ID</b></td>
+					<td id="BloodCircR_ID" style="text-align: left; padding: 10px;"></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>Uniform ID</b></td>
+					<td id="Uniform_ID" style="text-align: left; padding: 10px;"></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>BSJ ID</b></td>
+					<td id="BSJ_ID" style="text-align: left; padding: 10px;"></td>
+				</tr>
+			<tr>
+			    <td width="30%" style="text-align: left; padding: 10px; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; word-break: break-all;"><b>Isoform ID</b></td>
+			    <td  id="IsoformID" style="text-align: left; padding: 10px;  white-space: normal !important; word-wrap: break-word !important; overflow-wrap: break-word !important; word-break: break-all !important;max-width: 70%;"></td>
+			</tr>
+
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>Chr</b></td>
+					<td id="chr" style="text-align: left; padding: 10px;"></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>Strand</b></td>
+					<td id="Strand" style="text-align: left; padding: 10px;"></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>Start</b></td>
+					<td id="circRNA_start" style="text-align: left; padding: 10px;"></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>End</b></td>
+					<td id="circRNA_end" style="text-align: left; padding: 10px;"></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>Type</b></td>
+					<td id="circRNA_type" style="text-align: left; padding: 10px;"></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>Host gene</b></td>
+					<td id="Host_gene" style="text-align: left; padding: 10px;"></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>Ensembl ID</b></td>
+					<td id="Ensembl_ID" style="text-align: left; padding: 10px;"></td>
+				</tr>
+
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>Genomic length</b></td>
+					<td id="Genomic_length" style="text-align: left; padding: 10px;"></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>Spliced sequence length</b></td>
+					<td id="Spliced_sequence_length" style="text-align: left; padding: 10px;"></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>Isoform State</b></td>
+					<td id="IsoformState" style="text-align:left; padding: 10px;"></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>Source</b></td>
+					<td id="Source" style="text-align:left; padding: 10px;"></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;left; padding: 10px;"><b>Confidence</b></td>
+					<td id="ConfidenceRank" style="text-align: left; padding: 10px;"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<div class="box box2">
+		<!-- <a name="box2"></a> -->
+		<div id="box2" class="itembox"></div>
+		<h3>Structure<i class="xiala"></i></h3>
+		<div class="table_out">
+
+			<table class="layui-table">
+				<tr>
+					<td><b>Structure</b></td>
+					<td colspan="2" width="1350px">
+						<div class="echarts" id="StructureDom" style="width: 1380px;height:500px;"></div>
+						<div class="flexleft exonsbox" style="margin-left: 35px"></div>
+					</td>
+				</tr>
+				<tr>
+					<td><b>Sequence</b></td>
+					<td colspan="2">
+						<p style="text-align:left" id="Sequence_value"></p>
+					</td>
+				</tr>
+				<!--	<tr>
+                <td><b>ORF</b></td>
+                <td>
+                    <div class="flexcenter">
+                        <div class="flexcenter ORF_box">
+
+                        </div>
+                        <div class="ORF_INFO" id="ORF_INFO" style="margin-left: 20px">
+                            <p class="ORF_cont">
+                            </p>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><b>IRES</b></td>
+                <td class="flexcenter">
+                    <div class="flexcenter IRES_box">
+                    </div>
+                </td>
+            </tr>
+            -->
+				<!--
+    -->
+			</table>
+		</div>
+	</div>
+	<style>
+		.tooltip {
+			position: relative;
+			display: inline-block;
+		}
+
+		.tooltip .tooltiptext {
+			visibility: hidden;
+			width: 500px;
+			background-color: #cccccc;
+			color: #fff;
+			text-align: center;
+			border-radius: 6px;
+			padding: 5px 0;
+			position: absolute;
+			z-index: 1;
+			top: 100%;
+			left: 50%;
+			margin-left: -260px;
+			text-align: justify;
+			text-indent: 2em;
+		}
+
+		.tooltip:hover .tooltiptext {
+			visibility: visible;
+		}
+	</style>
+
+	<div class="box box4">
+		<!-- <a name="box4"></a> -->
+		<div id="box4" class="itembox"></div>
+		<h3><span>CircRNA Aliases</span><i class="xiala"></i></h3>
+		<div class="table_out">
+			<div class="flexcenter">
+				<table class="layui-table Alias_" lay-even>
+
+					<tr>
+						<td width="50%">
+							<div class="tooltip">
+								<a href="https://cosbi.ee.ncku.edu.tw/FL-circAS/circRNA_home/">
+									<img src="images/transcirc.png" alt="image">
+								</a>
+								
+							</div>
+						</td>
+						<td class="align_left" id="FLcircAS">-</td>
+					</tr>
+					<tr>
+						<td width="50%">
+							<div class="tooltip">
+								<a href="https://www.biosino.org/transcirc/">
+									<img src="images/logo-small.png" alt="image">
+								</a>
+							
+							</div>
+						</td>
+						<td class="align_left" id="Transcirc">-</td>
+					</tr>
+					<tr>
+						<td width="50%">
+							<div class="tooltip">
+								<a href="https://ngdc.cncb.ac.cn/circatlas/index.php">
+									<img src="images/circatlas.png">
+								</a>
+								
+							</div>
+						</td>
+						<td class="align_left" id="circAtlas">-</td>
+					</tr>
+					<tr>
+						<td width="50%">
+							<div class="tooltip">
+								<a href="http://www.circbase.org/">
+									<img src="images/circbase.png">
+								</a>
+							
+							</div>
+						</td>
+						<td class="align_left" id="circBase">-</td>
+					</tr>
+
+					<tr>
+						<td width="50%">
+							<div class="tooltip">
+								<a href="https://www.pltdb-hust.com/#/home">
+									<img src="images/pltdb.png">
+								</a>
+								
+							</div>
+						</td>
+						<td class="align_left" id="PltDB">-</td>
+
+					</tr>
+
+
+
+
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!--
+<div class="box box3">
+    <a name="box3"></a>
+    <h3>Detected samples<i class="xiala"></i></h3>
+    <div class="table_out">
+        <div class="flexcenter">
+    <div id="Detected_samples_echarts" style="width: 1500px;height:300px;"></div>
+</div>
+    </div>
+</div>
+-->
+	<!--
+<div class="box box5">
+    <a name="box5"></a>
+    <h3>Transtable evidence<i class="xiala"></i></h3>
+    <div class="table_out">
+        <div class="flexcenter">
+            <table class="layui-table" id="evidence">
+            </table>
+            <div class="echarts_box" id="evidence_echarts">
+            </div>
+        </div>
+    </div>
+</div>
+-->
+	<style>
+		.flexcenter {
+			display: flex;
+			/* 使用弹性盒子布局 */
+			align-items: flex-start;
+			/* 使子项在交叉轴的起始位置对齐，即顶部 */
+		}
+
+		/* 如果图片本身带有内边距或外边距，可能需要调整 */
+		#support_reads_img {
+			max-width: 100%;
+			/* 使得图片最大宽度为其父容器宽度，这样图片不会超出显示 */
+			height: auto;
+			/* 保持图片的比例 */
+		}
+	</style>
+
+	<div class="box box4_5">
+		<!-- <a name="box4_5"></a> -->
+		<div id="box4_5" class="itembox"></div>
+		<h3>Supporting Evidence<i class="xiala"></i></h3>
+		<div class="table_out">
+			<div class="dataset_select">
+				<p> <b>Dataset: </b>
+					<select id="Dataset_select">
+
+					</select>
+				</p>
+			</div>
+			<div class="flexcenter">
+				<div style="width: 50%; display: flex; align-items: flex-start;">
+					<table class="layui-table" id="support_reads_table" style="margin-top: 70px;"></table>
+				</div>
+				<div
+					style="width: calc(50% - 40px); text-align: center; position: relative; margin-left:20px;margin-right: 20px;">
+					<div style="display: inline-block; position: relative;">
+						<img id="support_reads_img" src=""
+							style="border: 2px solid #eee; padding: 10px; ">
+						<div id="support_reads_img_title"
+							style="color: #333333; font-size:20px; text-align: center; position: absolute; top: -30px; left: 0; right: 0;">
+							<!-- 上方文字 -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+<div id="app" style="width: 1500px;margin: 0 auto;" :class="{ loaded: isLoaded }">
+	<div class="box box6">
+		<div id="box6" class="itembox"></div>
+		<h3>Functions<i class="xiala"></i></h3>
+		<el-tabs v-model="activeName" stretch=true @tab-click="handleTabClick" style="border: 2px solid #E6B7B7;
+    border-top: 0px;
+		padding-top:10px">
+			<el-tab-pane label="RBP Binding" name="first" class="custom-tab">
+					<div id="box6"></div>
+					<div class="table_out" style="border: none;">
+						<div class="flexcenter">
+							<table class="layui-table" id="RBP">
+							</table>
+							<div class="echarts_box" id="RBP_echarts">
+							</div>
+						</div>
+					</div>
+				</el-tab-pane>
+				<el-tab-pane label="miRNA Binding" name="second">
+						<div id="box7"></div>
+						<div class="table_out" style="border: none;">
+							<table class="layui-table" id="miRNA">
+							</table>
+							<br>
+							<div class="tabbtnbox_miRNA">
+								<button id="tabbtn_miRNA_1" class="btn act">8mer-1a</button>
+								<button id="tabbtn_miRNA_2" class="btn">7mer-m8</button>
+								<button id="tabbtn_miRNA_3" class="btn">7mer-1a</button>
+								<button id="tabbtn_miRNA_4" class="btn">6mer</button>
+				
+							</div>
+							<div class="flexcenter tabbox_miRNA" id="tabbox_miRNA_1">
+								<div style="width:1200px;height:500px" id="miRNA_1_echarts">
+								</div>
+							</div>
+							<div class="flexcenter tabbox_miRNA" id="tabbox_miRNA_2">
+								<div style="width:1200px;height:500px" id="miRNA_2_echarts">
+								</div>
+							</div>
+							<div class="flexcenter tabbox_miRNA" id="tabbox_miRNA_3">
+								<div style="width:1200px;height:500px" id="miRNA_3_echarts">
+								</div>
+							</div>
+							<div class="flexcenter tabbox_miRNA" id="tabbox_miRNA_4">
+								<div style="width:1200px;height:500px" id="miRNA_4_echarts">
+								</div>
+							</div>
+						</div>
+				</el-tab-pane>
+				<el-tab-pane label="Regulatory network" name="third">
+						<div id="box5_1"></div>
+						<div class="table_out" style="border: none;">
+							<div class="flexcenter">
+								<div>
+									<div style="width: 600px; height: 600px; float: left;margin-right: 40px;margin-top: 10px;" id="rgnetwork_echarts">
+										<!-- 这里是您的 Echarts 图表内容 -->
+									</div>
+									<div id="container1" style="position: relative; float: left; width: 600px; height: 500px;">
+										<div id="centeredText1"
+											style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;font-size: 25px; color: #999;">
+											Sorry for your request, no data available！
+										</div>
+									</div>
+				
+									<div style="width: 800px; height: 700px; float: right;">
+										<div>
+											<div style="padding-bottom: 10px;">
+											</div>
+											<el-tabs v-model="activeTab2" type="card">
+												<el-tab-pane name="1">
+													<template #label>
+														<span class="custom-tabs-label" @click="enrichment_chart()">
+															Biological Process
+														</span>
+													</template>
+												</el-tab-pane>
+												<el-tab-pane name="2">
+													<template #label>
+														<span class="custom-tabs-label" @click="enrichment_chart()">
+															Cellular Component
+														</span>
+													</template>
+												</el-tab-pane>
+												<el-tab-pane name="3">
+													<template #label>
+														<span class="custom-tabs-label" @click="enrichment_chart()">
+															Molecular Function
+														</span>
+													</template>
+												</el-tab-pane>
+												<el-tab-pane name="4">
+													<template #label>
+														<span class="custom-tabs-label" @click="enrichment_chart()">
+															KEGG pathways
+														</span>
+													</template>
+												</el-tab-pane>
+												<el-tab-pane name="5">
+													<template #label>
+														<span class="custom-tabs-label" @click="enrichment_chart()">
+															Reactome
+														</span>
+													</template>
+												</el-tab-pane>
+											</el-tabs>
+											<div id="rgenrichment_echarts" style="height: 600px;width:750px; padding-top:10px;margin-left: 40px;">
+											</div>
+											<div id="container2" style="position: relative; width: 800px; height: 600px;">
+												<div id="centeredText2"
+													style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;font-size: 25px; color: #999;">
+													Sorry for your request, no data available！
+												</div>
+											</div>
+											<div style="text-align: center;">
+												<el-button style="margin-top:20px !important; margin-left:40px;" @click="export_enrichment()">Export
+													Data</el-button>
+											</div>
+				
+										</div>
+									</div>
+								</div>
+							</div>
+				
+							<button id="exportChart" style="">Export Image</button>
+							<button id="exportData" style="">Export Data</button>
+						</div>
+					</el-tab-pane>
+				<el-tab-pane label="Protein-protein interaction network" name="fourth">
+						<div id="box5"></div>
+						<div class="table_out" style="border: none;">
+							<div class="flexcenter">
+								<div class="echarts_box" id="Co_expression_echarts" style="height:0px">
+								</div>
+								<div>
+									<div class="mycontainer">
+										<div class="mybox">
+											<div class="box_main_container">
+												<div class="box_main">
+													<div class="box_top">
+														<div class="box_image" v-loading="loading" element-loading-text="Loading"
+															element-loading-spinner="el-icon-loading"
+															element-loading-background="rgba(255, 255, 255, 0.8)"
+															style="text-align: center;">
+															<div id="stringEmbedded"></div>
+															<div id="container"
+																style="position: relative; width: 600px; height: 600px;">
+																<div id="centeredText"
+																	style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;font-size: 25px; color: #999;">
+																	Sorry for your request, no data available！
+																</div>
+															</div>
+															<div class="box_btns" v-loading="loadingPic"
+																element-loading-text="Exporting"
+																element-loading-spinner="el-icon-loading"
+																element-loading-background="rgba(0, 0, 0, 0.8)" >
+																<div class="button-row" style="margin-top:50px; padding: 20px 0;">
+																	<el-button @click="getPartners()">Refresh View</el-button>
+																	<el-button @click="export_img()">Export Image</el-button>
+																	<el-button @click="export_partner()">Export Data</el-button>
+																	<!-- <el-button @click="moreTableData()">More</el-button> -->
+																	<!-- <el-button @click="lessTableData()">Less</el-button> -->
+																</div>
+															</div>
+														</div>
+														<div class="enrichments" v-loading="loading1" element-loading-text="Loading"
+															element-loading-spinner="el-icon-loading"
+															element-loading-background="rgba(255, 255, 255, 0.8)"
+															style="text-align: center;">
+															<div>
+																
+																<el-tabs v-model="activeTab" type="card">
+																	<el-tab-pane name="1">
+																		<template #label>
+																			<span class="custom-tabs-label" @click="bubble_chart()">
+																				Biological Process
+																			</span>
+																		</template>
+																	</el-tab-pane>
+																	<el-tab-pane name="2">
+																		<template #label>
+																			<span class="custom-tabs-label" @click="bubble_chart()">
+																				Cellular Component
+																			</span>
+																		</template>
+																	</el-tab-pane>
+																	<el-tab-pane name="3">
+																		<template #label>
+																			<span class="custom-tabs-label" @click="bubble_chart()">
+																				Molecular Function
+																			</span>
+																		</template>
+																	</el-tab-pane>
+																	<el-tab-pane name="4">
+																		<template #label>
+																			<span class="custom-tabs-label" @click="bubble_chart()">
+																				KEGG pathways
+																			</span>
+																		</template>
+																	</el-tab-pane>
+																	<el-tab-pane name="5">
+																		<template #label>
+																			<span class="custom-tabs-label" @click="bubble_chart()">
+																				Reactome
+																			</span>
+																		</template>
+																	</el-tab-pane>
+																</el-tabs>
+																<div id="Chart" style="height:600px; width:750px; margin-left: 40px;">
+																</div>
+																<div id="container3"
+																	style="position: relative; width: 800px; height: 600px;">
+																	<div id="centeredText3"
+																		style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;font-size: 25px; color: #999;">
+																		Sorry for your request, no data available！
+																	</div>
+																</div>
+																<el-button style="margin-top:10px;margin-left:40px; " @click="export_enrichment()">Export
+																	Data</el-button>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+				</el-tab-pane>
+		</el-tabs>
+	</div>
+	
+</div>
+
+
+
+
+	<div class="box box7">
+		<!-- <a name="box8"></a> -->
+		<div id="box8" class="itembox"></div>
+		<h3><span>Expression</span><i class="xiala"></i></h3>
+		<div class="table_out">
+			<div class="tabbtnbox">
+				<button id="tabbtn1" class="btn act">circRNA Expression</button>
+				<button id="tabbtn2" class="btn ">Host gene Expression</button>
+				<button id="tabbtn3" class="btn ">Junction Ratio </button>
+			</div>
+
+			<div class="flexcenter tabbox" id="tabbox1">
+				<div style="width:70%;height:500px; align-self: flex-start;margin-left: -50px;" id="Expression_echarts">
+				</div>
+				<div class="layui-table-container" style="align-self: flex-start; margin-top: 50px;width:30%;">
+					<table class="layui-table" id="expression"></table>
+				</div>
+			</div>
+
+			<div class="flexcenter tabbox" id="tabbox4">
+				<div style="width:70%;height:500px" id="Expression_echarts1">
+				</div>
+				<div style="width:70%;height:500px;display:none;" id="Expression_echarts2">
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="app3">
+		<!-- 滚动到顶部的按钮 -->
+		<el-backtop visibility-height="100" :bottom="20" :right="10"></el-backtop>
+		<!-- 使用定义的 footer 组件 -->
+		<app-footer></app-footer>
+	</div>
+
+</body>
+<script src="src/layui.js"></script>
+<script src="js/echarts5.4.3.js"></script>
+<script src="js/circRNA.js"></script>
+<!-- vue相关js -->
+<script>
+	new Vue({
+		el: '#app',
+		data() {
+			return {
+				activeName: 'first',
+
+				enrichmentData1: [], //富集
+				rgenrichment_echarts: null, // 富集
+				// 初始化时设置默认选中的标签页
+				activeTab2: '1', //富集
+				select2: 0,	//富集
+				isLoaded: false,
+				options: [{
+					value: 0,
+					label: 'Top 10'
+				}],
+
+
+				stringApiUrl: "https://string-db.org/api",
+				outputFormat: "json",
+				outputFormat1: "tsv",
+				method: "get_string_ids",
+				method1: "enrichment",
+				imgSrc: '',
+				jsonDataArray: [],
+				isLoaded: false,
+				myGenes: [],
+				partnerGenes: [],
+				view_num: 0,
+				svgHeight: 0,
+				svgWidth: 0,
+				loading: false,     // 照片加载
+				loading1: false,     // 照片加载
+
+				loadingPic: false,  // 导出图片加载
+				loadingTable: false,
+				limit: 10,            // 前limit个相关基因
+				partnerData: [],
+				mergeStartIndex: 0, // letiable to store the start index of merging
+				mergedRows: [], // Array to store indices of merged rows
+				enrichmentData: [],
+				chart: null,
+
+				// 初始化时设置默认选中的标签页
+				activeTab: '1',
+				select1: 0,
+				options: [{
+					value: 0,
+					label: 'Top 10'
+				}],
+			}
+		},
+		mounted() {
+			// 获取浏览器地址栏中的参数
+			const urlParams = new URLSearchParams(window.location.search);
+
+			const BloodCircRID = urlParams.get('BloodCircR_ID');
+			this.isLoaded = true;
+			document.getElementById('container1').style.display = 'none';
+			document.getElementById('centeredText1').style.display = 'none';
+			document.getElementById('rgenrichment_echarts').style.display = 'block';
+			document.getElementById('container2').style.display = 'none';
+			document.getElementById('centeredText2').style.display = 'none';
+			// Fetch the data from the PHP script
+			const self = this;
+			fetch('interface/test1.php?BloodCircR_ID=' + BloodCircR_ID)
+				.then(function (response) {
+					if (!response.ok) {
+						document.getElementById('rgenrichment_echarts').style.display = 'none';
+						document.getElementById('container2').style.display = 'block';
+						document.getElementById('centeredText2').style.display = 'block';
+						throw new Error('Network response was not ok ' + response.statusText);
+					}
+					return response.json();
+				})
+				.then(function (data) {
+					// Ensure data is received correctly
+					console.log('Received data:', data);
+
+					if (!data || !data.enrichments) {
+						throw new Error('Received data format is invalid');
+					}
+
+					self.enrichmentData1 = data.enrichments;
+					document.getElementById('rgenrichment_echarts').style.display = 'block';
+					document.getElementById('container2').style.display = 'none';
+					document.getElementById('centeredText2').style.display = 'none';
+					//富集数据图初始化
+					self.enrichment_chart();
+				}).catch(function (error) {
+					document.getElementById('rgenrichment_echarts').style.display = 'none';
+					document.getElementById('container2').style.display = 'block';
+					document.getElementById('centeredText2').style.display = 'block';
+					console.error('Error fetching or processing data: ', error);
+				});
+
+			// // 获取浏览器地址栏中的参数
+			// const urlParams = new URLSearchParams(window.location.search);
+
+			// 提取"BloodCircR_ID"参数的值
+			// const BloodCircRID = urlParams.get('BloodCircR_ID');
+			// const BloodCircRID = 'circAC008877.4_0034';
+
+			// 如果参数存在，则进行进一步处理
+			if (BloodCircRID) {
+				// 提取"circUBXN4_0034"
+				let match = BloodCircRID.match(/circ(\w+(?:\.\w+)?)_\d+/);
+				if (match) {
+					let result = match[1]; // 提取第一个匹配到的子串
+					this.myGenes.push(result);
+					console.log(result); // 输出 "UBXN4"
+				}
+			} else {
+				console.log("BloodCircR_ID 参数不存在");
+			}
+
+			// 获取图像及气泡图
+			this.getPartners();
+
+			// 获取input的基因数据
+			const stringApiUrl = this.stringApiUrl;
+			const outputFormat = this.outputFormat;
+			const method = this.method;
+			const params = {
+				identifiers: this.myGenes.join("\r\n"),
+				species: 9606,
+				limit: 1,
+				echo_query: 1,
+				caller_identity: "www.awesome_app.org"
+			};
+			const requestUrl = `${stringApiUrl}/${outputFormat}/${method}`;
+			let qs = Qs;
+
+			const queryString = Qs.stringify(params);
+			const requestUrlWithParams = `${requestUrl}?${queryString}`;
+
+			axios({
+				method: 'get',
+				url: requestUrlWithParams,
+			}).then(response => {
+				this.jsonDataArray = response.data;
+			}).catch(error => {
+				console.error('Error fetching json:', "Sorry, STRING did not find any matches for your input.<br>&nbsp;<br/>Generally, STRING understands a number of different names/symbols for proteins.<br/>Here is a selection of typical names: 'YEL036C', 'TRPB_ECOLI', 'trpB', 'ENSP00000249373', 'BRCA1', 'CG11561', 'daf-3', ...<br>&nbsp;<br/>Try to identify your proteins with different names/symbols that you might know. Alternatively, you can provide the raw amino-acid sequences of your proteins as input, and STRING will try to identify these via similarity searches.");
+			});
+
+			// 加载
+			document.getElementById('container').style.display = 'none';
+			document.getElementById('centeredText').style.display = 'none';
+			document.getElementById('Chart').style.display = 'block';
+			document.getElementById('container3').style.display = 'none';
+			document.getElementById('centeredText3').style.display = 'none';
+
+			this.isLoaded = true;
+			this.loading = true;
+			this.loading1 = true;
+			this.loadingTable = true;
+
+			// 监视
+			this.startObserving();
+
+		},
+		methods: {
+			export_enrichment() {
+				console.log(this.enrichmentData1);
+				const jsonArray = this.enrichmentData1;
+				const csvRows = jsonArray.map(item => {
+					// 假设每个对象都有一个 'id' 和 'height' 属性
+					const tsvValues = [item.BloodCircR_ID, item.name, item.description, item.gene_ratios, item.category, item.p_value, item.p_adjust, item.qvalue, item.geneID, item.geneSymbol];
+					// 将对象中的每个属性转换为TSV格式
+					return tsvValues.join('\t');
+				});
+
+				// 合并所有行成一个字符串，并添加必要的TSV头部信息
+				const csvContent = `BloodCircR_ID\tname\tdescription\tgene_ratio\tcategory\tp_value\tp.adjust\tqvalue\tgeneID\tgeneSymbol\n${csvRows.join('\n')}`;
+				const blob = new Blob([csvContent], { type: 'text/tab-separated-values;charset=utf-8;' });
+				const downloadUrl = URL.createObjectURL(blob);
+				const link = document.createElement('a');
+				link.href = downloadUrl;
+				link.download = 'enrichment.tsv';
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+				URL.revokeObjectURL(downloadUrl);
+
+			},
+			enrichment_chart() {
+
+				console.log(this.enrichmentData1);
+				console.log(this.activeTab2);
+				console.log(this.select2);
+				let enrichmentData = [];
+
+				document.getElementById('rgenrichment_echarts').style.display = 'block';
+
+				setTimeout(() => {
+					// 第一个筛选
+					if (this.activeTab2 == 1) {
+						enrichmentData = this.enrichmentData1.filter(item => item.category === 'Biological Process');
+					} else if (this.activeTab2 == 2) {
+						enrichmentData = this.enrichmentData1.filter(item => item.category === 'Cellular Component');
+					} else if (this.activeTab2 == 3) {
+						enrichmentData = this.enrichmentData1.filter(item => item.category === 'Molecular Function');
+					} else if (this.activeTab2 == 4) {
+						enrichmentData = this.enrichmentData1.filter(item => item.category === 'KEGG');
+					} else if (this.activeTab2 == 5) {
+						enrichmentData = this.enrichmentData1.filter(item => item.category === 'Reactome');
+					}
+
+					// 第二个筛选
+					if (this.select2 == 0) {
+						enrichmentData = enrichmentData.sort((a, b) => a.p_value - b.p_value);;
+						const numToTake = Math.min(enrichmentData.length, 10);
+						enrichmentData = enrichmentData.slice(0, numToTake);
+					} else {
+						enrichmentData = enrichmentData.filter(item => item.p_value < this.select2);
+					}
+					enrichmentData = enrichmentData.sort((b, a) => (b.number_of_genes / b.number_of_genes_in_background) - (a.number_of_genes / a.number_of_genes_in_background)); // 降序排序
+
+					if (enrichmentData.length === 0) {
+						this.$message.warning('Not available！');
+						document.getElementById('rgenrichment_echarts').style.display = 'none';
+						document.getElementById('container2').style.display = 'block';
+						document.getElementById('centeredText2').style.display = 'block';
+
+					} else {
+						document.getElementById('rgenrichment_echarts').style.display = 'block';
+						document.getElementById('container2').style.display = 'none';
+						document.getElementById('centeredText2').style.display = 'none';
+						// 提取 y 轴标签、气泡颜色、气泡大小和横坐标数据
+						const bubbleData = enrichmentData.map(item => item.description);
+						const yAxisData = enrichmentData.map(item => item.name);
+						const bubbleColor = enrichmentData.map(item => item.p_value);
+						const bubbleSize = enrichmentData.map(item => item.number_of_genes);
+						const totalSize = enrichmentData.map(item => item.number_of_genes_in_background);
+						const xAxisData = enrichmentData.map(item => item.number_of_genes / item.number_of_genes_in_background);
+
+						// 根据 p_value 值设置 visualMap 的 min 和 max
+						const visualMapMin = Math.min(...bubbleColor);
+						const visualMapMax = Math.max(...bubbleColor);
+
+						// 根据 p_value 值设置 visualMap 的 min 和 max
+						const visualMapSMin = Math.min(...bubbleSize);
+						const visualMapSMax = Math.max(...bubbleSize);
+						let myChart = echarts.init(document.getElementById('rgenrichment_echarts'));
+						// 配置项
+						let option = {
+							graphic: {
+								elements: [
+									{
+										type: 'text',
+										right: 10, // 设置visualMap水平居中
+										bottom: 220, // 设置visualMap距离顶部的距离为20
+										style: {
+											text: 'P-Value',  // 文本内容：这里是视觉映射的标题
+											font: '16px Microsoft YaHei',  // 字体样式
+											fill: '#333333',  // 文本颜色
+										},
+										// 可以添加其他属性来进一步定位文本，例如 z: 100, draggable: true 等
+									},
+
+								]
+							},
+							toolbox: {
+							        feature: {
+							            saveAsImage: {
+							                show: true,
+							                title: 'SaveAsImage' , 
+											backgroundColor: 'rgba(0,0,0,0)'
+							            }
+							        }
+							    },
+							visualMap: {
+								show: true,
+								min: visualMapMin,  // 使用实际的最小值
+								max: visualMapMax,  // 使用实际的最大值
+								// precision: 6, // 设置小数点后的位数为4
+								formatter: function (value) {
+									return value.toExponential(2); // 使用科学计数法显示数据，保留2位小数
+								},
+								calculable: true,
+								dimension: 2,  // 指定 visualMap 对应的维度，假设 pvalue 是数据的第 3 维
+								seriesIndex: 0, // 指定 visualMap 对应的系列索引
+								right: 10,
+								bottom: 50,
+
+								inRange: {
+									color: ['#ee5862', '#b62785', '#5c59ee']  // 定义颜色渐变
+								}
+							},
+							grid: {
+								left: '5%',
+								right: '15%',
+								bottom: '5%',
+								containLabel: true // 是否包含坐标轴的刻度标签
+							},
+							title: {
+								show: true,
+								left: '65%',
+								textStyle: { // 标题的文本样式
+									fontSize: 24, // 标题字体大小
+								}
+							},
+							tooltip: {
+								show: true,
+								trigger: 'item',
+								formatter: function (params) {
+									let description = params.data.description; // y 轴说明是 description
+									let pValue = params.data.pvalue; // x 轴说明是 p value
+									let count = params.data.count; // 假设你在数据中添加了 count 属性
+									let total = params.data.total; // 假设你在数据中添加了 count 属性
+									return `<div style="border-bottom: 1px solid #ccc;">Term: ${description}</div>                <div>p-value: ${pValue}</div>
+								<div>Count: ${count}</div>                <div>Total: ${total}</div>`;
+								}
+							},
+							xAxis: {
+								show: true,
+								type: 'value',
+								name: 'Gene ratio',  // x 轴标题
+								axisLabel: {
+								 
+								      color: '#333333',  // 设置 x 轴标签的字体颜色（红色）
+								     textStyle: { // 标题的文本样式
+								     	fontSize: 16,
+										color: '#333333',
+								     }
+								                    },
+								nameLocation: 'middle',  // 标题位置，居中显示
+								nameGap: 30,  // 标题与轴线之间的距离
+								nameTextStyle: {  // 设置标题文本的样式
+									fontFamily: 'Arial, Microsoft YaHei',  // 字体系列
+									fontSize: 24,  // 字体大小
+									color: '#333333',  // 字体颜色
+									fontWeight: 'bold'  // 字体粗细
+								}
+							},
+							yAxis: {
+								show: true,
+								type: 'category',
+								axisLabel: {
+								 
+								      color: '#333333',  // 设置 x 轴标签的字体颜色（红色）
+								     
+								                    },
+								data: yAxisData.map((value, index) => ({
+									value: value,
+									textStyle: { // 标题的文本样式
+										fontSize: 16,  // 字体大小
+										overflow: 'break',
+										color: '#333333',
+										// ellipsis: '...', // 显示省略号
+										// width: 340, // 设置文本宽度，根据需要调整
+									}
+								})),
+								name: 'Terms',  // y 轴标题
+								nameGap: 30,
+								nameTextStyle: {  // 设置标题文本的样式
+									fontFamily: 'Arial, Microsoft YaHei',  // 字体系列
+									fontSize: 24,  // 字体大小
+									color: '#333333',  // 字体颜色
+									fontWeight: 'bold'  // 字体粗细
+								}
+							},
+							series: [{
+								show: true,
+								type: 'scatter',
+								data: xAxisData.map((value, index) => ({
+									value: [value, index, bubbleColor[index]],  // x, y 坐标
+									symbolSize: bubbleSize[index] * 5,  // 气泡大小
+									// itemStyle: {
+									// 	// color: this.getColor(normalizedBubbleColor[index])  // 气泡颜色
+									// 	color: '{c}'  // 使用 {c} 来引用 visualMap 的颜色
+									// },
+									description: bubbleData[index],
+									pvalue: bubbleColor[index],
+									count: bubbleSize[index],
+									total: totalSize[index],
+								})),
+								label: {
+									show: false,
+									formatter: (params) => params.value[0]
+								}
+							}]
+						};
+
+						myChart.setOption(option);
+					}
+
+
+				}, 100); // 等待 1 秒钟
+			},
+
+			handleTabClick(tab, event) {
+                console.log(this.activeName);
+            },
+
+			startObserving() {
+				const targetNode = document.getElementById('stringEmbedded');
+				let changeDetected = false;
+				// 创建观察器实例
+				this.observer = new MutationObserver((mutations) => {
+					mutations.forEach((mutation) => {
+						console.log('变化被检测到:', mutation);
+						changeDetected = true;
+						// 获取元素
+						document.getElementById('container').style.display = 'none';
+						document.getElementById('centeredText').style.display = 'none';
+						this.loading = false;
+						this.toggle_view();
+						console.log(this.loading);
+						// 这里可以执行一些操作，比如更新组件的状态
+					});
+				});
+
+				// 定义观察选项
+				const config = { childList: true, subtree: true };
+
+				// 开始观察
+				this.observer.observe(targetNode, config);
+				// 设置一个定时器，在10秒后检查是否有变化
+				setTimeout(() => {
+					if (!changeDetected) {
+						// 没有检测到变化，执行您想要的操作
+						console.log('没有检测到变化');
+						this.loading = false; // 请求失败后设置 loading 为 false
+						// 获取元素
+						document.getElementById('container').style.display = 'block';
+						document.getElementById('centeredText').style.display = 'block';
+						// 这里可以执行一些操作
+					}
+				}, 10000); // 10秒
+			},
+			getPartners() {
+				const string_api_url = "https://string-db.org/api";
+				const output_format = "json";
+				const method = "interaction_partners";
+				const params = {
+					"identifiers": this.myGenes.join("\r\n"),
+					"species": 9606,
+					"limit": this.limit,
+					"caller_identity": "www.awesome_app.org"
+				};
+				const requestUrl = `${string_api_url}/${output_format}/${method}`;
+				let qs = Qs;
+				const queryString = Qs.stringify(params);
+				const requestUrlWithParams = `${requestUrl}?${queryString}`;
+
+				axios({
+					method: 'get',
+					url: requestUrlWithParams,
+				}).then(response => {
+
+					this.partnerData = response.data;
+					this.loadingTable = false;
+					this.partnerGenes = response.data.map(item => item.preferredName_B);
+					const combinedGenes = this.myGenes.concat(this.partnerGenes);
+					getSTRING('https://string-db.org', {
+						'species': '9606',
+						'identifiers': combinedGenes,
+						'add_color_nodes': 0,
+						'network_flavor': 'evidence',
+						'caller_identity': 'www.awesome_app.org'
+					});
+					const requestUrl1 = `${this.stringApiUrl}/${this.outputFormat}/${this.method1}`;
+					const params1 = {
+						identifiers: combinedGenes.join("\r\n"),
+						species: 9606,
+						caller_identity: "www.awesome_app.org"
+					};
+					let qs = Qs;
+					const queryString1 = Qs.stringify(params1);
+					const requestUrlWithParams1 = `${requestUrl1}?${queryString1}`;
+
+					axios({
+						method: 'get',
+						url: requestUrlWithParams1,
+					}).then(response => {
+						this.loading1 = false;
+						this.enrichmentData = response.data;
+						this.bubble_chart();
+						document.getElementById('Chart').style.display = 'block';
+						document.getElementById('container3').style.display = 'none';
+						document.getElementById('centeredText3').style.display = 'none';
+					}).catch(error => {
+						this.loading1 = false;
+						document.getElementById('Chart').style.display = 'none';
+						document.getElementById('container3').style.display = 'block';
+						document.getElementById('centeredText3').style.display = 'block';
+						console.error('Error fetching json:');
+					});
+
+
+				}).catch(error => {
+					this.loading1 = false;
+					document.getElementById('Chart').style.display = 'none';
+					document.getElementById('container3').style.display = 'block';
+					document.getElementById('centeredText3').style.display = 'block';
+					console.error('Error fetching json:');
+					console.error('Error fetching parteners:', error);
+				})
+			},
+			toggle_view() {
+				const myContainer = document.querySelector('.box_image');
+				const svgElement = document.querySelector('#stringEmbedded #svg_network_image');
+				if (!svgElement) return;
+
+				const svgHeight = svgElement.getAttribute('height');
+				const svgWidth = svgElement.getAttribute('width');
+				this.svgHeight = svgHeight;
+				this.svgWidth = svgWidth;
+
+				const currentHeight = myContainer.getAttribute('height');
+				const currentWidth = myContainer.getAttribute('width');
+
+				svgElement.setAttribute('height', 600);
+				svgElement.setAttribute('width', 600);
+				svgElement.setAttribute('viewBox', `250 0 ${this.svgWidth / 1.3} ${this.svgHeight}`);
+
+
+			},
+			export_img() {
+				this.loadingPic = true; // 显示加载指示器
+
+				const combinedGenes = this.myGenes.concat(this.partnerGenes);
+				const stringApiUrl = "https://string-db.org/api";
+				const outputFormat = "highres_image";
+				const method = "network";
+				const params = {
+					identifiers: combinedGenes.join("\r\n"),
+					species: 9606,
+					add_color_nodes: 0,
+				};
+
+				const requestUrl = `${stringApiUrl}/${outputFormat}/${method}`;
+				let qs = Qs;
+
+
+				const queryString = Qs.stringify(params);
+				const requestUrlWithParams = `${requestUrl}?${queryString}`;
+
+
+				axios({
+					method: 'get',
+					url: requestUrlWithParams,
+					responseType: 'blob' // 确保我们得到的是Blob响应
+				}).then(response => {
+
+					// response现在是Blob对象
+					const blob = new Blob([response.data], { type: response.headers['content-type'] });
+					const url = window.URL.createObjectURL(blob);
+					const a = document.createElement('a');
+					a.href = url;
+					a.download = 'image.png'; // 指定下载的文件名
+					document.body.appendChild(a); // 将a元素添加到body中
+					a.click(); // 触发下载
+					window.URL.revokeObjectURL(url); // 清除URL对象
+					document.body.removeChild(a); // 移除a元素
+					this.loadingPic = false; // 隐藏加载指示器
+
+				}).catch(error => {
+					console.error('Error fetching image:', error);
+					this.loadingPic = false; // 隐藏加载指示器
+
+				});
+			},
+			export_partner() {
+				const string_api_url = "https://string-db.org/api";
+				const output_format = "tsv";
+				const method = "interaction_partners";
+				const params = {
+					"identifiers": this.myGenes.join("\r\n"),
+					"species": 9606,
+					"limit": this.limit,
+					"caller_identity": "www.awesome_app.org"
+				};
+				const requestUrl = `${string_api_url}/${output_format}/${method}`;
+				let qs = Qs;
+				const queryString = Qs.stringify(params);
+				const requestUrlWithParams = `${requestUrl}?${queryString}`;
+
+				axios({
+					method: 'get',
+					url: requestUrlWithParams,
+				}).then(response => {
+					console.log(requestUrlWithParams);
+					const tsvData = response.data; // 假设服务器返回的数据是TSV格式的字符串
+					const blob = new Blob([tsvData], { type: 'text/tsv' });
+					const url = window.URL.createObjectURL(blob);
+					const a = document.createElement('a');
+					a.href = url;
+					a.download = 'partner.tsv'; // 下载的文件名
+					document.body.appendChild(a);
+					a.click();
+					window.URL.revokeObjectURL(url);
+					document.body.removeChild(a);
+				}).catch(error => {
+					console.error('Error fetching tsv:', "Sorry, STRING did not find any matches for your input.<br>&nbsp;<br/>Generally, STRING understands a number of different names/symbols for proteins.<br/>Here is a selection of typical names: 'YEL036C', 'TRPB_ECOLI', 'trpB', 'ENSP00000249373', 'BRCA1', 'CG11561', 'daf-3', ...<br>&nbsp;<br/>Try to identify your proteins with different names/symbols that you might know. Alternatively, you can provide the raw amino-acid sequences of your proteins as input, and STRING will try to identify these via similarity searches.");
+				});
+			},
+			export_enrichment() {
+				const string_api_url = "https://string-db.org/api";
+				const combinedGenes = this.myGenes.concat(this.partnerGenes);
+				const requestUrl = `${this.stringApiUrl}/${this.outputFormat1}/${this.method1}`;
+				const params = {
+					identifiers: combinedGenes.join("\r\n"),
+					species: 9606,
+					caller_identity: "www.awesome_app.org"
+				};
+				let qs = Qs;
+				const queryString = Qs.stringify(params);
+				const requestUrlWithParams = `${requestUrl}?${queryString}`;
+
+				axios({
+					method: 'get',
+					url: requestUrlWithParams,
+				}).then(response => {
+					console.log(requestUrlWithParams);
+					const tsvData = response.data; // 假设服务器返回的数据是TSV格式的字符串
+					const blob = new Blob([tsvData], { type: 'text/tsv' });
+					const url = window.URL.createObjectURL(blob);
+					const a = document.createElement('a');
+					a.href = url;
+					a.download = 'enrichment.tsv'; // 下载的文件名
+					document.body.appendChild(a);
+					a.click();
+					window.URL.revokeObjectURL(url);
+					document.body.removeChild(a);
+				}).catch(error => {
+					console.error('Error fetching tsv:', "Sorry, STRING did not find any matches for your input.<br>&nbsp;<br/>Generally, STRING understands a number of different names/symbols for proteins.<br/>Here is a selection of typical names: 'YEL036C', 'TRPB_ECOLI', 'trpB', 'ENSP00000249373', 'BRCA1', 'CG11561', 'daf-3', ...<br>&nbsp;<br/>Try to identify your proteins with different names/symbols that you might know. Alternatively, you can provide the raw amino-acid sequences of your proteins as input, and STRING will try to identify these via similarity searches.");
+				});
+			},
+			bubble_chart() {
+				console.log(this.enrichmentData);
+				console.log(this.activeTab);
+				console.log(this.select1);
+
+
+
+				let enrichmentData = [];
+				document.getElementById('Chart').style.display = 'block';
+
+				setTimeout(() => {
+					// 第一个筛选
+					if (this.activeTab == 1) {
+						enrichmentData = this.enrichmentData.filter(item => item.category === 'Process');
+					} else if (this.activeTab == 2) {
+						enrichmentData = this.enrichmentData.filter(item => item.category === 'Component');
+					} else if (this.activeTab == 3) {
+						enrichmentData = this.enrichmentData.filter(item => item.category === 'Function');
+					} else if (this.activeTab == 4) {
+						enrichmentData = this.enrichmentData.filter(item => item.category === 'KEGG');
+					} else if (this.activeTab == 5) {
+						enrichmentData = this.enrichmentData.filter(item => item.category === 'Reactome');
+					}
+
+					// 第二个筛选
+					if (this.select1 == 0) {
+						enrichmentData = enrichmentData.sort((a, b) => a.p_value - b.p_value);;
+						const numToTake = Math.min(enrichmentData.length, 10);
+						enrichmentData = enrichmentData.slice(0, numToTake);
+					} else {
+						enrichmentData = enrichmentData.filter(item => item.p_value < this.select1);
+					}
+					enrichmentData = enrichmentData.sort((b, a) => (b.number_of_genes / b.number_of_genes_in_background) - (a.number_of_genes / a.number_of_genes_in_background)); // 降序排序
+
+					if (enrichmentData.length === 0) {
+						this.$message.warning('Not available！');
+						document.getElementById('Chart').style.display = 'none';
+						document.getElementById('container3').style.display = 'block';
+						document.getElementById('centeredText3').style.display = 'block';
+
+					} else {
+						document.getElementById('Chart').style.display = 'block';
+						document.getElementById('container3').style.display = 'none';
+						document.getElementById('centeredText3').style.display = 'none';
+						// 提取 y 轴标签、气泡颜色、气泡大小和横坐标数据
+						const bubbleData = enrichmentData.map(item => item.description);
+						const yAxisData = enrichmentData.map(item => item.term);
+						const bubbleColor = enrichmentData.map(item => item.p_value);
+						const bubbleSize = enrichmentData.map(item => item.number_of_genes);
+						const totalSize = enrichmentData.map(item => item.number_of_genes_in_background);
+						// const xAxisData = enrichmentData.map(item => item.p_value);
+						const xAxisData = enrichmentData.map(item => item.number_of_genes / item.number_of_genes_in_background);
+
+
+						// 根据 p_value 值设置 visualMap 的 min 和 max
+						const visualMapMin = Math.min(...bubbleColor);
+						const visualMapMax = Math.max(...bubbleColor);
+
+						// 根据 p_value 值设置 visualMap 的 min 和 max
+						const visualMapSMin = Math.min(...bubbleSize);
+						const visualMapSMax = Math.max(...bubbleSize);
+						let myChart = echarts.init(document.getElementById('Chart'));
+						// 配置项
+						let option = {
+							graphic: {
+								elements: [
+									{
+										type: 'text',
+										right: 10, // 设置visualMap水平居中
+										bottom: 220, // 设置visualMap距离顶部的距离为20
+										style: {
+											text: 'P-Value',  // 文本内容：这里是视觉映射的标题
+											font: '16px Microsoft YaHei',  // 字体样式
+											fill: '#333',  // 文本颜色
+										},
+										// 可以添加其他属性来进一步定位文本，例如 z: 100, draggable: true 等
+									},
+
+								]
+							},
+							toolbox: {
+							        feature: {
+							            saveAsImage: {
+							                show: true,
+							                title: 'SaveAsImage' , 
+											backgroundColor: 'rgba(0,0,0,0)'
+							            }
+							        }
+							    },
+							visualMap: {
+								show: true,
+								min: visualMapMin,  // 使用实际的最小值
+								max: visualMapMax,  // 使用实际的最大值
+								// precision: 6, // 设置小数点后的位数为4
+								formatter: function (value) {
+									return value.toExponential(2); // 使用科学计数法显示数据，保留2位小数
+								},
+								calculable: true,
+								dimension: 2,  // 指定 visualMap 对应的维度，假设 pvalue 是数据的第 3 维
+								seriesIndex: 0, // 指定 visualMap 对应的系列索引
+								right: 10,
+								bottom: 50,
+
+								inRange: {
+									color: ['#ee5862', '#b62785', '#5c59ee']  // 定义颜色渐变
+								}
+							},
+							grid: {
+								left: '5%',
+								right: '15%',
+								bottom: '5%',
+								containLabel: true // 是否包含坐标轴的刻度标签
+							},
+							title: {
+								show: true,
+								left: '65%',
+								textStyle: { // 标题的文本样式
+									fontSize: 24, // 标题字体大小
+								}
+							},
+							tooltip: {
+								show: true,
+								trigger: 'item',
+								formatter: function (params) {
+									let description = params.data.description; // y 轴说明是 description
+									let pValue = params.data.pvalue; // x 轴说明是 p value
+									let count = params.data.count; // 假设你在数据中添加了 count 属性
+									let total = params.data.total; // 假设你在数据中添加了 count 属性
+									return `<div style="border-bottom: 1px solid #ccc;">Term: ${description}</div>                <div>p-value: ${pValue}</div>
+								<div>Count: ${count}</div>                <div>Total: ${total}</div>`;
+								}
+							},
+							xAxis: {
+								show: true,
+								type: 'value',
+								name: 'Gene ratio',  // x 轴标题
+								axisLabel: {
+								 
+								      color: '#333333',  // 设置 x 轴标签的字体颜色（红色）
+								     textStyle: { // 标题的文本样式
+								     	fontSize: 16
+								     }
+								                    },
+								nameLocation: 'middle',  // 标题位置，居中显示
+								nameGap: 30,  // 标题与轴线之间的距离
+								nameTextStyle: {  // 设置标题文本的样式
+									fontFamily: 'Helvetica',  // 字体系列
+									fontSize: 24,  // 字体大小
+									color: '#333333',  // 字体颜色
+									fontWeight: 'bold'  // 字体粗细
+								}
+							},
+							yAxis: {
+								show: true,
+								type: 'category',
+								axisLabel: {
+								 
+								      color: '#333333',  // 设置 x 轴标签的字体颜色（红色）
+								     
+								                    },
+								data: yAxisData.map((value, index) => ({
+									value: value,
+									textStyle: { // 标题的文本样式
+										fontSize: 16,  // 字体大小
+										overflow: 'break',
+										// ellipsis: '...', // 显示省略号
+										// width: 340, // 设置文本宽度，根据需要调整
+									}
+								})),
+								name: 'Terms',  // y 轴标题
+								nameGap: 30,
+								nameTextStyle: {  // 设置标题文本的样式
+									fontFamily: 'Helvetica',  // 字体系列
+									fontSize: 24,  // 字体大小
+									color: '#333333',  // 字体颜色
+									fontWeight: 'bold'  // 字体粗细
+								}
+							},
+							series: [{
+								show: true,
+								type: 'scatter',
+								data: xAxisData.map((value, index) => ({
+									value: [value, index, bubbleColor[index]],  // x, y 坐标
+									symbolSize: bubbleSize[index] * 5,  // 气泡大小
+									// itemStyle: {
+									// 	// color: this.getColor(normalizedBubbleColor[index])  // 气泡颜色
+									// 	color: '{c}'  // 使用 {c} 来引用 visualMap 的颜色
+									// },
+									description: bubbleData[index],
+									pvalue: bubbleColor[index],
+									count: bubbleSize[index],
+									total: totalSize[index],
+								})),
+								label: {
+									show: false,
+									formatter: (params) => params.value[0]
+								}
+							}]
+						};
+
+						myChart.setOption(option);
+					}
+
+
+				}, 100); // 等待 1 秒钟
+			},
+		},
+
+
+
+	})
+</script>
+<script>
+	new Vue({
+		el: '#app2',
+		data() {
+			return {
+				enrichmentData1: [], //富集
+				rgenrichment_echarts: null, // 富集
+				// 初始化时设置默认选中的标签页
+				activeTab2: '1', //富集
+				select2: 0,	//富集
+				isLoaded: false,
+				options: [{
+					value: 0,
+					label: 'Top 10'
+				}],
+			}
+		},
+		mounted() {
+			const BloodCircRID = urlParams.get('BloodCircR_ID');
+			this.isLoaded = true;
+			document.getElementById('container1').style.display = 'none';
+			document.getElementById('centeredText1').style.display = 'none';
+			document.getElementById('rgenrichment_echarts').style.display = 'block';
+			document.getElementById('container2').style.display = 'none';
+			document.getElementById('centeredText2').style.display = 'none';
+			// Fetch the data from the PHP script
+			const self = this;
+			fetch('interface/test1.php?BloodCircR_ID=' + BloodCircR_ID)
+				.then(function (response) {
+					if (!response.ok) {
+						document.getElementById('rgenrichment_echarts').style.display = 'none';
+						document.getElementById('container2').style.display = 'block';
+						document.getElementById('centeredText2').style.display = 'block';
+						throw new Error('Network response was not ok ' + response.statusText);
+					}
+					return response.json();
+				})
+				.then(function (data) {
+					// Ensure data is received correctly
+					console.log('Received data:', data);
+
+					if (!data || !data.enrichments) {
+						throw new Error('Received data format is invalid');
+					}
+
+					self.enrichmentData1 = data.enrichments;
+					document.getElementById('rgenrichment_echarts').style.display = 'block';
+					document.getElementById('container2').style.display = 'none';
+					document.getElementById('centeredText2').style.display = 'none';
+					//富集数据图初始化
+					self.enrichment_chart();
+				}).catch(function (error) {
+					document.getElementById('rgenrichment_echarts').style.display = 'none';
+					document.getElementById('container2').style.display = 'block';
+					document.getElementById('centeredText2').style.display = 'block';
+					console.error('Error fetching or processing data: ', error);
+				});
+
+
+		},
+		methods: {
+			export_enrichment() {
+				console.log(this.enrichmentData1);
+				const jsonArray = this.enrichmentData1;
+				const csvRows = jsonArray.map(item => {
+					// 假设每个对象都有一个 'id' 和 'height' 属性
+					const tsvValues = [item.BloodCircR_ID, item.name, item.description, item.gene_ratios, item.category, item.p_value, item.p_adjust, item.qvalue, item.geneID, item.geneSymbol];
+					// 将对象中的每个属性转换为TSV格式
+					return tsvValues.join('\t');
+				});
+
+				// 合并所有行成一个字符串，并添加必要的TSV头部信息
+				const csvContent = `BloodCircR_ID\tname\tdescription\tgene_ratio\tcategory\tp_value\tp.adjust\tqvalue\tgeneID\tgeneSymbol\n${csvRows.join('\n')}`;
+				const blob = new Blob([csvContent], { type: 'text/tab-separated-values;charset=utf-8;' });
+				const downloadUrl = URL.createObjectURL(blob);
+				const link = document.createElement('a');
+				link.href = downloadUrl;
+				link.download = 'enrichment.tsv';
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+				URL.revokeObjectURL(downloadUrl);
+
+			},
+			enrichment_chart() {
+
+				console.log(this.enrichmentData1);
+				console.log(this.activeTab2);
+				console.log(this.select2);
+				let enrichmentData = [];
+
+				document.getElementById('rgenrichment_echarts').style.display = 'block';
+
+				setTimeout(() => {
+					// 第一个筛选
+					if (this.activeTab2 == 1) {
+						enrichmentData = this.enrichmentData1.filter(item => item.category === 'Biological Process');
+					} else if (this.activeTab2 == 2) {
+						enrichmentData = this.enrichmentData1.filter(item => item.category === 'Cellular Component');
+					} else if (this.activeTab2 == 3) {
+						enrichmentData = this.enrichmentData1.filter(item => item.category === 'Molecular Function');
+					} else if (this.activeTab2 == 4) {
+						enrichmentData = this.enrichmentData1.filter(item => item.category === 'KEGG');
+					} else if (this.activeTab2 == 5) {
+						enrichmentData = this.enrichmentData1.filter(item => item.category === 'Reactome');
+					}
+
+					// 第二个筛选
+					if (this.select2 == 0) {
+						enrichmentData = enrichmentData.sort((a, b) => a.p_value - b.p_value);;
+						const numToTake = Math.min(enrichmentData.length, 10);
+						enrichmentData = enrichmentData.slice(0, numToTake);
+					} else {
+						enrichmentData = enrichmentData.filter(item => item.p_value < this.select2);
+					}
+					enrichmentData = enrichmentData.sort((b, a) => (b.number_of_genes / b.number_of_genes_in_background) - (a.number_of_genes / a.number_of_genes_in_background)); // 降序排序
+
+					if (enrichmentData.length === 0) {
+						this.$message.warning('Not available！');
+						document.getElementById('rgenrichment_echarts').style.display = 'none';
+						document.getElementById('container2').style.display = 'block';
+						document.getElementById('centeredText2').style.display = 'block';
+
+					} else {
+						document.getElementById('rgenrichment_echarts').style.display = 'block';
+						document.getElementById('container2').style.display = 'none';
+						document.getElementById('centeredText2').style.display = 'none';
+						// 提取 y 轴标签、气泡颜色、气泡大小和横坐标数据
+						const bubbleData = enrichmentData.map(item => item.description);
+						const yAxisData = enrichmentData.map(item => item.name);
+						const bubbleColor = enrichmentData.map(item => item.p_value);
+						const bubbleSize = enrichmentData.map(item => item.number_of_genes);
+						const totalSize = enrichmentData.map(item => item.number_of_genes_in_background);
+						const xAxisData = enrichmentData.map(item => item.number_of_genes / item.number_of_genes_in_background);
+
+						// 根据 p_value 值设置 visualMap 的 min 和 max
+						const visualMapMin = Math.min(...bubbleColor);
+						const visualMapMax = Math.max(...bubbleColor);
+
+						// 根据 p_value 值设置 visualMap 的 min 和 max
+						const visualMapSMin = Math.min(...bubbleSize);
+						const visualMapSMax = Math.max(...bubbleSize);
+						let myChart = echarts.init(document.getElementById('rgenrichment_echarts'));
+						// 配置项
+						let option = {
+							graphic: {
+								elements: [
+									{
+										type: 'text',
+										right: 10, // 设置visualMap水平居中
+										bottom: 220, // 设置visualMap距离顶部的距离为20
+										style: {
+											text: 'P-Value',  // 文本内容：这里是视觉映射的标题
+											font: '16px Microsoft YaHei',  // 字体样式
+											fill: '#333333',  // 文本颜色
+										},
+										// 可以添加其他属性来进一步定位文本，例如 z: 100, draggable: true 等
+									},
+
+								]
+							},
+							toolbox: {
+							        feature: {
+							            saveAsImage: {
+							                show: true,
+							                title: 'SaveAsImage' , 
+											backgroundColor: 'rgba(0,0,0,0)'
+							            }
+							        }
+							    },
+							visualMap: {
+								show: true,
+								min: visualMapMin,  // 使用实际的最小值
+								max: visualMapMax,  // 使用实际的最大值
+								// precision: 6, // 设置小数点后的位数为4
+								formatter: function (value) {
+									return value.toExponential(2); // 使用科学计数法显示数据，保留2位小数
+								},
+								calculable: true,
+								dimension: 2,  // 指定 visualMap 对应的维度，假设 pvalue 是数据的第 3 维
+								seriesIndex: 0, // 指定 visualMap 对应的系列索引
+								right: 10,
+								bottom: 50,
+
+								inRange: {
+									color: ['#ee5862', '#b62785', '#5c59ee']  // 定义颜色渐变
+								}
+							},
+							grid: {
+								left: '5%',
+								right: '15%',
+								bottom: '5%',
+								containLabel: true // 是否包含坐标轴的刻度标签
+							},
+							title: {
+								show: true,
+								left: '65%',
+								textStyle: { // 标题的文本样式
+									fontSize: 24, // 标题字体大小
+								}
+							},
+							tooltip: {
+								show: true,
+								trigger: 'item',
+								formatter: function (params) {
+									let description = params.data.description; // y 轴说明是 description
+									let pValue = params.data.pvalue; // x 轴说明是 p value
+									let count = params.data.count; // 假设你在数据中添加了 count 属性
+									let total = params.data.total; // 假设你在数据中添加了 count 属性
+									return `<div style="border-bottom: 1px solid #ccc;">Term: ${description}</div>                <div>p-value: ${pValue}</div>
+								<div>Count: ${count}</div>                <div>Total: ${total}</div>`;
+								}
+							},
+							xAxis: {
+								show: true,
+								type: 'value',
+								name: 'Gene ratio',  // x 轴标题
+								axisLabel: {
+								 
+								      color: '#333333',  // 设置 x 轴标签的字体颜色（红色）
+								     textStyle: { // 标题的文本样式
+								     	fontSize: 16,
+										color: '#333333',
+								     }
+								                    },
+								nameLocation: 'middle',  // 标题位置，居中显示
+								nameGap: 30,  // 标题与轴线之间的距离
+								nameTextStyle: {  // 设置标题文本的样式
+									fontFamily: 'Arial, Microsoft YaHei',  // 字体系列
+									fontSize: 24,  // 字体大小
+									color: '#333333',  // 字体颜色
+									fontWeight: 'bold'  // 字体粗细
+								}
+							},
+							yAxis: {
+								show: true,
+								type: 'category',
+								axisLabel: {
+								 
+								      color: '#333333',  // 设置 x 轴标签的字体颜色（红色）
+								     
+								                    },
+								data: yAxisData.map((value, index) => ({
+									value: value,
+									textStyle: { // 标题的文本样式
+										fontSize: 16,  // 字体大小
+										overflow: 'break',
+										color: '#333333',
+										// ellipsis: '...', // 显示省略号
+										// width: 340, // 设置文本宽度，根据需要调整
+									}
+								})),
+								name: 'Terms',  // y 轴标题
+								nameGap: 30,
+								nameTextStyle: {  // 设置标题文本的样式
+									fontFamily: 'Arial, Microsoft YaHei',  // 字体系列
+									fontSize: 24,  // 字体大小
+									color: '#333333',  // 字体颜色
+									fontWeight: 'bold'  // 字体粗细
+								}
+							},
+							series: [{
+								show: true,
+								type: 'scatter',
+								data: xAxisData.map((value, index) => ({
+									value: [value, index, bubbleColor[index]],  // x, y 坐标
+									symbolSize: bubbleSize[index] * 5,  // 气泡大小
+									// itemStyle: {
+									// 	// color: this.getColor(normalizedBubbleColor[index])  // 气泡颜色
+									// 	color: '{c}'  // 使用 {c} 来引用 visualMap 的颜色
+									// },
+									description: bubbleData[index],
+									pvalue: bubbleColor[index],
+									count: bubbleSize[index],
+									total: totalSize[index],
+								})),
+								label: {
+									show: false,
+									formatter: (params) => params.value[0]
+								}
+							}]
+						};
+
+						myChart.setOption(option);
+					}
+
+
+				}, 100); // 等待 1 秒钟
+			},
+		},
+
+
+
+	})
+</script>
+<!-- vue相关js -->
+<script>
+	new Vue({
+		el: '#app1',
+		data() {
+			return {
+				isLoaded: false,
+			}
+		},
+		mounted() {
+			this.isLoaded = true;
+		}
+	})
+</script>
+<script>
+	new Vue({
+		el: '#app3',
+		data() {
+			return {
+				isLoaded: false,
+			}
+		},
+		mounted() {
+			this.isLoaded = true;
+		}
+	})
+</script>
+<script>
+	new Vue({
+		el: '#app4',
+		data() {
+			return {
+				activeName: 'first',
+			}
+		},
+		mounted() {
+			
+		},
+		methods: {
+		  handleTabClick(tab, event) {
+                console.log(this.activeName);
+            },
+		}
+	})
+</script>
+</html>

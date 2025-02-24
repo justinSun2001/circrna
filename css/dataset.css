@@ -1,0 +1,46 @@
+.dataset_line{
+	margin-bottom:0px;
+	border-radius:5px 5px 0 0;
+}
+.dataset_select{
+	width:1500px;
+	margin:0 auto;
+	box-sizing:border-box;
+	padding:20px;
+	background:#E1F0F4;
+	border:1px solid #d7d7d7;
+	border-top:0px;
+	margin-bottom:20px;
+}
+.dataset_select select{
+	width:300px;
+	height:30px;
+	border-radius:5px;
+	border:1px solid #d7d7d7;
+	text-indent:10px;
+}
+.dataset_select b{
+	margin-right:10px;
+}
+td[data-field="Sample"]:hover{
+	cursor:pointer;
+	color:B94A4A;
+	text-decoration:underline;
+}
+
+.newDiv{
+	background:#fff;
+	box-shadow:0 0 7px 1px #aaa;
+	padding:8px 0px;
+	border-radius:5px;
+}
+.newDiv li {
+	text-align:center;
+}
+.newDiv a{
+	line-height:35px;
+	color:#000;
+}
+.newDiv a:hover{
+	color:B94A4A;
+}

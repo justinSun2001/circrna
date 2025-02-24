@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>BloodCircR</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/study_dataset.css">
+    <link rel="icon" href="images/1_1.png" type="image/x-icon">
+    <!-- 引入elementui样式 -->
+    <link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
+    <script src="js/vue.js"></script>
+    <script src="js/elementui.js"></script>
+    <script src="js/header-component.js"></script>
+    <script src="js/footer-component.js"></script>
+    <!-- 引入 xlsx 库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+    <style scoped>
+        .menu_header a {
+            font-size: 27px;
+        }
+    </style>
+    <style>
+        .background {
+            background-image: url(../images/pipeline.png);
+            background-repeat: no-repeat;
+            background-size: cover;
+            width: 100%;
+            height: 500px;
+        }
+
+        .image-with-text {
+            position: relative;
+        }
+
+        .text-overlay {
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            right: 15%;
+            bottom: 15%;
+            width: 70%;
+            height: 70%;
+        }
+
+        .text-overlay .text {
+            font-size: 1.5vw;
+            font-weight: bold;
+            color: white !important;
+        }
+
+        .custom-link {
+            color: #B94A4A;
+            text-decoration: none;
+        }
+
+        .custom-link:hover {
+            text-decoration: underline;
+        }
+
+        .image-container {
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+          
+            margin: 0 auto; /* 居中容器 */
+            text-align: center;
+        }
+
+        #zoomableImage {
+            transition: transform 0.25s ease; /* 缩放过渡效果 */
+            cursor: grab; /* 鼠标样式 */
+            width: 100%; /* 使图像自适应宽度 */
+            height: auto; /* 自适应高度 */
+        }
+    </style>
+</head>
+
+<body>
+<div id="app" :class="{ loaded: isLoaded }">
+    <!-- 使用定义的 header 组件 -->
+    <app-header></app-header>
+    <div class="background" style="margin-top: 100px; margin-bottom: 0;">
+        <div class="image-with-text">
+            <div class="text-overlay">
+                <div style="display: flex;justify-content: center; flex-direction: column; height: 100%; ">
+                    <div class="text" style="font-size: 7.5vw;text-align: center;font-family: Arial Rounded MT Bold;color:white;margin-top: 430px;">PIPELINE</div>
+                    <div class="text" style="text-align: center;">A Computational Pipeline of CircRNA Analysis for Human Blood RNA-seq Datasets</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main" style="margin-top: 20px;">
+        <el-card>
+            <!-- Introduction text -->
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <img src="./images/pipelinelogo.png" alt="Logo" style="width: 50px; height: 50px; margin-right: 10px;">
+                <h2 style="margin: 0;"><i>AQUARIUM_HB</i>: a bioinformatics pipeline for human blood circular RNA analysis</h2>
+            </div>
+
+            <div class="content" style="border-left: 8px solid #B94A4A;margin: 1%;">
+                <p style="margin: 20px 0; text-align: left; font-size: 22px; line-height: 28px; margin-left: 20px;">
+                   Accurately identifying and quantifying human blood circular RNAs (circRNAs) from RNA-seq data is a critical bioinformatics challenge in biomarker discovery for human diseases. 
+				   We developed a comprehensive bioinformatics pipeline, AQUARIUM-HB, for identifying, quantifying, annotating, and analyzing circRNAs 
+				   from human blood transcriptomes. AQUARIUM-HB includes three functional modules. First, it identifies and annotates circRNAs from 
+				   rRNA-depleted RNA-seq datasets of human blood samples. Second, it performs an in-depth expression analysis of blood circRNAs. 
+				   Third, it constructs a reference set of full-length blood circRNAs. 
+                </p>
+                <p style="margin-left: 20px;font-size: 22px;">
+                    To access the pipeline and explore its capabilities, visit the GitHub repository at 
+                    <a href="https://github.com/NJUCMbioinfo/AQUARIUM-HB" target="_blank" class="custom-link"> AQUARIUM-HB</a>.
+                </p>
+            </div>
+            <el-divider></el-divider>
+
+            <!-- 可缩放图像 -->
+            <div class="image-container" style="margin: 20px 0;">
+                <img src="./images/AQUARIUM-HB3.jpg" alt="描述性文字" style="width: 100%;">
+            </div>
+        </el-card>
+    </div>
+
+    <!-- 使用定义的 footer 组件 -->
+    <app-footer></app-footer>
+</div>
+</body>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                isLoaded: false // 初始化变量
+            };
+        },
+        mounted() {
+            this.isLoaded = true; // 页面加载后将其设置为 true
+        }
+    });
+
+ 
+</script>
+
+</html>

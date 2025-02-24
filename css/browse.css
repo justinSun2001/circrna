@@ -1,0 +1,121 @@
+.line{
+	/* width:1500px; */
+	width: calc(100% - 50px); /* 计算整个页面宽度减去 50px */
+	height:45px;
+	background-color:#F2F2F2;
+	border-radius:5px;
+	background-image:url(../images/u2.svg);
+	background-repeat:no-repeat;
+	background-position:10px center;
+	/* margin:25px auto; */
+	line-height:40px;
+	text-indent:60px;
+	font-size:24px;
+	font-weight:700;
+	color:#E6B7B7;;
+	background-color: #E6B7B7;
+    line-height: 45px;
+    /* text-indent: 10px; */
+    position: relative;
+    font-size: 28px;
+	color:#333333;
+	border:2px solid #E6B7B7;
+}
+#main_echarts{
+	margin:0 auto;
+}
+.search_box{
+	/* width:1500px; */
+	width: calc(100% - 50px); /* 计算整个页面宽度减去 50px */
+	margin:10px auto;
+}
+.browse_search1{
+	width:500px;
+	height:40px;
+	position:relative;
+}
+.browse_search1 input{
+	box-sizing:border-box;
+	border:2px solid #E6B7B7;
+	width:330px;
+	height:40px;
+	float:left;
+	text-indent:10px;
+}
+.browse_search1 select{
+	width:130px;
+	height:40px;
+	float:left;
+	border:0px;
+	border:1px solid #aaa;
+}
+.browse_search1 button{
+	box-sizing:border-box;
+	border:0px solid #aaa;
+	width:40px;
+	height:40px;
+	float:left;
+	background-color:transparent;
+	background-image:url(../images/search.svg);
+	background-position:center;
+	background-repeat:no-repeat;
+	cursor:pointer;
+}
+.browse1{
+	/* width:1500px; */
+	width: calc(100% - 50px); /* 计算整个页面宽度减去 50px */
+	margin:15px 20px;
+}
+.browse1 tr th{
+	background-color:#fafafa;
+}
+.flag{
+	background-image:url(../images/u177.svg);
+	height:auto;
+	white-space: normal;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	text-indent:0px;
+	box-sizing:border-box;
+	padding-left:60px;
+	background-position:10px 5px;
+}
+td[data-field="Dataset"]:hover{
+	cursor:pointer;
+	color:#B94A4A;
+	text-decoration:underline;
+}
+.newDiv{
+	background:#fff;
+	box-shadow:0 0 7px 1px #aaa;
+	padding:8px 0px;
+	border-radius:5px;
+}
+.newDiv li {
+	text-align:center;
+}
+.newDiv a{
+	line-height:35px;
+	color:#000;
+}
+.newDiv a:hover{
+	color:#B94A4A;
+}
+
+.newDiv{
+	background:#fff;
+	box-shadow:0 0 7px 1px #aaa;
+	padding:8px 0px;
+	border-radius:5px;
+}
+.newDiv li {
+	text-align:center;
+}
+.newDiv a{
+	line-height:35px;
+	color:#000;
+}
+.newDiv a:hover{
+	color:#B94A4A;
+}
+

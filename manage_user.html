@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>manage_user</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/contact.css">
+    <link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
+    <link rel="icon" href="images/1_1.png" type="image/x-icon">
+    <script src="js/vue.js"></script>
+    <script src="js/elementui.js"></script>
+    <script src="src/layui.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/header-component.js"></script>
+    <script src="js/footer-component.js"></script>
+    <style>
+        #main.login {
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #main:not(.login) {
+            opacity: 0;
+        }
+
+   		.el-button:hover {
+   			color: #B94A4A;
+   			border-color: #E6B7B7;
+   			background-color: #E6B7B7;
+   		}
+   
+   		.el-button:active {
+   			color: #B94A4A;
+   			border-color: #E6B7B7;
+   			background-color: #E6B7B7;
+   		}
+   
+   		.el-button:focus {
+   			color: #B94A4A;
+   			border-color: #E6B7B7;
+   			background-color: #E6B7B7;
+   		}
+   		.el-descriptions__body .el-descriptions__table .el-descriptions-item__cell {
+   		    -webkit-box-sizing: border-box;
+   		    box-sizing: border-box;
+   		    text-align: left;
+   		    font-weight: 600 !important;
+   		    line-height: 1.5;
+   		    font-size: 18px !important;
+			color: #333333 !important;
+   		}
+    </style>
+</head>
+
+<body>
+    <div id="app" :class="{ loaded: isLoaded }">
+        <!-- 使用定义的 header 组件 -->
+        <app-header></app-header>
+
+        <!-- head1 -->
+        <div class="main" id="main" :class="{ login: isLogin }" style="margin-top: 100px;">
+
+            <div style="padding:0 40px;">
+                <div class="header">
+                    Manage your account
+                </div>
+            </div>
+
+            <div style="padding:0 40px;">
+                <div class="header_sub">
+                    <span>You can update your personal information in the card below and change your password in the second card. Remember to submit your changes.</span>
+                </div>
+            </div>
+
+            <el-card class="box-card" style="margin:0 40px;">
+                <div slot="header" class="clearfix" style="color: #B94A4A; font-size: 20px;font-weight: 700;">
+                    <span>Personal Information</span>
+                </div>
+                <el-descriptions direction="horizontal" :column="1" border>
+                    <el-descriptions-item label="First name">
+                        <el-input v-model="tempData.name" @blur="handleInputBlur('First name')"
+                            placeholder="Please input first name"></el-input>
+                    </el-descriptions-item>
+					<el-descriptions-item label="Last name">
+					    <el-input v-model="tempData.birthday" @blur="handleInputBlur('Last name')"
+					        placeholder="Please input last name"></el-input>
+					</el-descriptions-item>
+                    <el-descriptions-item label="sex">
+                        <el-input v-model="tempData.sex" @blur="handleInputBlur('sex')"
+                            placeholder="Please input sex"></el-input>
+                    </el-descriptions-item>
+                    <el-descriptions-item label="career">
+                        <el-input v-model="tempData.career" @blur="handleInputBlur('career')"
+                            placeholder="Please input career"></el-input>
+                    </el-descriptions-item>
+                    <el-descriptions-item label="address">
+                        <el-input v-model="tempData.address" @blur="handleInputBlur('address')"
+                            placeholder="Please input address"></el-input>
+                    </el-descriptions-item>
+                </el-descriptions>
+            </el-card>
+
+            <el-card class="box-card" style="margin:20px 40px 0 40px;">
+                <div slot="header" class="clearfix" style="color: #B94A4A; font-size: 20px;font-weight: 700;">
+                    <span>Login Information</span>
+                </div>
+                <el-descriptions direction="horizontal" :column="1" border>
+                    <el-descriptions-item label="email">
+                        <el-input v-model="tempData.email" disabled ></el-input>
+                    </el-descriptions-item>
+                    <el-descriptions-item label="password">
+                        <el-input v-model="tempData.password" type="password" required=true,
+                            @blur="handleInputBlur('password')" placeholder="*Please input password"></el-input>
+                    </el-descriptions-item>
+                    <el-descriptions-item label="re-type password">
+                        <el-input v-model="tempData.repassword" type="password" @blur="handleInputBlur('repassword')"
+                            placeholder="*Please input re-type password"></el-input>
+                    </el-descriptions-item>
+                </el-descriptions>
+            </el-card>
+
+            <div style="margin: 20px 0 0 40px;">
+                <el-button type="primary" @click="handleSubmit"
+                    style="width:100px;margin-right: 20px;">Submit</el-button>
+                <el-button type="primary" @click="handleReset" style="width:100px;">Reset</el-button>
+            </div>
+        </div>
+
+        <!-- 使用定义的 footer 组件 -->
+        <app-footer></app-footer>
+    </div>
+</body>
+
+<!-- vue相关js -->
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                isLoaded: false,
+                isLogin: JSON.parse(localStorage.getItem('user')) || null,
+                data: {
+                    name: '',
+                    sex: '',
+                    birthday: '',
+                    career: '',
+                    address: '',
+                    email: '',
+                    password: '',
+                    repassword: ''
+                },
+                // 临时数据，用于在Modify时存储输入的值
+                tempData: {
+                    name: '',
+                    sex: '',
+                    birthday: '',
+                    career: '',
+                    address: '',
+                    email: '',
+                    password: '',
+                    repassword: ''
+                }
+            }
+        },
+        mounted() {
+            this.isLoaded = true;
+            this.tempData.email = this.isLogin.email;
+            this.getData();
+        },
+        methods: {
+            getData() {
+                const FormData = {
+                    email: this.isLogin.email,
+                    action: 'get'
+                };
+                axios.post('./interface/manage_user.php', {}, { params: FormData })
+                    .then(response => {
+                        console.log(response.data);
+
+                        this.data.career = response.data.career;
+                        this.data.name = response.data.name;
+                        this.data.sex = response.data.sex;
+                        this.data.address = response.data.address;
+                        this.data.birthday = response.data.birthday;
+                        this.data.email = response.data.email;
+                        this.data.password = response.data.password;
+                        this.data.repassword = response.data.password;
+
+                        this.tempData.career = this.data.career;
+                        this.tempData.name = this.data.name;
+                        this.tempData.sex = this.data.sex;
+                        this.tempData.address = this.data.address;
+                        this.tempData.birthday = this.data.birthday;
+                        this.tempData.email = this.data.email;
+                        this.tempData.password = this.data.password;
+                        this.tempData.repassword = this.data.repassword;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+            },
+            handleInputBlur(key) {
+                // 当输入框失去焦点时，可以在这里触发更新数据到服务器的操作
+                // 例如，使用 axios 发起请求将 data[key] 的新值发送到服务器
+                // 输入框失去焦点时，更新原始数据
+                if (key === 'password') {
+                    if (!this.tempData[key]) {
+                    this.$message.error('Password can not be null');
+                    return;
+                    }
+                } else if (key ==='repassword') {
+                    if (!this.tempData[key]) {
+                    this.$message.error('Re-password can not be null');
+                    return;
+                    } else if (this.tempData[key]!== this.tempData['password']) {
+                    this.$message.error('Re-password must be the same as password');
+                    return;
+                    }
+                }
+                    this.data[key] = this.tempData[key];
+                    console.log(`Updated ${key}:`, this.data[key]);
+
+            },
+            handleSubmit() {
+                const FormData = {
+                    ...this.data,
+                    action: 'update'
+                }
+                axios.post('./interface/manage_user.php', {}, { params: FormData })
+                    .then(response => {
+                        console.log(response.data);
+                        if (response.data.status == 'success') {
+                            this.$message.success('update success');
+                            this.getData();
+                        } else {
+                            this.$message.error('update fail');
+                        }
+                    })
+                    .catch(error => {
+                        this.$message.error('update fail');
+                        console.error('Error fetching data:', error);
+                    });
+            },
+            handleReset(){
+                this.getData();
+            }
+        }
+    })
+</script>
+
+</html>

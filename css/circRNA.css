@@ -1,0 +1,483 @@
+*{
+	
+	
+	 font-family: Helvetica;
+
+}
+html{
+	width:100vw;
+}
+.layui-table td, .layui-table th {
+    color: #333333; /* 将字体颜色设置为红色 */
+}
+
+
+/* 增强选择器优先级，确保覆盖默认样式 */
+.layui-laypage .layui-laypage-curr {
+    background-color: #B94A4A !important; /* 红色背景 */
+
+    border: 1px solid #B94A4A !important; /* 红色边框 */
+}
+
+/* 如果 em 标签的背景颜色也需要设置 */
+.layui-laypage .layui-laypage-curr em {
+    background-color: #B94A4A !important; /* 红色背景 */
+
+}
+
+
+.menu{
+	background:#F7F7F7;
+	height:60px;
+	margin: 0px 0 15px 0;
+	min-width: 1500px;
+}
+.menu>div{
+	width:1500px;
+	margin:0 auto;
+}
+.menu>div>a{
+	width:calc(100% / 6);
+	float:left;
+	display:block;
+	line-height:40px;
+	height:40px;
+	margin:10px 0px;
+	color:#B94A4A;
+	text-align:center;
+	font-size:25px;
+	box-sizing:border-box;
+	border-right:1px solid #aaa;
+}
+.menu>div>a:hover,.menu_1:hover{
+	color:#B94A4A;
+	text-decoration:underline;
+}
+.menu_1{
+	width:calc(100%/6);
+	float:left;
+	display:block;
+	line-height:40px;
+	height:40px;
+	margin-top:10px;
+	padding-bottom:10px;
+	color:#B94A4A;
+	text-align:center;
+	font-size:23px;
+	box-sizing:border-box;
+	border-right:1px solid #aaa;
+	position:relative;
+}
+.menu_1:hover .menu_2{
+	display:block;
+}
+.menu_2{
+	width:100%;
+	height:200px;
+	font-size:20px;
+	position:absolute;
+	top:40px;
+	left:0px;
+	z-index:999;
+	background:#eee;
+	display:none;
+}
+.menu_2 a,.menu_1 a{
+	width:100%;
+	display:block;
+	color:#B94A4A;
+	line-height:40px;
+	/* height:40px; */
+}
+.menu div a:last-child{
+	border-right:0px;
+}
+.box{
+	width:1500px;
+	margin:0 auto;
+	margin-bottom:30px;
+	overflow:hidden;
+}
+.box h3{
+	background:#E6B7B7;
+	line-height:45px;
+	text-indent:10px;
+	position:relative;
+	font-size: 20px;
+}
+.box h3 span{
+	width:200px;
+	display:block;
+
+
+}
+.box h3 i{
+	width:45px;
+	height:50px;
+	display:block;
+	position:absolute;
+	top:-50px;
+	right:0px;
+	background-image:url(../images/u307_1.svg);
+	background-position:center center;
+	background-size:auto 20px;
+	background-repeat:no-repeat;
+	transform: rotate(0deg);
+	cursor:pointer;
+	transition:all 0.2s ease
+}
+.layui-table{
+	margin:0;
+}
+.layui-table td{
+	padding:9px 0px;
+	text-align:center;
+}
+.capsule1{
+	width:330px;
+	display:flex;
+	border:1px solid #E6B7B7;
+	height:50px;
+	line-height:45px;
+	border-radius:10px;
+	margin:5px 10px;
+	cursor:pointer;
+	color:#333333;
+}
+.capsule1:hover .capsule1_left{
+	background:#B94A4A;
+}
+.capsule1_left{
+	text-align:center;
+	flex:1;
+	background:#E6B7B7;
+	border-radius:10px 0 0 10px;
+}
+.capsule1_right{
+	flex:2;
+	text-align:center;
+}
+.capsule2{
+	width:130px;
+	text-align:center;
+	background:#C2ECF6;
+	height:50px;
+	line-height:45px;
+	border-radius:10px;
+	margin:5px 40px;
+	cursor:pointer;
+	color:#000;
+}
+.capsule2:hover{
+	background:#B94A4A;
+}
+.capsule3{
+	width:auto;
+	padding:0 20px;
+	text-align:center;
+	border:1px solid #FFB4B4;
+	height:50px;
+	line-height:45px;
+	border-radius:10px;
+	margin:5px 40px;
+	cursor:pointer;
+	color:#000;
+	background:#FFB4B4;
+}
+.capsule3:hover{
+	background:#B94A4A;
+}
+.flexcenter{
+	display:flex;
+	flex-wrap: wrap; /* 设置为wrap，以允许子元素换行 */
+	justify-content:center;
+}
+.flexleft{
+	display:flex;
+	flex-wrap: wrap; /* 设置为wrap，以允许子元素换行 */
+	justify-content:left;
+}
+.box4 .layui-table .align_left{
+	text-align:left;
+}
+.box4 .layui-table img{
+	max-width:100%;
+	height:40px;
+}
+.Alias_ a{
+	color:#B94A4A;
+}
+.Alias_ a:hover{
+	color:#B94A4A;
+	text-decoration:underline;
+}
+.Alias_ .align_left{
+	text-indent:15px;
+}
+.box .echarts_box{
+	width:800px;
+	height:500px;
+	/* margin:20px auto; */
+}
+.box5,.box6,.box7,.box8{
+	background:#fff;
+
+}
+
+
+.table_out{
+	padding:20px;
+	border:2px solid #E6B7B7;
+	border-top:0px;
+}
+#Sequence_value{
+	width:1350px;
+	margin: 0 auto;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	white-space: pre-wrap;
+}
+#StructureDom{
+	position:relative;
+}
+#StructureDom::after{
+	position:absolute;
+	top:0px;
+	left:50%;
+	background-image:url(../images/start.png);
+	background-size:cover;
+	content:'';
+	width:52px;
+	height:32px;
+	z-index:99;
+	transform:translateX(-11px);
+}
+
+.layui-table  .nopadding{
+	padding:0px;
+}
+.flexcenter{
+	width:100%;
+}
+.ORF_INFO{
+	width:1300px;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	text-align:left;
+	padding:20px;
+	border-top:1px solid #eee;
+	display:none;
+
+}
+.flexcenter {
+	display: flex;
+	align-items: center;
+}
+
+
+.ORF_box {
+	justify-content: flex-start;
+	display: flex; /* 添加这一行以确保子元素按行布局 */
+}
+.exonsbox{
+	justify-content: flex-start;
+	display: flex; /* 添加这一行以确保子元素按行布局 */
+}
+.IRES_box {
+	justify-content: flex-start;
+
+}
+.miRNA_choose {
+	text-align: left;
+}
+
+.miRNA_choose button#miRanda_btn,
+.miRNA_choose button#targetscan_btn {
+	float: left;
+	margin-right: 10px;
+}
+/*browse_dataset*/
+
+td[data-field="DetectCount"]{
+	position:relative;
+}
+/*
+td[data-field="DetectCount"]::after{
+	content:'';
+	width:39px;
+	height:39px;
+	display:block;
+	position:absolute;
+	top:0px;
+	right:10px;
+	background-image:url(../images/xiala.png);
+	background-position:center center;
+	background-size:auto 12px;
+	background-repeat:no-repeat;
+	transform: rotate(180deg);
+	cursor:pointer;
+	transition:all 0.2s ease
+}
+*/
+td[data-field="Sample"]:hover{
+	cursor:pointer;
+	color:#B94A4A;
+	text-decoration:underline;
+}
+
+.newDiv{
+	background:#fff;
+	box-shadow:0 0 7px 1px #aaa;
+	padding:8px 0px;
+	border-radius:5px;
+}
+.newDiv li {
+	text-align:center;
+}
+.newDiv a{
+	line-height:35px;
+	color:#000;
+}
+.newDiv a:hover{
+	color:#B94A4A;
+}
+
+.tabbtnbox .btn,.tabbtnbox_go .btn,.tabbtnbox_pathways .btn,.tabbtnbox_miRNA .btn{
+	padding:5px 10px;
+	background:#fff;
+	border-bottom:2px solid #fff !important;
+	border:0px solid #E6B7B7;
+	height:40px;
+	border-radius:5px 5px 0 0 ;
+	color:#B94A4A;
+	cursor:pointer;
+
+}
+.tabbtnbox .btn.act,.tabbtnbox_go .btn.act,.tabbtnbox_pathways .btn.act,.tabbtnbox_miRNA .btn.act{
+	border:1px solid #E6B7B7;
+	background:#fff;
+	color:#000;
+	height:41px;
+	border-bottom:2px solid #fff !important;
+	position:relative;
+	bottom:-2px;
+}
+.tabbox,.tabbox_go,.tabbox_pathways,.tabbox_miRNA{
+	padding:10px 0;
+	border:1px solid #E6B7B7;
+	
+}
+.search_box{
+	/* width:1500px; */
+	width: calc(100% - 50px); /* 计算整个页面宽度减去 50px */
+	margin:20px;
+}
+
+.browse_search1{
+	width:500px;
+	height:40px;
+	position:relative;
+}
+.browse_search1 input{
+	box-sizing:border-box;
+	border:1px solid #aaa;
+	width:330px;
+	height:40px;
+	float:left;
+	text-indent:10px;
+}
+.browse_search1 select{
+	width:130px;
+	height:40px;
+	border:1px solid #aaa;
+	float:left;
+}
+.browse_search1 button{
+	box-sizing:border-box;
+	border:0px solid #aaa;
+	width:40px;
+	height:40px;
+	float:left;
+	background-color:transparent;
+	background-image:url(../images/search.svg);
+	background-position:center;
+	background-repeat:no-repeat;
+	cursor:pointer;
+}
+.highlight{
+	font-weight: bold;
+	color: orange ;
+}
+td[data-field="DatasetID"]{
+
+	color:#B94A4A;
+
+}
+td[data-field="DatasetID"] :hover{
+	cursor: pointer;
+	text-decoration: underline;
+
+}
+td[data-field="Sample"]{
+
+	color:#B94A4A;
+
+}
+#Source {
+	word-wrap:break-word;
+	word-break:break-all;
+	table-layout:fixed;
+
+}
+
+/* 调整下拉框的大小 */
+#Dataset_select {
+	width: 200px; /* 设置下拉框宽度 */
+	height: 35px; /* 设置下拉框高度 */
+}
+
+/* 给下拉框添加上下间距 */
+.dataset_select {
+	margin-bottom: 10px; /* 设置下拉框下方的间距 */
+}
+
+/* 单独为“导出图表”按钮设置样式 */
+#exportChart{
+	margin-left: 200px;
+	background-color: #E6B7B7;
+	border-color: #E6B7B7;
+	border-radius: 3px; /* 设置按钮四个角为圆角 */
+	font-size: 14px; /* 设置按钮的字体大小为16px */
+	border: 1px solid #d6d6d6;
+	color:white;
+	font-family: roboto, sans-serif;;
+	padding: 10px 20px; /* 设置按钮的内边距，根据需要调整 */
+	line-height: 18px; /* 设置行高，使文字垂直居中 */
+	cursor: pointer;
+}
+#exportData{
+	margin-left: 10px;
+	background-color: #E6B7B7;
+	border-color: #E6B7B7;
+	border-radius: 3px; /* 设置按钮四个角为圆角 */
+	font-size: 14px; /* 设置按钮的字体大小为16px */
+	border: 1px solid #d6d6d6;
+	color:white;
+	font-family: roboto, sans-serif;;
+	padding: 10px 20px; /* 设置按钮的内边距，根据需要调整 */
+	line-height: 20px; /* 设置行高，使文字垂直居中 */
+	cursor: pointer;
+}
+#exportChart:hover,
+#exportData:hover {
+	background-color: #F7F7F7; /* 设置悬停时的背景色为紫色 */
+	border-radius: 3px; /* 设置按钮四个角为圆角 */
+	color:#B94A4A;
+	
+}
+
+
+/* 选择工具栏按钮的文字并修改颜色 */
+.echarts-toolbox span {
+    color: #B94A4A; /* 设置为你想要的颜色 */
+}

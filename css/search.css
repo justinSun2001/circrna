@@ -1,0 +1,120 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.search_body{
+	/* width:1500px; */
+	width: calc(100% - 50px); /* 计算整个页面宽度减去 50px */
+	margin:0 auto;
+	border: 2px #E6B7B7 solid;
+}
+.search_line{
+	background-image:url(../images/u34.svg);
+	margin-bottom:0;
+	/* background-color: #F2F2F2; */
+    /* padding: 5px 0; */
+	background-color: #E1F0F4;
+    line-height: 45px;
+    /* text-indent: 10px; */
+    position: relative;
+    font-size: 28px;
+	color:#333333;
+}
+.search_way1,.search_way2{
+	padding-top:20px;
+	padding-left:50px;
+	padding-right:100px;
+}
+.search_way1 p,
+.search_way2 p{
+	width:100%;
+	padding: 0 10px;
+	line-height:35px;
+	border-bottom:2px solid #ddd;
+	margin-bottom:10px;
+	color:#666;
+	font-weight:600;
+	font-size:22px;
+}
+.search_way1 textarea{
+	width:100%;
+	height:130px;
+	resize:none;
+	padding:10px;
+}
+.examples{
+	margin-top:30px;
+	display: flex;
+	justify-content: center; /* 水平居中 */
+	align-items: center; /* 垂直居中 */
+}
+.examples span,.eg em{
+	text-decoration:underline;
+	cursor:pointer;
+	color:#B94A4A;
+	margin:0 8px;
+}
+.btnbox{
+	text-align:center;
+	margin:30px 0px;
+}
+.btnbox button{
+	/* color:#4C5155;
+	border:0px;
+	border-radius:5px;
+	width:90px;
+	height:35px;
+	background:#C2ECF6;
+	margin:0 70px; */
+	color: #FFF;
+    background-color: #B94A4A;
+    border-color: #B94A4A;
+	line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+	text-align: center;
+	font-weight: 500;
+	font-size: 14px;
+	display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #DCDFE6;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: 0;
+    margin: 0;
+    -webkit-transition: .1s;
+    transition: .1s;
+    font-weight: 500;
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 4px;
+	width: 120px;
+}
+.btnbox button:hover{
+	/* text-decoration: underline;
+	color: #B94A4A; */
+	color: #B94A4A;
+	border:1px solid #aaa;
+  border-color: #E6B7B7;
+  background-color: #E6B7B7;
+}
+.row{
+	text-align:center;
+	margin-bottom:10px;
+}
+.row input,.row select{
+	width:200px;
+	height:35px;
+	line-height:35px;
+	text-indent:10px;
+	border:1px solid #aaa;
+	border-radius:5px;
+}
+.row span{
+	width:150px;
+	display:inline-block;
+}

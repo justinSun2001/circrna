@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Atlas</title>
+	<link rel="stylesheet" href="src/css/layui.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/browse.css">
+	<link rel="icon" href="images/1_1.png" type="image/x-icon">
+	<style>
+		td[data-field="Dataset"]{
+			color:#1FA3C6
+		}
+	</style>
+</head>
+<body>
+<div class="header">
+	<div class="header_center">
+		<div class="logo">
+			<a href="index.html"> </a>
+		</div>
+		<div class="nav">
+			<ul>
+				<li class="key1">
+					<a href="#">Browse</a>
+					<Div class="menu1">
+						<Div class="menucenter">
+
+							<div class="menuright">
+								<ul>
+									<li><a href="browse_circRNA.html">circRNA</a></li>
+									<li><a href="browse.html">Dataset</a></li>
+									<li><a href="#">Phenotype</a></li>
+								</ul>
+							</div>
+						</div>
+					</Div>
+				</li>
+				<li><a href="search.html">Search</a></li>
+				<li><a href="#">Differential Expression</a></li>
+				<li><a href="#">Download</a></li>
+				<li><a href="#">Help</a></li>
+				<li><a href="#"><img src="images/search.svg"></a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="line">
+	Browse by
+</div>
+<!-- 为 ECharts 准备一个定义了宽高的 DOM -->
+<div id="main_echarts" style="width: 960px;height:600px;"></div>
+<table id="test"></table>
+<div class="browse1">
+	<div class="search_box">
+		<div class="browse_search1">
+			<form class="layui-form" id="search_form" lay-filter="search_form">
+				<select lay-ignore required name="item_name" lay-filter="item_name">
+					<option value="Dataset">Dataset</option>
+					<option value="ICD11">ICD11</option>
+					<option value="Type">Type</option>
+					<option value="Platform">Platform</option>
+					<option value="Subtype">Subtype</option>
+				</select>
+				<input lay-ignore type="text" value="Itemvalue1" name="search_value" lay-filter="search_value">
+				<button lay-ignore lay-submit lay-filter="search_submit" id="search_submit"></button>
+			</form>
+		</div>
+	</div>
+	<table class="layui-table" id="demo">
+	</table>
+</div>
+
+<div class="footer">
+	<div class="footer_center">
+		<div class="flogo">
+		</div>
+		<div class="footer_menu">
+			<div class="menulist">
+				<h3>Related Databases</h3>
+				<ul>
+					<li>circAtlas</li>
+					<li>circBase</li>
+					<li>circPedia</li>
+					<li>Transcirc</li>
+					<li>circBank</li>
+					<li>PltDB</li>
+					<li>exorBase</li>
+				</ul>
+			</div>
+			<div class="menulist">
+				<h3>Legal</h3>
+				<ul>
+					<li>Cited policy</li>
+					<li>Private policy</li>
+				</ul>
+			</div>
+			<div class="menulist">
+				<h3>About</h3>
+				<ul>
+					<li>Help</li>
+					<li>Download</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<p>Copyright © 2023 The Gu Lab. All Rights Reserved.</p>
+</div>
+</body>
+<script src="js/echarts5.4.3.js"></script>
+<script src="src/layui.js"></script>
+
+<script>
+	layui.use(['table','form'], function(){
+		var table = layui.table,form = layui.form,$ = layui.$;
+
+		var cirRNAs = table.render({
+			elem: '#demo'
+			,page: true
+			,width:1500
+			,url: './interface/browse_dataset_API.php'
+			,page: true //开启分页
+			,limits:[10,50,100]
+			,id : 'cirRNAs'
+			,cols: [[ //表头
+				{field: 'Dataset', title: 'Dataset',event: 'Go_dataset',sort:true,align:'center'}
+				,{field: 'ICD11', title: 'ICD11', sort: true,align:'center'}
+				,{field: 'Type', title: 'Type', sort: true,align:'center'}
+				,{field: 'Platform', title: 'Platform',sort:true,align:'center'}
+				,{field: 'Subtype', title: 'Subtype',sort:true,align:'center'}
+			]]
+		});
+		var searchColumn = '';
+		var searchValue = '';
+		var lastSortField = ''; // 上一次的排序字段
+		var lastSortOrder = ''; // 上一次的排序顺序
+		table.on('sort(cirRNAs)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+			console.log(obj.field); //当前排序的字段名
+			console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+			console.log(this); //当前排序的 th 对象
+
+			// 判断是否需要重新加载数据
+			if (obj.field !== lastSortField || obj.type !== lastSortOrder) {
+				// 保存当前排序字段和排序顺序
+				lastSortField = obj.field;
+				lastSortOrder = obj.type;
+				console.log('reload');
+				// 重新加载数据
+				table.reload('cirRNAs', {
+					where: {
+						search_column:searchColumn,
+						search_value:searchValue,
+						field: obj.field, //排序字段
+						order: obj.type //排序方式
+					}
+				});
+			}
+		});
+		//table.on('row(cirRNAs)', function(obj){
+
+		// window.location.href = 'browse_dataset.html?Dataset=' + encodeURIComponent(obj.data.Dataset);
+		//});
+		table.on('tool(cirRNAs)', function (obj) {
+			let event = obj.event;
+			if (event === "Go_dataset") {
+				window.location.href = 'browse_dataset.html?Dataset=' + encodeURIComponent($(this).find('div').html());
+			}
+		});
+		var data1 = form.val("search_form");
+		form.on('submit(search_submit)', function(data){
+			data1 = form.val("search_form");
+			if (data1['item_name'] !== "All" && data1['search_value'] !== ''&& lastSortField!== '') {
+				searchColumn = data1['item_name'];
+				searchValue = data1['search_value'];
+				console.log(searchColumn);
+				console.log(searchValue);
+				console.log(lastSortField);
+				console.log(lastSortOrder);
+				cirRNAs.reload({
+					url : './interface/browse_dataset_API.php'
+					,where: {
+						search_column:searchColumn,
+						search_value:searchValue,
+						field: lastSortField, //排序字段
+						order: lastSortOrder //排序方式
+					}
+					,page: {
+						curr: 1 //重新从第 1 页开始
+					}
+				});
+			}
+			else if (data1['item_name'] !== "All" && data1['search_value'] !== '') {
+				searchColumn = data1['item_name'];
+				searchValue = data1['search_value'];
+				cirRNAs.reload({
+					url : './interface/browse_dataset_API.php'
+					,where: {
+						search_column:searchColumn,
+						search_value:searchValue,
+						// field: lastSortField, //排序字段
+						// order: lastSortOrder //排序方式
+					}
+					,page: {
+						curr: 1 //重新从第 1 页开始
+					}
+				});
+			}else {
+				searchColumn='';
+				searchValue='';
+				cirRNAs.reload({
+				url : './interface/browse_dataset_API.php'
+				,where: {}
+				,page: {
+					curr: 1 //重新从第 1 页开始
+				}});
+			}
+			return false;
+		});
+
+
+		var chartDom = document.getElementById('main_echarts');
+		var myChart = echarts.init(chartDom);
+		var Type_data;
+		$.ajax({
+			type: "GET",
+			url: "./interface/browse_echarts_API.php",
+			dataType: "json",
+			success: function(data) {
+				Type_data = data;
+				var option;
+				option = {
+					title: {
+						text: 'Dataset classified by disease',
+						left: 'center'
+					},
+					tooltip: {
+						trigger: 'item'
+					},
+					color:['#9C27B0', '#673AB7', '#2196F3', '#8BC34A', '#CDDC39', '#FF9800', '#03A9F4', '#009688', '#FFC107', '#FF5722', '#795548', '#607D8B'],
+					legend: {
+						orient: 'vertical',
+						left: 'left'
+					},
+					series: [
+						{
+							name: 'Disease',
+							type: 'pie',
+							radius: '50%',
+							data: Type_data.data,
+							emphasis: {
+								itemStyle: {
+									shadowBlur: 12,
+									shadowOffsetX: 0,
+									shadowColor: 'rgba(0, 0, 0, 0.5)'
+								}
+							}
+						}
+					]
+				};
+				option && myChart.setOption(option);
+			},
+			error: function(xhr, status, error) {
+				console.log("请求失败: " + error);
+			}
+		});
+		myChart.on('click', function(params) {
+			console.log(params.data);
+			var obj1 = {search_column: 'Type', search_value:params.data.name};
+			console.log(obj1)
+			cirRNAs.reload({
+				url : './interface/browse_dataset_API.php'
+				,where: obj1
+				,page: {
+					curr: 1 //重新从第 1 页开始
+				}
+			});
+		});
+	});
+
+</script>
+</html>

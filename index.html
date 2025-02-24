@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>BloodCircR</title>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="src/animate.css">
+	<link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
+	<link rel="icon" href="images/1_1.png" type="image/x-icon">
+	<script src="js/vue.js"></script>
+	<script src="js/elementui.js"></script>
+	<script src="src/layui.js"></script>
+	<script src="src/wow.js"></script>
+	<script src="js/axios.min.js"></script>
+	<script src="js/header-component.js"></script>
+	<script src="js/footer-component.js"></script>
+	<script>
+		new WOW().init();
+	</script>
+	<style>
+		.el-button {
+			color: #F5F7FA;
+			background-color: #B94A4A;
+			border-color: #B94A4A;
+		}
+
+		.el-button:hover {
+			color: #B94A4A;
+			border-color: #E6B7B7;
+			background-color: #E6B7B7;
+		}
+
+		.image-with-text {
+			position: relative;
+		}
+
+		.text-overlay {
+			position: absolute;
+			top: 15%;
+			left:15%;
+			right:15%;
+			bottom:15%;
+			color: white;
+			/* padding: 80px 20px; */
+			width: 70%;
+			height: 70%;
+		}
+
+		.text-overlay .text {
+			font-size: 1.5vw;
+			font-weight: bold;
+		}
+
+		a {
+			text-decoration: none;
+			color: #F5F7FA;
+		}
+		.urlink{
+					color:#333333;
+					text-decoration: none;
+					word-wrap: break-word;
+					word-break: break-all;
+					cursor: pointer;
+					font-size: 26px;
+					font-weight: 700;
+		}
+		.urlink:hover{
+			 color: #B94A4A;
+				text-decoration: underline;
+		}
+	.custom-link { color: #B94A4A; text-decoration: none; } .custom-link:hover { text-decoration: underline !important; }	
+
+
+	</style>
+</head>
+
+<body>
+	<div id="app" :class="{ loaded: isLoaded }">
+		<!-- 使用定义的 header 组件 -->
+		<app-header></app-header>
+
+		<div class="banner" style="margin-top: 100px;">
+			<el-carousel :interval="5000" height="600px" indicator-position="outside">
+
+				<el-carousel-item>
+					<div class="image-with-text" onclick="scrollToData()" style="cursor: pointer;">
+						<img src="images/u27.png">
+						<div class="text-overlay">
+							<div style="display: flex;justify-content: center; flex-direction: column; height: 100%; margin-top: -30px;">
+								<div class="text" style="font-size: 10vw;text-align: center;font-family: Arial Rounded MT Bold;">RESEOURCES</div>
+								<!--<div style="border-bottom: 2px solid white; width: 100%; margin: 20px 0;"></div>-->
+								<div class="text" style="text-align: center;">A curated collection of 5,430 human blood samples from 89 RNA-seq studies encompassing 58 
+								human diseases or phenotypes</div>
+							</div>
+						</div>
+					</div>
+				</el-carousel-item>
+				<el-carousel-item>
+					<div class="image-with-text" onclick="scrollToCircRNA()" style="cursor: pointer;">
+						<img src="images/u33.png">
+						<div class="text-overlay">
+							<div style="display: flex;justify-content: center; flex-direction: column; height: 100%; margin-top: -30px;">
+								<div class="text" style="font-size: 10vw;text-align: center;font-family: Arial Rounded MT Bold;">CIRCRNAS</div>
+									<!--<<div style="border-bottom: 2px solid white; width: 100%; margin: 20px 0;"></div>-->
+								<div class="text" style="text-align: center;">An atlas of 2,298,044 human blood circRNAs, enriched with detailed annotations and functional insights</div>
+							</div>
+						</div>
+					</div>
+				</el-carousel-item>
+				<el-carousel-item>
+					<div class="image-with-text" onclick="scrollToExpression()" style="cursor: pointer;">
+						<img src="images/u34.png">
+						<div class="text-overlay">
+							<div style="display: flex;justify-content: center; flex-direction: column; height: 100%; margin-top: -30px;">
+								<div class="text" style="font-size: 10vw;text-align: center;font-family: Arial Rounded MT Bold;">EXPRESSIONS</div>
+								<!--<div style="border-bottom: 2px solid white; width: 100%; margin: 20px 0;"></div>-->
+								<div class="text" style="text-align: center;">Personalized integrative analysis of expressions, differential expressions
+									and functional annotation of human blood circRNAs</div>
+							</div>
+						</div>
+					</div>
+				</el-carousel-item>
+				<el-carousel-item>
+					<div class="image-with-text" onclick="scrollToPipeline()" style="cursor: pointer;">
+						<img src="images/dataview.png">
+						<div class="text-overlay">
+							<div style="display: flex;justify-content: center; flex-direction: column; height: 100%; margin-top: -30px;">
+								<div class="text" style="font-size: 10vw;text-align: center;font-family: Arial Rounded MT Bold;">PIPELINE</div>
+								<!--<div style="border-bottom: 2px solid white; width: 100%; margin: 20px 0;"></div>-->
+								<div class="text" style="text-align: center;">A bioinformatics pipeline optimized for identifying, annotating, quantifying and analyzing circRNA expressions in human blood</div>
+							</div>
+						</div>
+					</div>
+				</el-carousel-item>
+			</el-carousel>
+		</div>
+		<script>
+			function scrollToCircRNA() {
+				const element = document.getElementById('CircRNA');
+				const rect = element.getBoundingClientRect();
+				window.scrollTo({
+					top: rect.top - 100,
+					behavior: 'smooth'
+				});
+			}
+			function scrollToData() {
+				const element = document.getElementById('Data');
+				const rect = element.getBoundingClientRect();
+				window.scrollTo({
+					top: rect.top - 100,
+					behavior: 'smooth'
+				});
+			}
+			function scrollToExpression() {
+				const element = document.getElementById('Expression');
+				const rect = element.getBoundingClientRect();
+				window.scrollTo({
+					top: rect.top - 100,
+					behavior: 'smooth'
+				});
+			}
+			function scrollToPipeline() {
+				const element = document.getElementById('Pipeline');
+				const rect = element.getBoundingClientRect();
+				window.scrollTo({
+					top: rect.top - 100,
+					behavior: 'smooth'
+				});
+			}
+		</script>
+		<div class="welcome" style="margin-top: 10px;">
+			<div >
+				<span class="card_title" style="font-size: 50px;">Welcome to <i>BloodCircR</i>！</span>
+				<br>
+				<br><i><b>BloodCircR</b></i> is a comprehensive database of human blood circular RNAs (circRNAs) and an integrative platform for analyzing their expression in 
+				human blood samples from RNA-seq studies. CircRNAs are single-stranded RNA molecules with a unique closed-loop structure and critical biological functions. 
+				Abnormal circRNA expression has been associated with various human diseases, including cancer, neurodegenerative disorders, cardiovascular diseases, and immune 
+				system abnormalities. Due to their exceptional stability, abundant expression in blood, and high disease specificity, circRNAs are emerging as promising blood-based 
+				biomarkers for diagnosing and monitoring human diseases.</br>
+
+			</div>
+		</div>
+		<!-- 分割线 -->
+		<hr style="margin-left: 20px; margin-right: 20px; border: 2px solid #F2f2f2;margin-top: -10px;">
+		<el-card id="Data" style="background-color: rgb(247, 247, 247)">
+			<div class="statistics">
+				<div class="statistics_left" style="width:60%;">
+					<img src="images/u13-1.png" class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s"
+						style="margin-left: 30px;margin-top: 20px;">
+				</div>
+				<div class="statistics_right" style="width:40%;">
+					<div>
+						<div class="card_title wow slideInRight" data-wow-duration="1s" data-wow-delay="0s"
+							style="font-size: 36px; padding-bottom: 20px;font-family: Arial Rounded MT Bold;margin-top: 30px;">
+							A Resource of Human Blood Transcriptome Studies and Datasets
+						</div>
+						<ul class="wow slideInRight" data-wow-duration="1s" data-wow-delay="0s"
+							style="color: #333333;font-size: 25px;line-height: 1.5;">
+						<li>5,430 Samples</li>
+							<li>89 RNA-seq Datasets</li>
+							<li>93 RNA-seq Studies</li>
+							<li>8 Human Diseases or Phenotypes</li>
+						</ul>
+					</div>
+				  <div style="display: flex; justify-content: end; margin-right: 20px;"><a class="more wow slideInRight" data-wow-duration="1s" data-wow-delay="0s" href="study_dataset.html"
+						>More</a></div>
+				</div>
+			</div>
+		</el-card>
+		<el-card id="CircRNA">
+			<div class="statistics">
+				<div class="statistics_left" style="padding-left: 30px;width:40%;">
+					<div>
+						<div class="card_title wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s"
+							style="font-size: 36px; padding-bottom: 20px;font-family: Arial Rounded MT Bold;margin-top: 30px;">
+							An Atlas of Human Blood CircRNAs
+						</div>
+						<ul class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s"
+							style="line-height: 1.5;color: #333333;font-size: 25px;">
+							<li>2,298,044 circRNAs</li>
+							<li>Sequence and Structure</li>
+							<li>Alias Names</li>
+							<li>Supporting Evidences</li>
+							<li>Functional Implications</li>
+							<li>Expression in RNA-seq Datasets</li>
+						</ul>
+					</div>
+					<div style="display: flex; justify-content: end; margin-right: 20px;">
+						<a class="more wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s"
+							href="browse_circRNA.html">More</a>
+					</div>
+				</div>
+				<div class="statistics_right" style="width:60%;">
+					<div style="display: flex; justify-content: end;">
+						<img src="images/circrnamodule-1.png" class="wow slideInRight" data-wow-duration="1s"
+							data-wow-delay="0s" style="margin-right: 30px;margin-top: 20px;">
+					</div>
+				</div>
+			</div>
+		</el-card>
+		<el-card id="Expression" style="background-color: rgb(247, 247, 247)">
+			<div class="statistics">
+				<div class="statistics_left" style="width:60%;">
+					<img src="images/u72-1.png" class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s"
+						style="margin-left: 30px;margin-top: 20px;">
+				</div>
+				<div class="statistics_right" style="width:40%;">
+					<div>
+						<div class="card_title wow slideInRight" data-wow-duration="1s" data-wow-delay="0s"
+							style="font-size: 36px; padding-bottom: 20px;font-family: Arial Rounded MT Bold;margin-top: 30px;">
+							An Integrative Platform of Expression Analysis for Human Blood CircRNAs
+						</div>
+						<ul class="wow slideInRight" data-wow-duration="1s" data-wow-delay="0s"
+							style="line-height: 1.5;color: #333333;font-size: 25px;">
+							<li>Expression Landscape</li>
+							<li>Differential Expression</li>
+							<li>Functional Enrichment</li>
+
+
+						</ul>
+					</div>
+					<div style="display: flex; justify-content: end; margin-right: 20px;">
+					<a class="more wow slideInRight" data-wow-duration="1s" data-wow-delay="0s"
+						href="expression.html">More</a>
+					</div>
+					</div>
+			</div>
+		</el-card>
+		<el-card id="Pipeline">
+			<div class="statistics">
+				<div class="statistics_left" style="padding-left: 30px;padding-right: 30px;width:50%;">
+					<div>
+						<div class="card_title wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s"
+							style="font-size: 36px; padding-bottom: 20px;font-family: Arial Rounded MT Bold;margin-top: 30px;">
+							A Computational Pipeline of CircRNA Analysis for Human Blood RNA-seq Datasets
+						</div>
+						<ul class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s"
+							style="line-height: 1.5;color: #333333;font-size: 25px;margin-bottom:20px;">
+							<li>Identification and Annotation of Blood CircRNAs</li>
+							<li>Automatic Updates of the Reference Atlas of Human Blood CircRNAs</li>
+							<li>Expression Quantification of CircRNAs</li>
+							<li>Downstream Analysis of CircRNA Expressions</li>
+
+
+						</ul>
+					</div>
+					<div style="display: flex; justify-content: end; margin-right: 20px;">
+						<a class="more wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s"
+							href="study_dataset.html">More</a>
+					</div>
+				</div>
+				<div class="statistics_right" style="width:60%;">
+					<div style="display: flex; justify-content: end;">
+						<img src="images/upipe-1.png" class="wow slideInRight" data-wow-duration="1s" data-wow-delay="0s"
+							style="margin-right: 30px;margin-top: 30px;margin-bottom: 10px;">
+					</div>
+				</div>
+			</div>
+		</el-card>
+
+		<h2 class="home_title">Publications</h2>
+		<div class="news">
+			<el-carousel :interval="5000" height="350px" indicator-position="outside" >
+				<el-carousel-item>
+					<el-card>
+							<div class="news_item">
+								<img src="images/p3.jpeg" class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s">
+								<div class="news_text1">
+									<div class="wow slideInRight" data-wow-duration="1s" data-wow-delay="0s">					
+						<b>The potential of using blood circular RNA as liquid biopsy biomarker for
+												human diseases</b>	
+										<br>
+								
+									<p style="line-height: 1.5;">Guoxia Wen, Tong Zhou, Wanjun Gu<br><span style="font-style: italic; font-weight: 700;">Protein & Cell</span>, Volume 12, Issue 12, December 2021, Pages 911–946,<br> 
+									<a href="http://www.protein-cell.org/en/article/doi/10.1007/s13238-020-00799-3" target="_blank" style="text-decoration: none; color:#B94A4A;" class="custom-link">https://doi.org/10.1007/s13238-020-00799-3</a>
+									</div>
+								</div>
+							</div>
+						</el-card>
+					</el-carousel-item>
+					<el-carousel-item>
+						<el-card>
+							<div class="news_item">
+								<img src="images/p4.jpeg" class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s">
+								<div class="news_text2">
+									<div class="wow slideInRight" data-wow-duration="1s" data-wow-delay="0s">
+								
+											<b>AQUARIUM: accurate quantification of circular isoforms using model-based strategy</b>
+												<br>
+										<p style="line-height: 1.5;">Guoxia Wen, Musheng Li, Fuyu Li, Zengyan Yang, Tong Zhou, Wanjun Gu<br><span style="font-style: italic; font-weight: 700;">Bioinformatics</span>, Volume 37, Issue 24, December 2021, Pages 4879–4881,<br>
+										<a href="https://academic.oup.com/bioinformatics/article/37/24/4879/6296829?login=false#"
+											target="_blank" style="text-decoration: none; color:#B94A4A;" class="custom-link">https://doi.org/10.1093/bioinformatics/btab435</a>
+										</p>
+									</div>
+								</div>
+							</div>
+						</el-card>
+				</el-carousel-item>
+				<el-carousel-item>
+						<el-card>
+							<div class="news_item">
+								<img src="images/research_sqaure.png" class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s">
+								<div class="news_text2">
+									<div class="wow slideInRight" data-wow-duration="1s" data-wow-delay="0s">
+										
+											<b>AQUARIUM_HB: a bioinformatics pipeline for human blood circular RNA analysis</b>
+												<br>
+										<p style="line-height: 1.5;">Shaoxun Yuan, Xue Bai, Linwei Li et al. <br><span style="font-style: italic; font-weight: 700;">Research Square</span>, 17 December 2024, PREPRINT (Version 1)<br>
+										<a href="https://doi.org/10.21203/rs.3.rs-5657706/v1"
+											target="_blank" style="text-decoration: none; color:#B94A4A;" class="custom-link">https://doi.org/10.21203/rs.3.rs-5657706/v1</a>
+										</p>
+									</div>
+								</div>
+							</div>
+						</el-card>
+				</el-carousel-item>
+				<el-carousel-item>
+						<el-card>
+							<div class="news_item">
+								<img src="images/12.webp" class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s">
+								<div class="news_text2">
+									<div class="wow slideInRight" data-wow-duration="1s" data-wow-delay="0s">
+										
+											<b>Large-scale benchmarking of circRNA detection tools reveals largedifferences in sensitivity but not in precision</b>
+												<br>
+										<p style="line-height: 1.5;">Vromman, M., Anckaert, J., Bortoluzzi, S. et al. <br><span style="font-style: italic; font-weight: 700;">Nat Methods</span> 20, 1159–1169 (2023).<br>
+										<a href="https://doi.org/10.1038/s41592-023-01944-6"
+											target="_blank" style="text-decoration: none; color:#B94A4A;" class="custom-link">https://doi.org/10.1038/s41592-023-01944-6</a>
+										</p>
+									</div>
+								</div>
+							</div>
+						</el-card>
+				</el-carousel-item>
+				<el-carousel-item>
+						<el-card>
+							<div class="news_item">
+								<img src="images/jcmm.v29.1.cover.jpg" class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s">
+								<div class="news_text2">
+									<div class="wow slideInRight" data-wow-duration="1s" data-wow-delay="0s">
+										
+											<b>Circular RNAs in peripheral blood mononuclear cells are more stable than linear RNAs upon sample processing delay</b>
+												<br>
+										<p style="line-height: 1.5;">Wen G, Gu W. <br><span style="font-style: italic; font-weight: 700;">J Cell Mol Med.</span> 2022; 26: 5021-5032.<br>
+										<a href="https://doi.org/10.1111/jcmm.17525"
+											target="_blank" style="text-decoration: none; color:#B94A4A;" class="custom-link"> https://doi.org/10.1111/jcmm.17525</a>
+										</p>
+									</div>
+								</div>
+							</div>
+						</el-card>
+				</el-carousel-item>
+				<el-carousel-item>
+						<el-card>
+							<div class="news_item">
+								<img src="images/ebiomedicine.jpg" class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s">
+								<div class="news_text2">
+									<div class="wow slideInRight" data-wow-duration="1s" data-wow-delay="0s">
+										
+											<b>Potential Diagnostic Power of Blood Circular RNA Expression in Active Pulmonary Tuberculosis</b>
+												<br>
+										<p style="line-height: 1.5;">Qian, Zhongqing et al. <br><span style="font-style: italic; font-weight: 700;">eBioMedicine,</span> Volume 27, 18 - 26.<br> DOI:
+										<a href="https://www.thelancet.com/journals/ebiom/article/PIIS2352-3964(17)30488-7/fulltext"
+											target="_blank" style="text-decoration: none; color:#B94A4A;" class="custom-link">10.1016/j.ebiom.2017.12.007</a>
+										</p>
+									</div>
+								</div>
+							</div>
+						</el-card>
+				</el-carousel-item>
+				<el-carousel-item>
+						<el-card>
+							<div class="news_item">
+								<img src="images/p4.jpeg" class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s">
+								<div class="news_text2">
+									<div class="wow slideInRight" data-wow-duration="1s" data-wow-delay="0s">
+										
+											<b>Quantifying circular RNA expression from RNA-seq data using model-based framework</b>
+												<br>
+										<p style="line-height: 1.5;">Qian, Zhongqing et al. <br><span style="font-style: italic; font-weight: 700;">Bioinformatics,</span> Volume 33, Issue 14, July 2017, Pages 2131–2139,<br>
+										<a href="https://doi.org/10.1093/bioinformatics/btx129"
+											target="_blank" style="text-decoration: none; color:#B94A4A;" class="custom-link">https://doi.org/10.1093/bioinformatics/btx129</a>
+										</p>
+									</div>
+								</div>
+							</div>
+						</el-card>
+				</el-carousel-item>
+			</el-carousel>
+		</div>
+
+		<h2 class="home_title">Links</h2>
+		<el-card>
+			<div style="display: flex; justify-content: center; flex-wrap: nowrap; margin:0 5%"
+			class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s">
+				<div style="display: flex; justify-content: start; flex-wrap: wrap; width:50%">
+					<div style="display: flex; flex-wrap: nowrap; justify-content: center; align-items: center;width:100%;">
+						<img src="images/u74.png" style="width: 100px; margin: 0 80px 0 40px;" alt="点击图片跳转">
+						<div style="display: flex; flex-direction: column; justify-content: start; align-items: start;">
+							<a href="https://ngdc.cncb.ac.cn/circatlas/index.php" target="_blank"  class="urlink">
+								CircAtlas
+							</a>
+						</div>
+					</div>
+					<div style="display: flex; flex-wrap: nowrap; justify-content: center; align-items: center;width:100%;">
+						<img src="images/u77.png" style="width: 140px; margin: 0 40px 0 0;" alt="点击图片跳转">
+						<div style="display: flex; flex-direction: column; justify-content: start; align-items: start;">
+							<a href="https://www.pltdb-hust.com/" target="_blank"  class="urlink">
+								PltDB
+							</a>
+						</div>
+					</div>
+					<div style="display: flex; flex-wrap: nowrap; justify-content: center; align-items: center;width:100%; padding-top: 15px;">
+						<img src="images/u79.png" style="width: 140px; margin: 0 40px;" alt="点击图片跳转">
+						<div style="display: flex; flex-direction: column; justify-content: start; align-items: start;">
+							<a href="https://www.biosino.org/transcirc/" target="_blank"  class="urlink">
+								Transcirc
+							</a>
+						</div>
+					</div>		
+				</div>
+				<div style="display: flex; justify-content: start; flex-wrap: wrap; width:50%">
+					<div style="display: flex; flex-wrap: nowrap; justify-content: center; align-items: center;width:100%;">
+						<img src="images/u73.png" style="width: 140px; margin: 0 40px;" alt="点击图片跳转">
+						<div style="display: flex; flex-direction: column; justify-content: start; align-items: start;">
+							<a href="https://cosbi.ee.ncku.edu.tw/FL-circAS/" target="_blank"  class="urlink">
+								FL-circAS
+							</a>
+						</div>
+					</div>
+					<div style="display: flex; flex-wrap: nowrap; justify-content: center; align-items: center;width:100%;">
+						<img src="images/circbase.png" style="width: 140px; margin: 0 40px;" alt="点击图片跳转">
+						<div style="display: flex; flex-direction: column; justify-content: start; align-items: start;">
+							<a href="http://www.circbase.org/" target="_blank"  class="urlink">
+								circBase
+							</a>
+						</div>
+					</div>
+					<div style="display: flex; flex-wrap: nowrap; justify-content: center; align-items: center;width:100%; padding-top: 15px;">
+						<img src="images/bloodspot.png" style="width: 140px; margin: 0 0 0 80px;" alt="点击图片跳转">
+						<div>
+							<div style="display: inline-block; width: 20px;"></div> <!-- 40px 空白 -->
+							<a href="https://www.fobinf.com/" target="_blank"  class="urlink">
+								BloodSpot
+							</a>
+						</div>
+					</div>	
+				</div>
+			</div>
+		</el-card>
+		
+		<div class="bott">
+			<div class="header" style="margin-bottom: -30px;">
+				Contact us
+			</div>
+
+			<div class="form">
+				<div class="header_sub" style="text-align: left;">
+					<span>If you have any questions or suggestions, please fill the form below.</span>(<span
+						style="color: red;">*</span><span>Required)</span>
+				</div>
+				<el-divider></el-divider>
+				<div style=" justify-content: center;" class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s">
+					<el-form ref="form1" :model="form1" label-width="100px" label-position="left">
+						<!-- First Name, Last Name, and Title in one row -->
+						<el-row :gutter="20">
+							<el-col :span="8">
+								<el-form-item prop="First_name" :rules="[
+		                    { required: true, message: '', trigger: 'blur' }
+		                ]">
+									<span slot="label" style="font-weight: 700;color:#333333;">First Name:</span>
+									<el-input v-model="form1.First_name" placeholder="*First Name"
+										></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="8">
+								<el-form-item prop="Last_name" :rules="[
+		                    { required: true, message: '', trigger: 'blur' }
+		                ]">
+									<span slot="label" style="font-weight: 700;color:#333333;">Last Name:</span>
+									<el-input v-model="form1.Last_name" placeholder="*Last Name"
+										></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="8">
+								<el-form-item prop="Title">
+									<span slot="label"
+										style="font-weight: 700;color:#333333;margin-right: 10px;">Title:</span>
+									<el-input v-model="form1.Title" placeholder="Title" ></el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>
+
+						<!-- Email and Organization in one row -->
+						<el-row :gutter="20">
+							<el-col :span="8">
+								<el-form-item prop="Email" :rules="[
+		                    { required: true, message: '', trigger: 'blur' }
+		                ]">
+									<span slot="label" style="font-weight: 700;color:#333333;">Email:</span>
+									<el-input v-model="form1.Email" placeholder="*Email"
+										></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="8">
+								<el-form-item prop="Organization">
+									<span slot="label" style="font-weight: 700;color:#333333;">Organization:</span>
+									<el-input v-model="form1.Organization" placeholder="Organization"
+										></el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>
+					</el-form>
+				</div>
+
+				<div class="form_title">
+					Comments
+				</div>
+				<el-divider></el-divider>
+				<div class="wow slideInLeft" data-wow-duration="1s" data-wow-delay="0s">
+				<el-input type="textarea" :rows="5" placeholder="CONTENT..." v-model="questions">
+				</el-input>
+				</div>
+				<div style="display: flex; justify-content: center;" class="wow slideInRight" data-wow-duration="1s" data-wow-delay="0s">
+					<div style="margin:20px 10px 0 0; text-align: center;">
+						<el-button type="primary" @click="submitForm" style="width:100px;">Submit</el-button>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+
+		<!-- 使用定义的 footer 组件 -->
+		<app-footer></app-footer>
+
+	</div>
+
+	<script>
+		const searchButton = document.getElementById("search_btn");
+		const search1 = document.getElementById("search1");
+
+		let isSearch1Visible = false; // 初始状态为不可见
+
+		searchButton.addEventListener("click", function () {
+			if (isSearch1Visible) {
+				search1.style.display = "none"; // 点击后隐藏
+			} else {
+				search1.style.display = "flex"; // 点击后显示
+			}
+			isSearch1Visible = !isSearch1Visible; // 切换状态
+		});
+
+		const examples = document.getElementById("examples");
+		const searchInput = document.getElementById("search_input");
+
+		examples.addEventListener("click", function (event) {
+			if (event.target.tagName === "SPAN") {
+				searchInput.value = event.target.textContent;
+			}
+		});
+
+	</script>
+</body>
+
+<!-- vue相关js -->
+<script>
+	new Vue({
+		el: '#app',
+		data() {
+			return {
+				isLoaded: false,
+				form1: {
+					First_name: '',
+					Last_name: '',
+					Email: '',
+					Title: '',
+					Organization: ''
+				},
+				questions: ''
+			}
+		},
+		mounted() {
+			this.isLoaded = true;
+		},
+		methods: {
+			resetForm() {
+				this.$refs.form1.resetFields();
+				this.questions = '';
+			},
+			submitForm() {
+				// 使用Element UI的表单验证
+				this.$refs.form1.validate((valid) => {
+					if (valid) {
+						// 如果所有验证都通过，则准备发送数据到后端
+						const formData = {
+							...this.form1,
+							questions: this.questions
+						};
+
+						// 使用axios或者其他HTTP库发送数据
+						this.submitToServer(formData);
+					} else {
+						console.log('error submit!!');
+						return false;
+					}
+				});
+			},
+			submitToServer(formData) {
+				// 使用axios发送数据到后端PHP脚本
+				axios.post('./interface/contact.php', {}, { params: formData })
+					.then(response => {
+						// 处理响应
+						console.log(response);
+						if (response.data.status === 'success') {
+							console.log('success');
+							this.$message.success(response.data.message);
+						} else {
+							// 处理错误的情况
+							console.log('error');
+							this.$message.error(response.data.message);
+						}
+					})
+					.catch(error => {
+						// 处理请求错误
+						this.$message.error('An error occurred while processing the request.');
+					});
+			}
+		}
+	})
+</script>
+
+</html>

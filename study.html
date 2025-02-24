@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>BloodCircR</title>
+    <link rel="icon" href="images/1_1.png" type="image/x-icon">
+    <!-- 引入elementui样式 -->
+    <link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
+    <script src="js/vue.js"></script>
+    <script src="js/elementui.js"></script>
+    <script src="js/axios.min.js"></script>
+    <style>
+        * {
+
+            font-family: Helvetica;
+        }
+
+        /* 修改 Element UI 表格的文字颜色 */
+        .el-table .cell,
+        .el-table th,
+        .el-table td {
+            color: #333333 !important;
+            /* 更改文字颜色为 #333333 */
+            white-space: normal !important;
+            /* 允许文字换行 */
+            word-wrap: break-word !important;
+            /* 长单词换行处理 */
+            overflow-wrap: break-word !important;
+            /* 处理其他换行情况 */
+            word-break: keep-all !important;
+
+            /* 保持单词完整，不随意断开 */
+        }
+
+        .title-link {
+            text-decoration: none;
+            color: #B94A4A;
+        }
+
+        .title-link:hover {
+            text-decoration: underline;
+            /* 其他悬停时的样式 */
+        }
+
+        .study {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .study_left {
+            width: 20%;
+            display: flex;
+            flex-direction: column;
+            padding: 50px 30px 0 0;
+        }
+
+        .study_left .title {
+            padding-left: 20px;
+            color: #B94A4A;
+            font-size: 30px;
+        }
+
+        .study_right {
+            width: 80%;
+            padding: 30px 10px 0 0;
+            overflow: auto;
+        }
+
+        .dataset-link {
+            color: #B94A4A;
+            text-decoration: none;
+            /* 移除默认下划线 */
+        }
+
+        .dataset-link:hover {
+            text-decoration: underline;
+            /* 添加悬停时的下划线 */
+        }
+
+        .el-button:hover {
+            color: #B94A4A;
+            border-color: #E6B7B7;
+            background-color: #E6B7B7;
+        }
+
+        .el-button:active {
+            color: #B94A4A;
+            border-color: #E6B7B7;
+            background-color: #E6B7B7;
+        }
+
+        .el-button:focus {
+            color: #B94A4A;
+            border-color: #E6B7B7;
+            background-color: #E6B7B7;
+        }
+
+        /* 自定义按钮样式 */
+        .el-button.custom-button {
+            border-color: #DCDFE6;
+            background-color: #B94A4A;
+            color: white;
+        }
+
+        .el-button.custom-button:hover {
+            color: #B94A4A;
+            border-color: #E6B7B7;
+            background-color: #E6B7B7;
+        }
+
+        .el-button.custom-button:active {
+            color: #B94A4A;
+            border-color: #E6B7B7;
+            background-color: #E6B7B7;
+        }
+
+        .el-button.custom-button:focus {
+            color: #B94A4A;
+            border-color: #E6B7B7;
+            background-color: #E6B7B7;
+        }
+
+        /* 修改 el-tree 节点文字颜色 */
+        .el-tree .el-tree-node__label {
+            color: #333333 !important;
+            /* 更改字体颜色为 #333333 */
+        }
+
+        .el-tree .el-tree-node__content {
+            color: #333333 !important;
+            /* 确保节点内容字体颜色一致 */
+        }
+
+        .el-table--enable-row-hover .el-table__body tr:hover>td.el-table__cell {
+            background-color: #F7EFEF !important;
+        }
+
+        .el-tree-node__label {
+            font-size: 18px !important;
+        }
+
+        .el-tree {
+            display: inline-block;
+            min-width: 100%;
+        }
+
+        .el-button--mini,
+        .el-button--small {
+            font-size: 16px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" :class="{ loaded: isLoaded }">
+        <!-- 根据选择展示不同的内容 -->
+        <div class="study">
+            <div class="study_left"
+                style="margin-top: -20px;margin-left: 10px;margin-right: -10px !important;">
+                <el-card style="height:560px; overflow:auto;-ms-overflow-style: none;
+      scrollbar-width: thin;">
+                    <div class="title">Type</div>
+                    <el-divider></el-divider>
+                    <el-tree :data="study_left" empty-text="" show-checkbox node-key="id" default-expand-all ref="tree"
+                        @check-change="handleCheckChange">
+                        <template #default="{ node, data }">
+                            <span v-html="replaceTextWithIcons(node.label)"></span>
+                        </template>
+                    </el-tree>
+                </el-card>
+                <div style="text-align: center;">
+
+                    <el-button class="custom-button" type="primary" size="mini" @click="resetChecked()"
+                        style="width:50%; margin-top: 20px;height: 40px !important;">Reset</el-button>
+                </div>
+            </div>
+            <div class="study_right">
+                <el-row style="padding-left: 0px; padding-bottom: 10px;">
+                    <el-col :span="3" style="padding:0">
+                        <!-- 下拉选择框 -->
+                        <el-select v-model="searchField" placeholder="Please Select">
+                            <el-option label="StudyID" value="StudyID"></el-option>
+                            <el-option label="Title" value="Title"></el-option>
+                            <el-option label="DatasetID" value="DatasetID"></el-option>
+                            <el-option label="Type" value="type2"></el-option>
+                            <el-option label="Description" value="Description"></el-option>
+                        </el-select>
+                    </el-col>
+                    <el-col :span="9" style="padding:0; padding-right: 50px;">
+                        <!-- 搜索输入框 -->
+                        <el-input v-model="searchKeyword" placeholder="Please input search content" clearable
+                            @keyup.enter.native="handleSearch" style="width: 100%">
+                        </el-input>
+                    </el-col>
+                    <el-button class="custom-button" icon="el-icon-search" @click="handleSearch">Search</el-button>
+                    <el-button class="custom-button" @click="handleSearchReset">Reset</el-button>
+                </el-row>
+                <!-- 表格显示主体 -->
+                <el-table :data="displayData" style="width: 100%;" @sort-change="handleSort" stripe border>
+                    <el-table-column prop="StudyID" label="StudyID" :width="width1" sortable>
+                        <template slot-scope="scope">
+                                <!-- 使用 v-bind 绑定 href 属性到一个路由链接 -->
+                                <a href="#" class="title-link" @click.prevent="goToDetail(scope.row)">{{ scope.row.StudyID
+                                    }}</a>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="Title" label="Title" :width="width2" sortable>
+                    </el-table-column>
+                    <el-table-column prop="DatasetID" label="DatasetID" :width="width3" sortable>
+                        <template slot-scope="scope">
+                                <!-- 判断是否有顿号分隔 -->
+                                <template v-if="scope.row.DatasetID.includes('、')">
+                                    <template v-for="(id,index) in scope.row.DatasetID.split('、')">
+                                        <a href="#" @click.prevent="goToDetail1(id)" class="title-link" target="_blank">
+                                            {{ id }}
+                                        </a>
+                                        <!-- 顿号分隔符，除了最后一个外都显示 -->
+                                        <span v-if="index!== scope.row.DatasetID.split('、').length - 1"> </span>
+                                    </template>
+                                </template>
+                                <!-- 没有顿号则直接显示一个链接 -->
+                                <template v-else>
+                                    <a href="#" @click.prevent="goToDetail1(scope.row.DatasetID)" class="title-link"
+                                        target="_blank">
+                                        {{ scope.row.DatasetID }}
+                                    </a>
+                                </template>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column prop="type2" label="Type" :width="width4" sortable>
+                    </el-table-column>
+                    <el-table-column prop="Description" label="Description" :width="width5" sortable>
+                        <template slot-scope="scope">
+                            <!-- 使用 v-html 来渲染经过换行处理的文本 -->
+                            <div v-html="convertDescription(scope.row.Description)"></div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                    :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 20px"
+                    :i18n="paginationI18n">
+                </el-pagination>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+<!-- vue相关js -->
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                containerWidth: 1000, // 初始容器宽度
+                isLoaded: false,
+                paginationI18n: {
+                    navigateTo: 'Go to',
+                    pageSize: '/page',
+                    total: 'Total {total} items', // 注意这里的 {total} 不会被替换为实际的总数，你需要手动替换
+                    pageClassifier: 'of', // 用于 "current page of total pages" 的格式化字符串
+                },
+                study_left: [],
+                totalStudies: 0,
+                totalDatasets: 0,
+                totalSamples: 0,
+                searchField: 'StudyID', // 选择的搜索字段
+                searchKeyword: '', // 用户输入的搜索关键词
+                data: [],
+                displayData: [],
+                filteredData: [],
+                currentPage: 1, // 当前页码
+                pageSizes: [10], //页码数选项
+                pageSize: 10, // 每页显示的条数
+                total: 0, // 数据总数
+                totalPages: 0, // 总页数
+            }
+        },
+        computed: {
+            width1() {
+            return 120;
+            },
+            width2() {
+            return (this.containerWidth -120-150-120)*0.3 > 300 ? (this.containerWidth -120-150-120)*0.3 : 300;
+            },
+            width3() {
+            return 150;
+            },
+            width4() {
+            return 120;
+            },
+            width5() {
+            return (this.containerWidth -120-150-120)*0.7 > 600 ? (this.containerWidth -120-150-120)*0.7 : 600;
+            },
+        },
+        mounted() {
+            this.isLoaded = true;
+            this.getDataAndCheck();
+             // 监听容器宽度变化
+            this.updateContainerWidth();
+            window.addEventListener('resize', this.updateContainerWidth);
+        },
+        beforeDestroy() {
+            // 移除事件监听
+            window.removeEventListener('resize', this.updateContainerWidth);
+        },
+        methods: {
+            updateContainerWidth() {
+            // 获取容器的实际宽度
+            const container = document.querySelector('.el-table');
+            if (container) {
+                this.containerWidth = container.clientWidth;
+            }
+            },
+            replaceTextWithIcons(text) {
+                let replacedText = text;
+
+                // 替换 "studies" 相关内容：图标在前，数字在后
+                replacedText = replacedText.replace(/(\d+)\s*studies/g,
+                    '<i class="el-icon-collection"></i> $1');
+
+                // 替换 "datasets" 相关内容：图标在前，数字在后
+                replacedText = replacedText.replace(/(\d+)\s*datasets/g,
+                    '<img src="./images/dataset.svg" alt="dataset-icon" style="width: 1em; height: 1em; vertical-align: -0.15em;"> $1');
+
+                // 替换 "samples" 相关内容：图标在前，数字在后
+                replacedText = replacedText.replace(/(\d+)\s*samples/g,
+                    '<img src="./images/All-samples.svg" alt="samples-icon" style="width: 1em; height: 1em; vertical-align: -0.15em;"> $1');
+
+                // 将 "Select All" 后面加上图标：studies 图标，datasets 图标，samples 图标，数字放后面
+                replacedText = replacedText.replace(/Select All/g,
+                    `Select All (<i class="el-icon-collection"></i> ${this.totalStudies},
+                    <img src="./images/dataset.svg" alt="dataset-icon" style="width: 1em; height: 1em; vertical-align: -0.15em;"> ${this.totalDatasets},
+                    <img src="./images/All-samples.svg" alt="samples-icon" style="width: 1em; height: 1em; vertical-align: -0.15em;"> ${this.totalSamples})`);
+
+                return replacedText;
+            },
+            handleSort(column) {
+                const { prop, order } = column;
+                this.filteredData.sort((a, b) => {
+                    const valueA = a[prop];
+                    const valueB = b[prop];
+                    if (valueA < valueB) return order === 'ascending' ? -1 : 1;
+                    if (valueA > valueB) return order === 'ascending' ? 1 : -1;
+                    return 0;
+                });
+                this.updateDisplayData(this.filteredData);
+            },
+            goToDetail(row) {
+                // 这里写跳转逻辑(改为根据studyid和id跳转)
+                // 假设 row 是一个包含多个属性的对象
+                console.log(row.StudyID);
+                axios.post('./interface/study_dataset_get.php', {}, { params: { StudyID: row.StudyID } })
+                    .then(response => {
+                        console.log('test1:', response.data);
+                        const params = new URLSearchParams({
+                            Dataset: response.data,
+                            StudyID: row.StudyID
+                            // ...其他属性
+                        });
+                        const url = `studyinfo.html?${params.toString()}`;
+                        window.open(url, '_parent');
+                    })
+                    .catch(error => {
+                        console.error('Error fetching:', error);
+                    });
+            },
+            goToDetail1(DatasetID) {
+                console.log(DatasetID);
+                axios.post('./interface/datasetID_dataset_get.php', {}, { params: { DatasetID: DatasetID } })
+                    .then(response => {
+                        console.log('test2:', response.data);
+                        const params = new URLSearchParams({
+                            Dataset: response.data,
+                            DatasetID: DatasetID
+                            // ...其他属性
+                        });
+                        const url = `datasetinfo.html?${params.toString()}`;
+                        window.open(url, '_parent');
+                    })
+                    .catch(error => {
+                        console.error('Error fetching:', error);
+                    });
+            },
+            convertDescription(description) {
+                // 找到第一个点号的索引
+                const firstDotIndex = description.indexOf('·');
+                // 如果第一个字符就是点号，则直接在开头添加点号和换行
+                if (firstDotIndex === 0) {
+                    return '·' + description.substring(1).replace(/\·/g, '<br>·');
+                }
+                // 如果没有点号，就不做任何替换
+                return description;
+            },
+            resetChecked() {
+                this.$refs.tree.setCheckedKeys([]);
+            },
+            handleCheckAll() {
+                // 设置所有节点为选中状态
+                this.$refs.tree.setCheckedKeys(this.study_left[0].children.map((node) => node.id));
+            },
+            handleCheckChange() {
+                // 获取被选中节点的类型标签
+                let selectedTypes = this.$refs.tree.getCheckedNodes().map(node => node.label);
+                console.log("选择类型：", selectedTypes);
+                // 使用 filter() 和 includes() 去除包含 "Select All" 字段的值
+                let filteredTypes = selectedTypes.filter(type => !type.includes("Select All"));
+                // 使用正则表达式提取 "studies"、"datasets" 和 "samples" 的数字
+                // 初始化统计变量
+                let totalStudies = 0;
+                let totalDatasets = 0;
+                let totalSamples = 0;
+                filteredTypes.forEach(type => {
+                    // 提取数字
+                    let studiesMatch = type.match(/(\d+)\s*studies/);
+                    let datasetsMatch = type.match(/(\d+)\s*datasets/);
+                    let samplesMatch = type.match(/(\d+)\s*samples/);
+
+                    // 如果找到数字，则累加
+                    if (studiesMatch) totalStudies += parseInt(studiesMatch[1]);
+                    if (datasetsMatch) totalDatasets += parseInt(datasetsMatch[1]);
+                    if (samplesMatch) totalSamples += parseInt(samplesMatch[1]);
+                });
+
+                console.log("Total Studies:", totalStudies);      // 总studies
+                console.log("Total Datasets:", totalDatasets);    // 总datasets
+                console.log("Total Samples:", totalSamples);      // 总samples
+                this.totalStudies = totalStudies;
+                this.totalDatasets = totalDatasets;
+                this.totalSamples = totalSamples;
+
+                console.log("data:", this.data);
+                // 筛选出包含被选中节点类型的数据
+                let filteredData = this.data.filter(item => selectedTypes.includes(item.Type));
+                console.log("过滤数据：", filteredData)
+
+                this.filteredData = filteredData;
+                this.total = this.filteredData.length;
+
+                if (this.total < 10) {
+                    this.pageSize = this.total;
+                    this.pageSizes = [this.total];
+                } else if (this.total <= 20) {
+                    this.pageSize = 10;
+                    this.pageSizes = [10, 20];
+                } else {
+                    this.pageSize = 10;
+                    this.pageSizes = [10, 20, 50];
+                }
+
+                // 使用 setTimeout 延迟执行赋值操作
+                setTimeout(() => {
+                    this.updateDisplayData(this.filteredData);
+                }, 0);
+            },
+            handleSearch() {
+                if (this.searchField && this.searchKeyword) {
+                    // 过滤数据
+                    let filteredData = this.data.filter(item => {
+                        // 获取搜索字段的值并转换为小写
+                        const fieldValue = item[this.searchField]?.toLowerCase();
+                        // 判断搜索字段的值是否包含搜索关键词（不区分大小写）
+                        return fieldValue && fieldValue.includes(this.searchKeyword.toLowerCase());
+                    });
+                    console.log("过滤数据1：", filteredData);
+                    this.currentPage = 1;
+                    this.filteredData = filteredData;
+                    this.total = this.filteredData.length;
+                    if (this.total < 10) {
+                        this.pageSize = this.total;
+                        this.pageSizes = [this.total];
+                    } else if (this.total <= 20) {
+                        this.pageSize = 10;
+                        this.pageSizes = [10, 20];
+                    } else {
+                        this.pageSize = 10;
+                        this.pageSizes = [10, 20, 50];
+                    }
+
+                    this.updateDisplayData(this.filteredData);
+                } else {
+                    // 如果搜索字段或搜索关键词为空，则不进行过滤，返回原始数据
+                    this.currentPage = 1;
+                    this.getData();
+                }
+            },
+            handleSearchReset() {
+                this.searchKeyword = '';
+                this.handleSearch();
+            },
+            updateDisplayData(data) {
+                const totalDataCount = data.length;
+                this.totalPages = Math.ceil(totalDataCount / this.pageSize);
+                if (this.currentPage > this.totalPages) {
+                    this.currentPage = this.totalPages;
+                }
+                console.log("totalPages:", this.totalPages);
+                console.log("currentPage:", this.currentPage);
+                console.log("pageSize:", this.pageSize);
+                console.log("totalDataCount:", totalDataCount);
+                const startIndex = (this.currentPage - 1) * this.pageSize;
+                const endIndex = Math.min(startIndex + this.pageSize, totalDataCount);
+                console.log("startIndex:", startIndex);
+                console.log("endIndex:", endIndex);
+                this.displayData = data.slice(startIndex, endIndex);
+            },
+            getData() {
+                axios.get('./interface/study_data.php')
+                    .then(response => {
+                        console.log(response.data);
+                        this.study_left = [response.data.typeData];
+                        const extractedData = response.data.detailData;
+                        this.data = extractedData;
+                        this.filteredData = extractedData;
+                        this.total = this.filteredData.length;
+                        console.log(this.total);
+                        if (this.total < 10) {
+                            this.pageSize = this.total;
+                            this.pageSizes = [this.total];
+                        } else if (this.total <= 20) {
+                            this.pageSize = 10;
+                            this.pageSizes = [10, 20];
+                        } else {
+                            this.pageSize = 10;
+                            this.pageSizes = [10, 20, 50];
+                        }
+                        this.updateDisplayData(this.filteredData);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+            },
+            getDataAndCheck() {
+                axios.get('./interface/study_data.php')
+                    .then(response => {
+                        console.log(response.data);
+                        this.study_left = [response.data.typeData];
+                        const extractedData = response.data.detailData;
+                        this.data = extractedData;
+                        this.filteredData = extractedData;
+                        this.total = this.filteredData.length;
+                        console.log(this.total);
+                        if (this.total < 10) {
+                            this.pageSize = this.total;
+                            this.pageSizes = [this.total];
+                        } else if (this.total <= 20) {
+                            this.pageSize = 10;
+                            this.pageSizes = [10, 20];
+                        } else {
+                            this.pageSize = 10;
+                            this.pageSizes = [10, 20, 50];
+                        }
+                        this.updateDisplayData(this.filteredData);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    })
+                    .finally(() => {
+                        this.handleCheckAll();
+                    })
+            },
+            handleSizeChange(newSize) {
+                // 每页显示条数改变时触发
+                this.pageSize = newSize;
+                this.currentPage = 1; // 重置当前页码
+                this.updateDisplayData(this.filteredData); // 更新显示数据
+            },
+            handleCurrentChange(newPage) {
+                // 当前页码改变时触发
+                this.currentPage = newPage;
+                this.updateDisplayData(this.filteredData); // 更新显示数据
+            },
+        }
+    })
+</script>
+
+</html>

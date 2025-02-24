@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>BloodCircR</title>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/study_dataset.css">
+	<link rel="icon" href="images/1_1.png" type="image/x-icon">
+	<!-- 引入elementui样式 -->
+	<link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
+	<script src="js/vue.js"></script>
+	<script src="js/elementui.js"></script>
+	<script src="js/header-component.js"></script>
+	<script src="js/footer-component.js"></script>
+	<!-- 引入 xlsx 库 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+	<style>
+		.el-button{
+			color: #F5F7FA;
+			background-color: #B94A4A;
+			border-color: #B94A4A;
+		}
+		.el-button:hover {
+			color: #B94A4A;
+			border-color: #D7BCBC;
+			background-color: #D7BCBC;
+		}
+		
+
+
+		.el-card__body {
+			padding: 0;
+		}
+
+		.el-button:active {
+			color:  #B94A4A;
+			border-color: #D7BCBC;
+			background-color: #D7BCBC;
+		}
+
+		.el-button:focus {
+			color:  #B94A4A;
+			border-color: #D7BCBC;
+			background-color: #D7BCBC;
+		}
+	</style>
+	<style scoped>
+		.menu_header {
+			font-size: 27px;
+			/* 修改为你想要的字体大小 */
+
+		}
+		
+	</style>
+	<style>
+		.background {
+			background-image: url(../images/u600.png);
+			background-repeat: no-repeat;
+			background-size: cover;
+			width: 100%;
+			height: 500px;
+		}
+	</style>
+	<style>
+		.image-with-text {
+			position: relative;
+		}
+
+.text-overlay {
+			position: absolute;
+			top: 15%;
+			left:15%;
+			right:15%;
+			bottom:15%;
+			
+			/* padding: 80px 20px; */
+			width: 70%;
+			height: 70%;
+		}
+
+.text-overlay .text {
+			font-size: 1.5vw;
+			font-weight: bold;
+			color: white !important;
+		}
+		.el-table--enable-row-hover .el-table__body tr:hover>td.el-table__cell {
+		    background-color: #F7EFEF;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" :class="{ loaded: isLoaded }">
+		<!-- 使用定义的 header 组件 -->
+		<app-header></app-header>
+		<div class="background" style="margin-top: 100px; margin-bottom: 0;">
+			<div class="image-with-text">
+				<div class="text-overlay">
+					<div style="display: flex;justify-content: center; flex-direction: column; height: 100%; ">
+					<div class="text" style="font-size: 8vw;text-align: center;font-family: Arial Rounded MT Bold;color:white;margin-top: 430px;">RESEOURCES</div>		
+					<div class="text" style="text-align: center;">Browse and Search Human Blood Transcriptome Studies and Datasets</div>
+				</div>
+			</div>
+		</div>
+</div>
+		<div class="main" style="margin-top: 20px;">
+			<!-- <div class="header">
+				Browse
+			</div> -->
+			<el-card>
+				<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+					<el-menu-item index="1" class="menu_header" @click="navigateTo('study.html')">
+						<div :class="{ text: activeIndex === '1' }">Study</div>
+					</el-menu-item>
+					<el-menu-item index="2" class="menu_header" @click="navigateTo('dataset.html')">
+						<div :class="{ text: activeIndex === '2' }">Dataset</div>
+					</el-menu-item>
+				</el-menu>
+				<iframe name="content" id="content" src="study.html" frameborder="0" scrolling="no"
+					width="100%"></iframe>
+			</el-card>
+		</div>
+
+
+		<!-- 使用定义的 footer 组件 -->
+		<app-footer></app-footer>
+	</div>
+</body>
+
+<!-- vue相关js -->
+<script>
+	new Vue({
+		el: '#app',
+		data() {
+			return {
+				isLoaded: false,
+				activeIndex: '1',
+			}
+		},
+		mounted() {
+			this.isLoaded = true;
+		},
+		methods: {
+			handleSelect(index) {
+				this.activeIndex = index;
+				console.log(this.activeIndex);
+			},
+			navigateTo(url) {
+      window.open(url, 'content'); // 在 iframe 中打开链接
+    },
+		}
+	})
+</script>
+<script>
+	// 根据页面的操作，大小跟随变化
+	function initIframe() {
+		var iframe = document.querySelector('#content');
+		try {
+			var bHeight = iframe.contentWindow.document.body.scrollHeight;
+			var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+			var heigth = Math.max(bHeight, dHeight);
+
+			iframe.height = bHeight + 50;
+			// console.log(heigth);
+		} catch (ex) {
+			console.log('Errors');
+		}
+	}
+
+	window.setInterval('initIframe()', 100)
+</script>
+
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Atlas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/contact.css">
+    <link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
+    <link rel="icon" href="images/1_1.png" type="image/x-icon">
+    <script src="js/vue.js"></script>
+    <script src="js/elementui.js"></script>
+    <script src="src/layui.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/header-component.js"></script>
+	<script src="js/footer-component.js"></script>
+    <style>
+        .el-button:hover {
+    color: #1FA3C6;
+    border-color: #c6e2ff;
+    background-color: #ecf5ff;
+}
+.el-button:active {
+    color: #1FA3C6;
+    border-color: #c6e2ff;
+    background-color: #ecf5ff;
+}
+.el-button:focus {
+    color: #1FA3C6;
+    border-color: #c6e2ff;
+    background-color: #ecf5ff;
+}
+    </style>
+</head>
+
+<body>
+    <div id="app" :class="{ loaded: isLoaded }">
+        <!-- 使用定义的 header 组件 -->
+		<app-header></app-header>
+
+        <div class="main" style="margin-top: 100px;">
+            <div style="padding:0 40px;">
+                <div class="header">
+                    Contact us
+                </div>
+            </div>
+            <div style="padding:0 40px;">
+                <div class="header_sub">
+                    <span>If you have any questions or find new datasets related to our
+                        research, please do not hesitate to
+                        fill the form below. (</span><span style="color: red;">*</span><span>required)</span>
+                </div>
+            </div>
+            <div style="padding:0 40px;">
+                <div class="form">
+                    <div class="form_title">
+                        Personal information
+                    </div>
+                    <el-divider></el-divider>
+                    <el-form ref="form1" :model="form1" label-width=50px" label-position="left">
+                        <el-col :span="12">
+                            <el-form-item prop="name">
+                                <span slot="label" style="font-weight: 700;color:#333333;">Name:</span>
+                                <el-input v-model="form1.name" style="width:250px;"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item prop="email" :rules="[
+                                { required: true, message: '', trigger: 'blur' },
+                                { type: 'email', message: '', trigger: ['blur', 'change'] }
+                            ]">
+                                <span slot="label" style="font-weight: 700;color:#333333;">Email:</span>
+                                <el-input v-model="form1.email" style="width:250px;"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-form>
+                    <div class="form_title">
+                        Dataset information
+                    </div>
+                    <el-divider></el-divider>
+                    <el-form ref="form2" :model="form2" label-width=50px" label-position="top">
+                        <el-col :span="12">
+                            <el-form-item prop="dataset_name">
+                                <span slot="label" style="font-weight: 700;color:#333333;">Dataset name:</span>
+                                <el-input v-model="form2.dataset_name" placeholder="eg.PNJNA56023"
+                                    style="width:250px;"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item prop="dataset_link" :rules="[
+                                { required: true, message: '', trigger: 'blur' },
+                            ]">
+                                <span slot="label" style="font-weight: 700;color:#333333;">Dataset Link:</span>
+                                <el-input v-model="form2.dataset_link" placeholder="eg.http://www.ncbi.nlm.nih"
+                                    style="width:250px;"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item prop="pubmed_id" :rules="[
+                                { required: true, message: '', trigger: 'blur' },
+                            ]">
+                                <span slot="label" style="font-weight: 700;color:#333333;">PubMed ID:</span>
+                                <el-input v-model="form2.pubmed_id" placeholder="eg.32314960"
+                                    style="width:250px;"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item prop="disease_name" :rules="[
+                                { required: true, message: '', trigger: 'blur' },
+                            ]">
+                                <span slot="label" style="font-weight: 700;color:#333333; padding:0">Disease
+                                    name:</span>
+                                <el-input v-model="form2.disease_name" placeholder="eg.Cancer"
+                                    style="width:250px;"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item prop="phenotype">
+                                <span slot="label" style="font-weight: 700;color:#333333;">Phenotype:</span>
+                                <el-input v-model="form2.phenotype" placeholder="eg.HCC"
+                                    style="width:250px;"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item prop="species" :rules="[
+                                { required: true, message: '', trigger: 'blur' },
+                            ]">
+                                <span slot="label" style="font-weight: 700;color:#333333;">Species:</span>
+                                <el-input v-model="form2.species" placeholder="eg.Homo sapiens"
+                                    style="width:250px;"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item prop="tissue_type" :rules="[
+                                { required: true, message: '', trigger: 'blur' },
+                            ]">
+                                <span slot="label" style="font-weight: 700;color:#333333;">Tissue type:</span>
+                                <el-input v-model="form2.tissue_type" placeholder="eg.Blood"
+                                    style="width:250px;"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item prop="data_type" :rules="[
+                                { required: true, message: '', trigger: 'blur' },
+                            ]">
+                                <span slot="label" style="font-weight: 700;color:#333333;">Data
+                                    type:</span>
+                                <el-input v-model="form2.data_type" placeholder="eg.RNA-seq"
+                                    style="width:250px;"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-form>
+                    <div class="form_title">
+                        Dataset description
+                    </div>
+                    <el-divider></el-divider>
+                    <el-input type="textarea" :rows="5" placeholder="" v-model="dataset_description">
+                    </el-input>
+                    <div class="form_title">
+                        Questions
+                    </div>
+                    <el-divider></el-divider>
+                    <el-input type="textarea" :rows="5" placeholder="" v-model="questions">
+                    </el-input>
+                    <div style="padding:10px 0">
+                        <el-button type="primary" @click="submitForm"
+                            style="width:100px;margin-right: 50px;">Submit</el-button>
+                        <el-button type="primary" @click="resetForm" style="width:100px;">Reset</el-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 使用定义的 footer 组件 -->
+        <app-footer></app-footer>
+    </div>
+</body>
+
+<!-- vue相关js -->
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                isLoaded: false,
+                form1: {
+                    name: '',
+                    email: '',
+                },
+                form2: {
+                    dataset_name: '',
+                    dataset_link: '',
+                    pubmed_id: '',
+                    disease_name: '',
+                    phenotype: '',
+                    species: '',
+                    tissue_type: '',
+                    data_type: '',
+                },
+                dataset_description: '',
+                questions: ''
+            }
+        },
+        mounted() {
+            this.isLoaded = true;
+        },
+        methods: {
+            submitForm() {
+                // 使用Element UI的表单验证
+                this.$refs.form1.validate((valid) => {
+                    if (valid) {
+                        this.$refs.form2.validate((valid) => {
+                            if (valid) {
+                                // 如果所有验证都通过，则准备发送数据到后端
+                                const formData = {
+                                    ...this.form1,
+                                    ...this.form2,
+                                    dataset_description: this.dataset_description,
+                                    questions: this.questions
+                                };
+
+                                // 使用axios或者其他HTTP库发送数据
+                                this.submitToServer(formData);
+                            } else {
+                                console.log('error submit!!');
+                                return false;
+                            }
+                        });
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            resetForm() {
+                // 重置表单
+                this.$refs.form1.resetFields();
+                this.$refs.form2.resetFields();
+                this.dataset_description = '';
+                this.questions = '';
+            },
+            submitToServer(formData) {
+                // 使用axios发送数据到后端PHP脚本
+                axios.post('./interface/contact.php', {}, { params: formData })
+                    .then(response => {
+                        // 处理响应
+                        console.log(response);
+                        if (response.data.status === 'success') {
+                            console.log('success');
+                            this.$message.success(response.data.message);
+                        } else {
+                            // 处理错误的情况
+                            console.log('error');
+                            this.$message.error(response.data.message);
+                        }
+                    })
+                    .catch(error => {
+                        // 处理请求错误
+                        this.$message.error('An error occurred while processing the request.');
+                    });
+            }
+        }
+    })
+</script>
+
+</html>
