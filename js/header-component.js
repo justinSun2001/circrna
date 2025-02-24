@@ -58,7 +58,7 @@ Vue.component("app-header", {
                 <div class="nav_right">
                     <div class="xiala">
                         <!-- 替换图标为图片 -->
-                        <img src="/images/dropdown.png" alt="展开" class="toggle-icon" style="width: 50px; height: 50px;">
+                        <img src="./images/dropdown.png" alt="展开" class="toggle-icon" style="width: 50px; height: 50px;">
                         <div class="xiala_nav">
                             <ul>
                             
