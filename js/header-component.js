@@ -1,43 +1,41 @@
 // header-component.js
-Vue.component('app-header', {
-    data() {
-        return {
-            user: JSON.parse(localStorage.getItem('user')) || null
-        };
+Vue.component("app-header", {
+  data() {
+    return {
+      user: JSON.parse(localStorage.getItem("user")) || null,
+    };
+  },
+  mounted() {
+    // // 获取.top_header 元素
+    // var header = document.querySelector('.top_header');
+    // window.addEventListener('scroll', function() {
+    //     if (window.scrollY >= 100) {
+    //       // 修改背景颜色
+    //         header.style.backgroundColor ='#F2F2F2';
+    //     } else {
+    //       // 修改背景颜色
+    //         header.style.backgroundColor ='white';
+    //     }
+    //   });
+  },
+  methods: {
+    managedata() {
+      // 刷新页面
+      window.location.href = "manage_data.html";
     },
-    mounted() { 
-        // // 获取.top_header 元素
-        // var header = document.querySelector('.top_header');
-
-        
-        // window.addEventListener('scroll', function() {
-        //     if (window.scrollY >= 100) {
-        //       // 修改背景颜色
-        //         header.style.backgroundColor ='#F2F2F2';
-        //     } else {
-        //       // 修改背景颜色
-        //         header.style.backgroundColor ='white';
-        //     }
-        //   });
+    userdata() {
+      // 刷新页面
+      window.location.href = "manage_user.html";
     },
-    methods: {
-        managedata() {
-            // 刷新页面
-            window.location.href='manage_data.html';
-        },
-        userdata() {
-            // 刷新页面
-            window.location.href='manage_user.html';
-        },
-        logout() {
-            // 清除 localStorage 中的用户信息
-            localStorage.removeItem('user');
-            // 刷新页面
-            // window.location.reload();
-            window.location.href='index.html';
-        }
+    logout() {
+      // 清除 localStorage 中的用户信息
+      localStorage.removeItem("user");
+      // 刷新页面
+      // window.location.reload();
+      window.location.href = "index.html";
     },
-    template: `
+  },
+  template: `
     <div class="top_header">
         <div class="header_center">
             <div style="height:100px; display:flex; justify-content: space-between; width: 100%;">
@@ -60,7 +58,7 @@ Vue.component('app-header', {
                 <div class="nav_right">
                     <div class="xiala">
                         <!-- 替换图标为图片 -->
-                        <img src="../images/dropdown.png" alt="展开" class="toggle-icon" style="width: 50px; height: 50px;">
+                        <img src="/images/dropdown.png" alt="展开" class="toggle-icon" style="width: 50px; height: 50px;">
                         <div class="xiala_nav">
                             <ul>
                             
@@ -91,12 +89,13 @@ Vue.component('app-header', {
         </div>
     </div>
 	
-    `
-	
+    `,
 });
 
-{/* <span><a href="contact.html">Contact us</a></span>
-                <span class="separator">|</span> */}
-                // <a id="search_btn" href="search.html" style="padding-left: 10px;"><img src="images/search.svg"></a>
-                // <span style="font-size:20px;">Welcome,{{ user.email }}!</span>
-                // <li><a href="differential_expression.html">Differential Expression</a></li>
+{
+  /* <span><a href="contact.html">Contact us</a></span>
+                <span class="separator">|</span> */
+}
+// <a id="search_btn" href="search.html" style="padding-left: 10px;"><img src="images/search.svg"></a>
+// <span style="font-size:20px;">Welcome,{{ user.email }}!</span>
+// <li><a href="differential_expression.html">Differential Expression</a></li>

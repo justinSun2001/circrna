@@ -1,919 +1,1219 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>BloodCircR</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/datasetinfo.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="elementui/theme-chalk/index.css"
+    />
+    <link rel="icon" href="images/1_1.png" type="image/x-icon" />
+    <script src="js/vue.js"></script>
+    <script src="js/elementui.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/header-component.js"></script>
+    <script src="js/footer-component.js"></script>
+    <style>
+      .title-link {
+        text-decoration: none;
+        color: #b94a4a;
+      }
 
-<head>
-	<meta charset="utf-8">
-	<title>BloodCircR</title>
-	<link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href="css/datasetinfo.css">
-	<link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
-	<link rel="icon" href="images/1_1.png" type="image/x-icon">
-	<script src="js/vue.js"></script>
-	<script src="js/elementui.js"></script>
-	<script src="js/axios.min.js"></script>
-	<script src="js/header-component.js"></script>
-	<script src="js/footer-component.js"></script>
-	<style>
-		.title-link {
-			text-decoration: none;
-			color: #B94A4A;
-		}
+      .title-link:hover {
+        text-decoration: underline;
+        /* 其他悬停时的样式 */
+      }
 
-		.title-link:hover {
-			text-decoration: underline;
-			/* 其他悬停时的样式 */
-		}
+      .el-button:hover {
+        color: #b94a4a;
+        border-color: #e6b7b7;
+        background-color: #e6b7b7;
+      }
 
-		.el-button:hover {
-			color: #B94A4A;
-			border-color: #E6B7B7;
-			background-color: #E6B7B7;
-		}
+      .el-button:active {
+        color: #b94a4a;
+        border-color: #e6b7b7;
+        background-color: #e6b7b7;
+      }
 
-		.el-button:active {
-			color: #B94A4A;
-			border-color: #E6B7B7;
-			background-color: #E6B7B7;
-		}
+      .el-button:focus {
+        color: #b94a4a;
+        border-color: #e6b7b7;
+      }
 
-		.el-button:focus {
-			color: #B94A4A;
-			border-color: #E6B7B7;
+      .img_container {
+        width: 100%;
+        /* 容器的宽度 */
+        overflow-x: auto;
+        /* 启用水平滚动条 */
+        white-space: nowrap;
+      }
 
-		}
+      .img1_container {
+        width: 70%;
+        /* 容器的宽度 */
+        overflow-x: auto;
+        /* 启用水平滚动条 */
+        white-space: nowrap;
+        /* 防止图片换行 */
+        /* border: 1px solid #ccc;  */
+        display: flex;
+        /* justify-content: center; */
+        align-items: center;
+        z-index: 1000;
+      }
 
-		.img_container {
-			width: 100%;
-			/* 容器的宽度 */
-			overflow-x: auto;
-			/* 启用水平滚动条 */
-			white-space: nowrap;
-		}
+      .img2_container {
+        width: 50%;
+        /* 容器的宽度 */
+        overflow-x: auto;
+        /* 启用水平滚动条 */
+        white-space: nowrap;
+        /* 防止图片换行 */
+        /* border: 1px solid #ccc;  */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-		.img1_container {
-			width: 70%;
-			/* 容器的宽度 */
-			overflow-x: auto;
-			/* 启用水平滚动条 */
-			white-space: nowrap;
-			/* 防止图片换行 */
-			/* border: 1px solid #ccc;  */
-			display: flex;
-			/* justify-content: center; */
-			align-items: center;
-			z-index: 1000;
-		}
+      ul {
+        padding: 0px 40px;
+        font-size: 20px;
+        color: #333333;
+        /* font-weight: 700; */
+      }
 
-		.img2_container {
-			width: 50%;
-			/* 容器的宽度 */
-			overflow-x: auto;
-			/* 启用水平滚动条 */
-			white-space: nowrap;
-			/* 防止图片换行 */
-			/* border: 1px solid #ccc;  */
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
+      ul .text {
+        font-size: 16px;
+        color: #333333;
+        font-weight: normal;
+        padding: 10px 0;
+      }
+    </style>
+    <style>
+      .background {
+        background-image: url("/images/datasetinfo.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 100%;
+        height: 500px;
+      }
+    </style>
+    <style>
+      .image-with-text {
+        position: relative;
+      }
 
-		ul {
-			padding: 0px 40px;
-			font-size: 20px;
-			color: #333333;
-			/* font-weight: 700; */
-		}
+      .text-overlay {
+        position: absolute;
+        top: 15%;
+        left: 15%;
+        right: 15%;
+        bottom: 15%;
 
-		ul .text {
-			font-size: 16px;
-			color: #333333;
-			font-weight: normal;
-			padding: 10px 0;
-		}
-	</style>
-	<style>
-		.background {
-			background-image: url(../images/datasetinfo.png);
-			background-repeat: no-repeat;
-			background-size: cover;
-			width: 100%;
-			height: 500px;
-		}
-	</style>
-	<style>
-	.image-with-text {
-			position: relative;
-		}
-	
-	.text-overlay {
-				position: absolute;
-				top: 15%;
-				left:15%;
-				right:15%;
-				bottom:15%;
-				
-				/* padding: 80px 20px; */
-				width: 70%;
-				height: 70%;
-			}
-	
-	.text-overlay .text {
-				font-size: 1.5vw;
-				font-weight: bold;
-				color: white !important;
-			}
+        /* padding: 80px 20px; */
+        width: 70%;
+        height: 70%;
+      }
 
-		.el-tabs__item {
-			font-size: 25px;
-		}
- .el-popover{
-	 text-align: left !important;
- }
-		.el-table--enable-row-hover .el-table__body tr:hover>td.el-table__cell {
-			background-color: #F7EFEF;
-		}
+      .text-overlay .text {
+        font-size: 1.5vw;
+        font-weight: bold;
+        color: white !important;
+      }
 
-		.el-popover__title {
+      .el-tabs__item {
+        font-size: 25px;
+      }
+      .el-popover {
+        text-align: left !important;
+      }
+      .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
+        background-color: #f7efef;
+      }
 
-			font-weight: bold;
-		}
+      .el-popover__title {
+        font-weight: bold;
+      }
 
-		.popover-content ::v-deep .el-popover__title {
-			background-color: red;
-			/* 你想要的背景颜色 */
-			padding: 10px;
-			/* 增加一点内边距 */
-			border-bottom: 1px solid #dcdcdc;
-			/* 添加底部的横线 */
-			font-weight: bold;
-			/* 加粗字体 */
-		}
-	</style>
-	<style>
-    /* 过渡动画 */
-.slide-enter-active, .slide-leave-active {
-  transition: all 0.3s ease;
-}
-.slide-enter, .slide-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-</style>
-</head>
+      .popover-content ::v-deep .el-popover__title {
+        background-color: red;
+        /* 你想要的背景颜色 */
+        padding: 10px;
+        /* 增加一点内边距 */
+        border-bottom: 1px solid #dcdcdc;
+        /* 添加底部的横线 */
+        font-weight: bold;
+        /* 加粗字体 */
+      }
+    </style>
+    <style>
+      /* 过渡动画 */
+      .slide-enter-active,
+      .slide-leave-active {
+        transition: all 0.3s ease;
+      }
+      .slide-enter,
+      .slide-leave-to {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+    </style>
+  </head>
 
+  <body>
+    <div id="app" :class="{ loaded: isLoaded }">
+      <!-- 使用定义的 header 组件 -->
+      <app-header></app-header>
+      <div class="background" style="margin-top: 100px; margin-bottom: 0">
+        <div class="image-with-text">
+          <div class="text-overlay">
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+                height: 100%;
+              "
+            >
+              <div
+                class="text"
+                style="
+                  font-size: 7.5vw;
+                  text-align: center;
+                  font-family: Arial Rounded MT Bold;
+                  color: white;
+                  margin-top: 400px;
+                "
+              >
+                DATASET DETAILS
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="main" style="margin-top: 20px">
+        <div class="sec2">
+          <div class="header">
+            <span>General information</span>
+            <div style="float: right; padding-right: 10px" @click="toggleCard">
+              <i :class="iconClass" style="cursor: pointer"></i>
+            </div>
+          </div>
+          <transition name="slide">
+            <el-card v-show="isCardVisible" style="padding: 20px">
+              <!-- 表格显示主体 -->
+              <el-table
+                :data="getValues"
+                :show-header="false"
+                style="width: 100%"
+                stripe
+                border
+              >
+                <el-table-column
+                  v-for="(item, index) in getHeaders"
+                  :key="index"
+                  :prop="item"
+                  :width="getColumnWidth(index)"
+                >
+                  <template slot-scope="scope">
+                    <div v-if="index === 0" :style="{ fontWeight: 'bold' }">
+                      {{ scope.row[item] }}
+                    </div>
+                    <a
+                      v-else-if="index === 1 && scope.$index == 1"
+                      :href="'https://www.ncbi.nlm.nih.gov/bioproject/' + scope.row[item]"
+                      target="_blank"
+                      class="title-link"
+                    >
+                      {{ scope.row[item] }}
+                    </a>
+                    <div v-else-if="index === 1 && scope.$index == 2">
+                      <span
+                        v-if="scope.row[item] && scope.row[item].includes('、')"
+                      >
+                        <!-- 使用 JavaScript 函数生成 DOM -->
+                        <span v-html="generateLinks(scope.row[item])"></span>
+                      </span>
+                      <span v-else>
+                        <a :href="getHref(scope.row[item])" class="title-link"
+                          >{{ scope.row[item] }}</a
+                        >
+                      </span>
+                    </div>
+                    <a
+                      v-else-if="index === 1 && scope.$index == 4"
+                      href="#"
+                      @click.prevent="goToDetail(scope.row)"
+                      class="title-link"
+                    >
+                      {{ scope.row[item] }}
+                    </a>
+                    <a
+                      v-else-if="index === 1 && scope.$index == 3"
+                      href="#"
+                      @click.prevent="downloadSamples(scope.row)"
+                      class="title-link"
+                    >
+                      {{ scope.row[item] }}
+                    </a>
+                    <div v-else v-html="scope.row[item]"></div>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-card>
+          </transition>
+        </div>
 
+        <div class="sec3">
+          <div class="header">
+            <span>Per Sample Summary</span>
+            <el-popover
+              placement="top-start"
+              title="Illustration"
+              width="400"
+              trigger="hover"
+              content="This module illustrates the distribution of circRNA species across samples, along with the expression patterns of highly variable circRNAs at the individual sample level."
+              class="popover-content"
+              style="
+                white-space: normal;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                word-break: keep-all;
+              "
+            >
+              <img
+                src="images/warning.png"
+                slot="reference"
+                alt="icon"
+                class="icon-image"
+              />
+              <!-- 这里是图标图片 -->
+            </el-popover>
+            <div style="float: right; padding-right: 10px" @click="toggleCard1">
+              <i :class="iconClass1" style="cursor: pointer"></i>
+            </div>
+          </div>
+          <transition name="slide">
+            <el-card
+              v-show="isCardVisible1"
+              v-loading="loading1"
+              element-loading-text="Loading"
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(255, 255, 255, 0.8)"
+              style="text-align: center"
+              style="padding: 20px; display: flex"
+            >
+              <el-tabs v-model="activeName1" stretch="true">
+                <el-tab-pane label="Number of Blood CircRNAs" name="first">
+                  <div class="img_container">
+                    <img
+                      :src="image1_1"
+                      style="height: 500px; width: auto"
+                      alt="Image1_1"
+                    />
+                  </div>
+                  <div class="my-accordion accordion" style="text-align: left">
+                    <input type="checkbox" id="collapse1" />
+                    <article>
+                      <label for="collapse1"
+                        >Click here for a detailed description of the
+                        results</label
+                      >
+                      <ul style="font-weight: 700">
+                        <div class="text" style="text-align: left">
+                          This figure displays the distribution of circRNA
+                          species across samples in a bar chart. The X-axis
+                          represents the sample IDs, while the Y-axis shows the
+                          number of circRNA species for each sample. The total
+                          circRNA count across all samples in the dataset is
+                          indicated in the lower right corner. This plot
+                          provides a clear overview of blood circRNA species in
+                          the dataset, emphasizing the variation observed
+                          between different samples.
+                        </div>
+                      </ul>
+                    </article>
+                  </div>
+                </el-tab-pane>
+                <el-tab-pane
+                  label="Expression Profiles of Blood CircRNAs"
+                  name="second"
+                >
+                  <div class="img_container">
+                    <img
+                      :src="image1_2"
+                      style="height: 600px; width: auto"
+                      alt="Image1_2"
+                    />
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      padding-bottom: 20px;
+                      margin-top: 10px;
+                    "
+                  >
+                    <span
+                      style="
+                        margin-right: 10px;
+                        font-weight: bold;
+                        font-size: 20px;
+                      "
+                      >Number of highly variable circRNAs:</span
+                    >
+                    <el-select
+                      v-model="image1_2_num"
+                      placeholder="Please Select"
+                      @change="getPic1"
+                    >
+                      <el-option label="50" value="50"></el-option>
+                      <el-option label="100" value="100"></el-option>
+                      <el-option label="200" value="200"></el-option>
+                      <el-option label="500" value="500"></el-option>
+                    </el-select>
+                    <span
+                      style="
+                        margin-right: 10px;
+                        font-weight: bold;
+                        font-size: 20px;
+                        margin-left: 20px;
+                      "
+                      >Ratio of detected samples:</span
+                    >
+                    <el-select
+                      v-model="image1_2_dr"
+                      placeholder="Please Select"
+                      @change="getPic1"
+                    >
+                      <el-option label="≥ 0.1" value="0.1"></el-option>
+                      <el-option label="≥ 0.2" value="0.2"></el-option>
+                      <el-option label="≥ 0.3" value="0.3"></el-option>
+                      <el-option label="≥ 0.4" value="0.4"></el-option>
+                    </el-select>
+                  </div>
+                  <div class="my-accordion accordion" style="text-align: left">
+                    <input type="checkbox" id="collapse2" />
+                    <article>
+                      <label for="collapse2"
+                        >Click here for a detailed description of the
+                        results</label
+                      >
+                      <ul style="font-weight: 700">
+                        <div class="text" style="text-align: left">
+                          This figure illustrates the expression of highly
+                          variable genes across different sample groups, using
+                          both hierarchical clustering heatmap and principal
+                          component analysis (PCA) to provide a clearer
+                          visualization of the differences between the groups.
+                        </div>
 
-<body>
-	<div id="app" :class="{ loaded: isLoaded }">
-		<!-- 使用定义的 header 组件 -->
-		<app-header></app-header>
-		<div class="background" style="margin-top: 100px; margin-bottom: 0;">
-			<div class="image-with-text">
-				<div class="text-overlay">
-						<div style="display: flex;justify-content: center; flex-direction: column; height: 100%; ">
-					<div class="text" style="font-size: 7.5vw;text-align: center;font-family: Arial Rounded MT Bold;color:white;margin-top: 400px;">DATASET DETAILS</div>
+                        <ul>
+                          <li>
+                            <i>Hierarchical Clustering Heatmap</i>
+                          </li>
+                          <div class="text" style="text-align: left">
+                            The heatmap displays the expression patterns of
+                            highly variable circRNAs across sample groups, with
+                            the X-axis representing sample IDs and the Y-axis
+                            representing circRNAs. A color gradient indicates
+                            expression levels. Clustering analysis groups
+                            samples with similar expression patterns,
+                            highlighting differences between groups.
+                          </div>
+                          <li>
+                            <i>PCA Plot</i>
+                            <div class="text" style="text-align: left">
+                              The PCA plot reduces the data to two components,
+                              PCA1 and PCA2, providing insight into circRNA
+                              expression differences. Each point represents a
+                              sample, with different colors distinguishing
+                              between groups (e.g., disease vs. control).
+                              Samples that cluster closely share similar
+                              expression patterns, while those further apart
+                              indicate significant differences.
+                            </div>
+                          </li>
+                        </ul>
+                      </ul>
+                    </article>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
+            </el-card>
+          </transition>
+        </div>
 
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="main" style="margin-top: 20px;">
-			<div class="sec2">
-				<div class="header">
-					<span>General
-						information</span>
-						<div style="float: right; padding-right: 10px;" @click="toggleCard">
-							<i :class="iconClass" style="cursor: pointer;"></i>
-					</div>
-			</div>
-			<transition name="slide">
-					<el-card v-show="isCardVisible" style="padding:20px;">
-					<!-- 表格显示主体 -->
-					<el-table :data="getValues" :show-header="false" style="width: 100%" stripe border>
-						<el-table-column v-for="(item, index) in getHeaders" :key="index" :prop="item"
-							:width="getColumnWidth(index)">
-							<template slot-scope="scope">
-								<div v-if="index === 0" :style="{ fontWeight: 'bold' }">{{ scope.row[item] }}</div>
-								<a v-else-if="index === 1 && scope.$index == 1"
-									:href="'https://www.ncbi.nlm.nih.gov/bioproject/' + scope.row[item]" target='_blank'
-									class="title-link">
-									{{ scope.row[item] }}
-								</a>
-								<div v-else-if="index === 1 && scope.$index == 2">
-									<span v-if="scope.row[item] && scope.row[item].includes('、')">
-										<!-- 使用 JavaScript 函数生成 DOM -->
-										<span v-html="generateLinks(scope.row[item])"></span>
-									</span>
-									<span v-else>
-										<a :href="getHref(scope.row[item])" class="title-link">{{ scope.row[item] }}</a>
-									</span>
-								</div>
-								<a v-else-if="index === 1 && scope.$index == 4" href="#" @click.prevent="goToDetail(scope.row)"
-									class="title-link">
-									{{ scope.row[item] }}
-								</a>
-								<a v-else-if="index === 1 && scope.$index == 3" href="#" @click.prevent="downloadSamples(scope.row)"
-									class="title-link">
-									{{ scope.row[item] }}
-								</a>
-								<div v-else v-html="scope.row[item]"></div>
-							</template>
-						</el-table-column>
-					</el-table>
-				</el-card>
-				</transition>
-			</div>
+        <!-- 新添两部分 -->
+        <div class="sec4">
+          <div class="header">
+            <span>Per CircRNA Summary</span>
+            <el-popover
+              placement="top-start"
+              title="Illustration"
+              width="400"
+              trigger="hover"
+              content="This module offers detailed information on the percentage of detected samples and the confidence level / type of identified circRNAs, 
+						enabling users to assess the reliability and prevalence of the blood circRNAs."
+            >
+              <img
+                src="images/warning.png"
+                slot="reference"
+                alt="icon"
+                class="icon-image"
+              />
+              <!-- 这里是图标图片 -->
+            </el-popover>
+            <div style="float: right; padding-right: 10px" @click="toggleCard2">
+              <i :class="iconClass2" style="cursor: pointer"></i>
+            </div>
+          </div>
+          <transition name="slide">
+            <el-card
+              v-show="isCardVisible2"
+              v-loading="loading2"
+              element-loading-text="Loading"
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(255, 255, 255, 0.8)"
+              style="text-align: center"
+              style="padding: 20px; display: flex"
+            >
+              <el-tabs v-model="activeName2" stretch="true">
+                <el-tab-pane label="Ratio of detected samples" name="first">
+                  <div style="display: flex; flex-wrap: nowrap">
+                    <div class="img2_container">
+                      <img :src="image2_1" style="width: 100%" alt="Image2_1" />
+                    </div>
+                    <div
+                      style="width: 50%; margin-left: 10px"
+                      v-loading="loading2_2"
+                      element-loading-text="Loading"
+                      element-loading-spinner="el-icon-loading"
+                      element-loading-background="rgba(255, 255, 255, 0.8)"
+                    >
+                      <el-row :gutter="20" style="padding-bottom: 10px">
+                        <el-col :span="6">
+                          <!-- 下拉选择框 -->
+                          <el-select
+                            v-model="searchField"
+                            placeholder="Please Select"
+                            @change="setDefaultKeyword"
+                          >
+                            <el-option label="All" value="All"></el-option>
+                            <el-option
+                              label="DetectedSample"
+                              value="n"
+                            ></el-option>
+                            <el-option
+                              label="DetectedRatio"
+                              value="ratio"
+                            ></el-option>
+                          </el-select>
+                        </el-col>
+                        <el-col :span="18">
+                          <!-- 搜索输入框 -->
+                          <el-input
+                            v-model="searchKeyword"
+                            placeholder="input search content"
+                            clearable
+                            @keyup.enter.native="handleSearch"
+                            style="width: 100%"
+                          >
+                            <el-button
+                              slot="append"
+                              icon="el-icon-search"
+                              @click="handleSearch"
+                            ></el-button>
+                          </el-input>
+                        </el-col>
+                      </el-row>
+                      <!-- 表格显示主体 -->
+                      <el-table
+                        :data="displayData"
+                        @sort-change="handleSort"
+                        style="width: 100%"
+                        row-key="id"
+                      >
+                        <el-table-column
+                          type="index"
+                          :index="getIndex"
+                          width="70"
+                          sortable
+                        ></el-table-column>
+                        <el-table-column
+                          prop="BloodCircR_ID"
+                          label="BloodCircR ID"
+                          sortable
+                          align="center"
+                        >
+                          <template slot-scope="scope">
+                            <!-- 使用 v-bind 绑定 href 属性到一个路由链接 -->
+                            <a
+                              href="#"
+                              class="title-link"
+                              @click.prevent="goToDetail2(scope.row)"
+                              >{{ scope.row.BloodCircR_ID }}</a
+                            >
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="n"
+                          label="DetectedSample"
+                          sortable
+                          align="center"
+                        ></el-table-column>
+                        <el-table-column
+                          prop="ratio"
+                          label="DetectedRatio"
+                          sortable
+                          align="center"
+                        ></el-table-column>
+                      </el-table>
+                      <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="pageSizes"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="total"
+                        style="margin-top: 20px"
+                        :i18n="paginationI18n"
+                      >
+                      </el-pagination>
+                    </div>
+                  </div>
+                  <div class="my-accordion accordion" style="text-align: left">
+                    <input type="checkbox" id="collapse3" />
+                    <article>
+                      <label for="collapse3"
+                        >Click here for a detailed description of the
+                        results</label
+                      >
+                      <ul style="font-weight: 700">
+                        <div class="text" style="text-align: left">
+                          This figure offers a visual representation of circRNA
+                          detection rates across samples through a bar chart.
+                          The X-axis displays the different detection
+                          percentages, while the Y-axis shows the number of
+                          circRNAs detected at the rates in the range. This
+                          chart enables users to quickly assess the detection
+                          status and abundance of circRNAs at specific detection
+                          levels. Additionally, the accompanying table on the
+                          right lists the circRNA ID, detection ratio, and
+                          detection interval for each circRNA.
+                        </div>
+                      </ul>
+                    </article>
+                  </div>
+                </el-tab-pane>
+                <el-tab-pane
+                  label="Confidence Level / Type of Identified CircRNAs"
+                  name="second"
+                >
+                  <div class="img_container">
+                    <img
+                      :src="image2_2"
+                      style="height: 700px; width: auto"
+                      alt="Image2_2"
+                    />
+                  </div>
+                  <div class="my-accordion accordion" style="text-align: left">
+                    <input type="checkbox" id="collapse4" />
+                    <article>
+                      <label for="collapse4"
+                        >Click here for a detailed description of and
+                        results</label
+                      >
+                      <ul style="font-weight: 700">
+                        <div class="text" style="text-align: justify">
+                          These figures illustrate the confidence level, types,
+                          and characteristics of identified blood circRNAs,
+                          offering users a deeper understanding of their
+                          reliability and features.
+                        </div>
 
-			<div class="sec3">
-				<div class="header">
-					<span>Per Sample Summary</span>
-					<el-popover placement="top-start" title="Illustration" width="400" trigger="hover"
-						content="This module illustrates the distribution of circRNA species across samples, along with the expression patterns of highly variable circRNAs at the individual sample level."
-						class="popover-content"
-						style="white-space: normal; word-wrap: break-word; overflow-wrap: break-word; word-break: keep-all; ">
-						<img src="images/warning.png" slot="reference" alt="icon" class="icon-image"> <!-- 这里是图标图片 -->
-					</el-popover>
-					<div style="float: right; padding-right: 10px;" @click="toggleCard1">
-						<i :class="iconClass1" style="cursor: pointer;"></i>
-				</div>
-		</div>
-		<transition name="slide">
-				<el-card v-show="isCardVisible1" v-loading="loading1" element-loading-text="Loading" element-loading-spinner="el-icon-loading"
-					element-loading-background="rgba(255, 255, 255, 0.8)" style="text-align: center;"
-					style="padding:20px; display: flex;">
-					<el-tabs v-model="activeName1" stretch=true>
-						<el-tab-pane label="Number of Blood CircRNAs" name="first">
-							<div class="img_container">
-								<img :src="image1_1" style="height: 500px;width:auto;" alt="Image1_1">
-							</div>
-							<div class="my-accordion accordion" style="text-align: left;">
-								<input type="checkbox" id="collapse1">
-								<article>
-									<label for="collapse1">Click here for a detailed description of the results</label>
-									<ul style="font-weight: 700;">
-											
-											
-												<div class="text" style="text-align: left;">This figure displays the distribution of circRNA species across samples in a bar chart. The X-axis represents the sample IDs, 
-												while the Y-axis shows the number of circRNA species for each sample. The total circRNA count across all samples in the dataset is indicated in the lower right corner. 
-												This plot provides a clear overview of blood circRNA species in the dataset, emphasizing the variation observed between different samples.</div>
-											
-										
-										
-									</ul>
-								</article>
-							</div>
-						</el-tab-pane>
-						<el-tab-pane label="Expression Profiles of Blood CircRNAs" name="second">
-						
-							<div class="img_container">
-								<img :src="image1_2" style="height: 600px;width:auto;" alt="Image1_2">
-							</div>
-						<div style="display: flex;align-items: center; justify-content: center;padding-bottom: 20px;margin-top: 10px;">
-							<span style="margin-right: 10px;font-weight: bold;font-size: 20px;">Number of highly variable circRNAs:</span>
-							<el-select v-model="image1_2_num" placeholder="Please Select" @change="getPic1">
-								<el-option label="50" value='50'></el-option>
-								<el-option label="100" value='100'></el-option>
-								<el-option label="200" value='200'></el-option>
-								<el-option label="500" value='500'></el-option>
-							</el-select>
-							<span style="margin-right: 10px;font-weight: bold;font-size: 20px; margin-left: 20px;">Ratio of detected samples:</span>
-							<el-select v-model="image1_2_dr" placeholder="Please Select" @change="getPic1">
-								<el-option label="≥ 0.1" value='0.1'></el-option>
-								<el-option label="≥ 0.2" value='0.2'></el-option>
-								<el-option label="≥ 0.3" value='0.3'></el-option>
-								<el-option label="≥ 0.4" value='0.4'></el-option>
-							</el-select>
-						</div>
-							<div class="my-accordion accordion" style="text-align: left;">
-							
-								<input type="checkbox" id="collapse2">
-								<article>
-									<label for="collapse2">Click here for a detailed description of the results</label>
-									<ul style="font-weight: 700;">
-										
-										<div class="text" style="text-align: left;">This figure illustrates the expression of highly variable genes
-										 across different sample groups, using both hierarchical clustering heatmap and principal component analysis (PCA) to 
-										 provide a clearer visualization of the differences between the groups. </div>
-										
-											<ul>
-												<li>
-													<i>Hierarchical Clustering Heatmap</i>
-												</li>
-												<div class="text" style="text-align: left;">The heatmap displays the expression patterns of highly variable circRNAs across sample groups, with the X-axis 
-												representing sample IDs and the Y-axis representing circRNAs. A color gradient indicates expression levels. Clustering analysis groups samples 
-												with similar expression patterns, highlighting differences between groups.</div>
-												<li>
-													<i>PCA Plot</i>
-													<div class="text" style="text-align: left;">The PCA plot reduces the data to two components, PCA1 and PCA2, providing insight into circRNA expression differences. 
-													Each point represents a sample, with different colors distinguishing between groups (e.g., disease vs. control). Samples that cluster closely share similar expression patterns, 
-													while those further apart indicate significant differences.
-													</div>
-												</li>
-											</ul>
-										
-									</ul>
-								</article>
-							</div>
-					
-						</el-tab-pane>
-					</el-tabs>
+                        <ul>
+                          <li>
+                            <i>Pie Chart</i>
+                          </li>
+                          <div class="text" style="text-align: justify">
+                            A pie chart displays the confidence distribution of
+                            circRNAs, showing the proportion circRNA species
+                            across different confidence levels. These levels
+                            represent the reliability of circRNA detection,
+                            allowing users to easily interpret the distribution
+                            of circRNA species at each confidence level. Another
+                            pie chart shows the distribution of circRNA types,
+                            indicating the proportions of different categories
+                            (exonic, intronic, and intergenic) within the
+                            samples.
+                          </div>
+                          <li>
+                            <i>Bar Chart</i>
 
-				</el-card>
-				</transition>
-			</div>
+                            <div class="text" style="text-align: justify">
+                              The module includes density plots and histograms
+                              that present the following distributions:
+                              <br />&#8226; Spliced Sequence Length
+                              Distribution: Illustrates the distribution of
+                              spliced sequence lengths of circRNAs, helping
+                              users understand the splicing characteristics
+                              during transcription. <br />&#8226; Number of
+                              Exons per Isoform Distribution: Displays the
+                              number of exons per isoform, reflecting the
+                              complexity of circRNAs within the genome.
+                              <br />&#8226; Number of circRNAs per BSJ
+                              Distribution: Shows the quantity of circRNAs
+                              corresponding to each back-splicing junction
+                              (BSJ), revealing the frequency of circRNA
+                              generation. <br />&#8226; Number of circRNAs per
+                              Host Gene Distribution: Presents the number of
+                              circRNAs associated with each host gene, aiding
+                              users in understanding the relationship between
+                              specific genes and circRNAs.
+                            </div>
+                          </li>
+                        </ul>
+                      </ul>
+                    </article>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
+            </el-card>
+          </transition>
+        </div>
+      </div>
+      <!-- 使用定义的 footer 组件 -->
+      <app-footer></app-footer>
+    </div>
+  </body>
+  <script>
+    function getHref(StudyID) {
+      // 这里写跳转逻辑
+      console.log(StudyID);
+      const queryString = window.location.search;
+      const params = new URLSearchParams(queryString);
+      const datasetname = params.get("Dataset"); // 获取 id 参数的值
+      const url = `studyinfo.html?Dataset=${datasetname}&StudyID=${StudyID}`;
+      return url;
+    }
+  </script>
+  <!-- vue相关js -->
+  <script>
+    new Vue({
+      el: "#app",
+      data() {
+        return {
+          isCardVisible: true, // 控制 el-card 的显示状态
+          isCardVisible1: true, // 控制 el-card 的显示状态
+          isCardVisible2: true, // 控制 el-card 的显示状态
+          isLoaded: false,
+          loading1: false,
+          loading2: false,
+          loading2_2: false,
+          loading3: false,
+          loading4: false,
+          paginationI18n: {
+            navigateTo: "Go to",
+            pageSize: "/page",
+            total: "Total {total} items", // 注意这里的 {total} 不会被替换为实际的总数，你需要手动替换
+            pageClassifier: "of", // 用于 "current page of total pages" 的格式化字符串
+          },
+          activeName1: "first",
+          activeName2: "first",
 
-			<!-- 新添两部分 -->
-			<div class="sec4">
-				<div class="header">
-					<span>Per CircRNA Summary</span>
-					<el-popover placement="top-start" title="Illustration" width="400" trigger="hover"
-						content="This module offers detailed information on the percentage of detected samples and the confidence level / type of identified circRNAs, 
-						enabling users to assess the reliability and prevalence of the blood circRNAs.">
-						<img src="images/warning.png" slot="reference" alt="icon" class="icon-image"> <!-- 这里是图标图片 -->
-					</el-popover>
-					<div style="float: right; padding-right: 10px;" @click="toggleCard2">
-						<i :class="iconClass2" style="cursor: pointer;"></i>
-				</div>
-		</div>
-		<transition name="slide">
-				<el-card v-show="isCardVisible2" v-loading="loading2" element-loading-text="Loading" element-loading-spinner="el-icon-loading"
-					element-loading-background="rgba(255, 255, 255, 0.8)" style="text-align: center;"
-					style="padding:20px; display: flex;">
-					<el-tabs v-model="activeName2" stretch=true>
-						<el-tab-pane label="Ratio of detected samples" name="first">
-							<div style="display: flex; flex-wrap: nowrap;">
-								<div class="img2_container">
-									<img :src="image2_1" style="width:100%" alt="Image2_1">
-								</div>
-								<div style="width:50%; margin-left: 10px;" v-loading="loading2_2" element-loading-text="Loading"
-									element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255, 0.8)">
-									<el-row :gutter="20" style="padding-bottom: 10px;">
-										<el-col :span="6">
-											<!-- 下拉选择框 -->
-											<el-select v-model="searchField" placeholder="Please Select" @change="setDefaultKeyword">
-												<el-option label="All" value="All"></el-option>
-												<el-option label="DetectedSample" value="n"></el-option>
-												<el-option label="DetectedRatio" value="ratio"></el-option>
-												
-											</el-select>
-										</el-col>
-										<el-col :span="18">
-											<!-- 搜索输入框 -->
-											<el-input v-model="searchKeyword" placeholder="input search content" clearable
-												@keyup.enter.native="handleSearch" style="width: 100%">
-												<el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
-											</el-input>
-										</el-col>
-									</el-row>
-									<!-- 表格显示主体 -->
-									<el-table :data="displayData" @sort-change="handleSort" style="width: 100%" row-key='id'>
-										<el-table-column type="index" :index="getIndex" width="70" sortable></el-table-column>
-										<el-table-column  prop="BloodCircR_ID" label="BloodCircR ID" sortable align="center">
-											<template slot-scope="scope">
-												<!-- 使用 v-bind 绑定 href 属性到一个路由链接 -->
-												<a href="#" class="title-link" @click.prevent="goToDetail2(scope.row)">{{
-													scope.row.BloodCircR_ID
-													}}</a>
-											</template>
-										</el-table-column>
-										<el-table-column  prop="n" label="DetectedSample" sortable align="center"></el-table-column>
-										<el-table-column  prop="ratio" label="DetectedRatio" sortable align="center"></el-table-column>
-										
-									</el-table>
-									<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-										:current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize"
-										layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 20px"
-										:i18n="paginationI18n">
-									</el-pagination>
-								</div>
-							</div>
-							<div class="my-accordion accordion" style="text-align: left;">
-								<input type="checkbox" id="collapse3">
-								<article>
-									<label for="collapse3">Click here for a detailed description of the results</label>
-									<ul style="font-weight: 700;">
-										
-										<div class="text" style="text-align: left;"> This figure offers a visual representation of circRNA detection rates across samples through 
-										a bar chart. The X-axis displays the different detection percentages, while the Y-axis shows the number of circRNAs detected at the rates in 
-										the range. This chart enables users to quickly assess the detection status and abundance of circRNAs at specific detection levels. Additionally, 
-										the accompanying table on the right lists the circRNA ID, detection ratio, and detection interval for each circRNA.</div>
-									
-									</ul>
-								</article>
-							</div>
-						</el-tab-pane>
-						<el-tab-pane label="Confidence Level / Type of Identified CircRNAs" name="second">
-							<div class="img_container">
-								<img :src="image2_2" style="height: 700px;width:auto;" alt="Image2_2">
-							</div>
-							<div class="my-accordion accordion" style="text-align: left;">
-								<input type="checkbox" id="collapse4">
-								<article>
-									<label for="collapse4">Click here for a detailed description of and
-										results</label>
-									<ul style="font-weight: 700;">
-										<div class="text" style="text-align: justify">These figures illustrate the confidence level, types, and characteristics of identified blood 
-										circRNAs, offering users a deeper understanding of their reliability and features.</div>
-										
-											<ul>
-												<li>
-													<i>Pie Chart</i>
-												</li>
-												<div class="text" style="text-align: justify">A pie chart displays the confidence distribution of circRNAs, showing the proportion circRNA species across different confidence levels. These levels represent the reliability of circRNA detection, allowing users to easily interpret the distribution of circRNA species at each confidence level. Another pie chart shows the distribution of circRNA types, 
-												indicating the proportions of different categories (exonic, intronic, and intergenic) within the samples.</div>
-												<li>
-													<i>Bar Chart</i>
-								
-													<div class="text" style="text-align: justify">The module includes density plots and histograms that present the following distributions:
-													<br>&#8226; Spliced Sequence Length Distribution: Illustrates the distribution of spliced sequence lengths of circRNAs, helping users understand the splicing characteristics during transcription.
-													<br>&#8226; Number of Exons per Isoform Distribution: Displays the number of exons per isoform, reflecting the complexity of circRNAs within the genome.
-													<br>&#8226; Number of circRNAs per BSJ Distribution: Shows the quantity of circRNAs corresponding to each back-splicing junction (BSJ), revealing the frequency of circRNA generation.
-													<br>&#8226; Number of circRNAs per Host Gene Distribution: Presents the number of circRNAs associated with each host gene, aiding users in understanding the relationship between specific genes and circRNAs.
-													</div>
-												</li>
-											</ul>
-									
-									</ul>
-								</article>
-							</div>
-						</el-tab-pane>
-					</el-tabs>
-				</el-card>
-				</transition>
-			</div>
-		</div>
-		<!-- 使用定义的 footer 组件 -->
-		<app-footer></app-footer>
-	</div>
-</body>
-<script>
-	function getHref(StudyID) {
-		// 这里写跳转逻辑
-		console.log(StudyID);
-		const queryString = window.location.search;
-		const params = new URLSearchParams(queryString);
-		const datasetname = params.get('Dataset'); // 获取 id 参数的值
-		const url = `studyinfo.html?Dataset=${datasetname}&StudyID=${StudyID}`
-		return url;
-	}
-</script>
-<!-- vue相关js -->
-<script>
-	new Vue({
-		el: '#app',
-		data() {
-			return {
-				isCardVisible: true, // 控制 el-card 的显示状态
-				isCardVisible1: true, // 控制 el-card 的显示状态
-				isCardVisible2: true, // 控制 el-card 的显示状态
-				isLoaded: false,
-				loading1: false,
-				loading2: false,
-				loading2_2: false,
-				loading3: false,
-				loading4: false,
-				paginationI18n: {
-					navigateTo: 'Go to',
-					pageSize: '/page',
-					total: 'Total {total} items', // 注意这里的 {total} 不会被替换为实际的总数，你需要手动替换
-					pageClassifier: 'of', // 用于 "current page of total pages" 的格式化字符串
-				},
-				activeName1: 'first',
-				activeName2: 'first',
-
-				image1_1: '',
-				image1_2: '',
-				image1_2_num: '50',
-				image1_2_dr:'0.1',
-				image2_1: '',
-				image2_2: '',
-				datasetname: '',
-				data: [],	// sec2表格数据
-				data1: [],	// pic2表格数据
-				displayData: [],
-				sortBy: '',
-				sortOrder: '',
-				currentPage: 1, // 当前页码
-				pageSizes: [10], //页码数选项
-				pageSize: 10, // 每页显示的条数
-				total: 10, // 数据总数
-				searchField: 'All', // 选择的搜索字段
-				searchKeyword: '', // 用户输入的搜索关键词
-				headers: [
-					{
-						prop: 'DatasetID',
-						label: 'DatasetID',
-					},
-					{
-						prop: 'Dataset',
-						label: 'BioProject',
-					},
-					{
-						prop: 'StudyID',
-						label: 'Study',
-					},
-					{
-						prop: 'Sample',
-						label: 'Samples',
-					},
-					{
-						prop: 'CircRNA_Count',
-						label: 'CircRNA Count',
-					},
-					{
-						prop: 'type2',
-						label: 'Type',
-					},
-					{
-						prop: 'Subtype',
-						label: 'Phenotype',
-					},
-					{
-						prop: 'Sample_Profile',
-						label: 'Sample Profile',
-					},
-					{
-						prop: 'Platform',
-						label: 'Platform',
-					},
-					{
-						prop: 'AvgsoptLen',
-						label: 'AvgsoptLen',
-					},
-					{
-						prop: 'librarySelection',
-						label: 'Library Selection',
-					},
-					{
-						prop: 'Tissue',
-						label: 'Source',
-					}
-				]
-			}
-		},
-		computed: {
-			getHeaders() {
-				return this.data.reduce((pre, cur, index) => pre.concat(`value${index}`), ['title'])
-			},
-			getValues() {
-				return this.headers.map(item => {
-					return this.data.reduce((pre, cur, index) => Object.assign(pre, { ['value' + index]: cur[item.prop] }), { 'title': item.label, });
-				});
-			},
-			getIndex() {
-				// 计算表格显示数据的索引值
-				return (index) => {
-					return (this.currentPage - 1) * this.pageSize + index + 1;
-				};
-			},
-			iconClass() {
-            // 根据 isCardVisible 的值动态返回图标类名
-            return this.isCardVisible ? 'el-icon-caret-top' : 'el-icon-caret-bottom';
+          image1_1: "",
+          image1_2: "",
+          image1_2_num: "50",
+          image1_2_dr: "0.1",
+          image2_1: "",
+          image2_2: "",
+          datasetname: "",
+          data: [], // sec2表格数据
+          data1: [], // pic2表格数据
+          displayData: [],
+          sortBy: "",
+          sortOrder: "",
+          currentPage: 1, // 当前页码
+          pageSizes: [10], //页码数选项
+          pageSize: 10, // 每页显示的条数
+          total: 10, // 数据总数
+          searchField: "All", // 选择的搜索字段
+          searchKeyword: "", // 用户输入的搜索关键词
+          headers: [
+            {
+              prop: "DatasetID",
+              label: "DatasetID",
             },
-            iconClass1() {
-            // 根据 isCardVisible 的值动态返回图标类名
-            return this.isCardVisible1 ? 'el-icon-caret-top' : 'el-icon-caret-bottom';
+            {
+              prop: "Dataset",
+              label: "BioProject",
             },
-            iconClass2() {
-            // 根据 isCardVisible 的值动态返回图标类名
-            return this.isCardVisible2 ? 'el-icon-caret-top' : 'el-icon-caret-bottom';
+            {
+              prop: "StudyID",
+              label: "Study",
             },
-		},
-		mounted() {
-			this.isLoaded = true;
-			this.loading1 = true;
-			this.loading2 = true;
-			this.loading3 = true;
-			this.loading4 = true;
-			const queryString = window.location.search;
-			const params = new URLSearchParams(queryString);
-			// 现在你可以获取查询参数中的值
-			const datasetname = params.get('Dataset'); // 获取 id 参数的值
-			this.datasetname = datasetname;
-			const FormData = { datasetname: datasetname };
-			this.getData();
-			this.fetchAllImages(FormData);
-		},
-		methods: {
-			toggleCard() {
-                this.isCardVisible = !this.isCardVisible; // 切换显示状态
+            {
+              prop: "Sample",
+              label: "Samples",
             },
-            toggleCard1() {
-                this.isCardVisible1 = !this.isCardVisible1; // 切换显示状态
+            {
+              prop: "CircRNA_Count",
+              label: "CircRNA Count",
             },
-            toggleCard2() {
-                this.isCardVisible2 = !this.isCardVisible2; // 切换显示状态
+            {
+              prop: "type2",
+              label: "Type",
             },
-			downloadSamples(row) {
-				// 获取当前页面的查询参数
-				const params = new URLSearchParams(window.location.search);
-				// 获取指定的参数
-				const paramValue = params.get('Dataset');  // 替换 'yourParamName' 为你要获取的参数名
-				console.log(paramValue);
-				// 动态生成文件名，可以使用 paramValue 来生成文件名
-				const fileName = `${paramValue}_sampletable.txt`;
-                // 发送 AJAX 请求到 PHP 脚本
-                var xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        // 创建一个 Blob 对象，并设置其类型为文件的 MIME 类型
-                        var blob = new Blob([this.response], { type: 'application/octet-stream' });
-                        // 创建一个下载链接
-                        var link = document.createElement('a');
-                        link.href = window.URL.createObjectURL(blob);
-                        link.download = fileName; // 替换为您要下载的文件名
-                        // 模拟点击下载链接
-                        link.click();
+            {
+              prop: "Subtype",
+              label: "Phenotype",
+            },
+            {
+              prop: "Sample_Profile",
+              label: "Sample Profile",
+            },
+            {
+              prop: "Platform",
+              label: "Platform",
+            },
+            {
+              prop: "AvgsoptLen",
+              label: "AvgsoptLen",
+            },
+            {
+              prop: "librarySelection",
+              label: "Library Selection",
+            },
+            {
+              prop: "Tissue",
+              label: "Source",
+            },
+          ],
+        };
+      },
+      computed: {
+        getHeaders() {
+          return this.data.reduce(
+            (pre, cur, index) => pre.concat(`value${index}`),
+            ["title"]
+          );
+        },
+        getValues() {
+          return this.headers.map((item) => {
+            return this.data.reduce(
+              (pre, cur, index) =>
+                Object.assign(pre, { ["value" + index]: cur[item.prop] }),
+              { title: item.label }
+            );
+          });
+        },
+        getIndex() {
+          // 计算表格显示数据的索引值
+          return (index) => {
+            return (this.currentPage - 1) * this.pageSize + index + 1;
+          };
+        },
+        iconClass() {
+          // 根据 isCardVisible 的值动态返回图标类名
+          return this.isCardVisible
+            ? "el-icon-caret-top"
+            : "el-icon-caret-bottom";
+        },
+        iconClass1() {
+          // 根据 isCardVisible 的值动态返回图标类名
+          return this.isCardVisible1
+            ? "el-icon-caret-top"
+            : "el-icon-caret-bottom";
+        },
+        iconClass2() {
+          // 根据 isCardVisible 的值动态返回图标类名
+          return this.isCardVisible2
+            ? "el-icon-caret-top"
+            : "el-icon-caret-bottom";
+        },
+      },
+      mounted() {
+        this.isLoaded = true;
+        this.loading1 = true;
+        this.loading2 = true;
+        this.loading3 = true;
+        this.loading4 = true;
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString);
+        // 现在你可以获取查询参数中的值
+        const datasetname = params.get("Dataset"); // 获取 id 参数的值
+        this.datasetname = datasetname;
+        const FormData = { datasetname: datasetname };
+        this.getData();
+        this.fetchAllImages(FormData);
+      },
+      methods: {
+        toggleCard() {
+          this.isCardVisible = !this.isCardVisible; // 切换显示状态
+        },
+        toggleCard1() {
+          this.isCardVisible1 = !this.isCardVisible1; // 切换显示状态
+        },
+        toggleCard2() {
+          this.isCardVisible2 = !this.isCardVisible2; // 切换显示状态
+        },
+        downloadSamples(row) {
+          // 获取当前页面的查询参数
+          const params = new URLSearchParams(window.location.search);
+          // 获取指定的参数
+          const paramValue = params.get("Dataset"); // 替换 'yourParamName' 为你要获取的参数名
+          console.log(paramValue);
+          // 动态生成文件名，可以使用 paramValue 来生成文件名
+          const fileName = `${paramValue}_sampletable.txt`;
+          // 发送 AJAX 请求到 PHP 脚本
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+              // 创建一个 Blob 对象，并设置其类型为文件的 MIME 类型
+              var blob = new Blob([this.response], {
+                type: "application/octet-stream",
+              });
+              // 创建一个下载链接
+              var link = document.createElement("a");
+              link.href = window.URL.createObjectURL(blob);
+              link.download = fileName; // 替换为您要下载的文件名
+              // 模拟点击下载链接
+              link.click();
+            }
+          };
+          xhttp.open(
+            "GET",
+            `./interface/download_samples.php?fileParam=${fileName}`,
+            true
+          );
+          xhttp.send();
+        },
+        handleSort(column) {
+          const { prop, order } = column;
+          console.log(column);
+          this.sortBy = prop;
+          this.sortOrder =
+            order === "ascending"
+              ? "ASC"
+              : order === "descending"
+              ? "DESC"
+              : "";
+          this.updateDisplayData();
+        },
+        generateLinks(value) {
+          if (typeof value === "string" && value.includes("、")) {
+            const parts = value.split("、");
+            let linksHTML = "";
+            parts.forEach((part, index) => {
+              linksHTML += `<a href="${getHref(
+                part
+              )}" class="title-link">${part}</a>`;
+              if (index < parts.length - 1) {
+                linksHTML += "、";
+              }
+            });
+            return linksHTML;
+          } else {
+            return `<a href="${getHref(
+              value
+            )}" class="title-link">${value}</a>`;
+          }
+        },
+        goToDetail2(row) {
+          // 这里写跳转逻辑
+          // 假设 row 是一个包含多个属性的对象
+          const params = new URLSearchParams({
+            BloodCircR_ID: row.BloodCircR_ID,
+            // ...其他属性
+          });
+          const url = `circRNA.html?${params.toString()}`;
+          window.open(url, "_parent");
+        },
+        // 设置搜索框的默认值
+        setDefaultKeyword(value) {
+          switch (value) {
+            case "All":
+              this.searchKeyword = ""; // "All" 不需要默认搜索词
+              break;
+            case "Confidence":
+              this.searchKeyword = "1"; // 设置默认值为0.95
+              break;
+            case "group":
+              this.searchKeyword = "(0.9,1]"; // 默认搜索 group 的值
+              break;
+            case "n":
+              this.searchKeyword = "25"; // 设置默认值为 100
+              break;
+            case "ratio":
+              this.searchKeyword = "0.98"; // 设置默认值为 1:2
+              break;
+            default:
+              this.searchKeyword = "";
+          }
+        },
+        handleSearch() {
+          const newFormData = {
+            datasetname: this.datasetname,
+            currentPage: this.currentPage,
+            pageSize: this.pageSize,
+            searchField: this.searchField,
+            searchKeyword: this.searchKeyword,
+            sortBy: this.sortBy,
+            sortOrder: this.sortOrder,
+          };
+          this.loading2_2 = true;
+          axios
+            .post(
+              "./interface/sample_detection_data.php",
+              {},
+              { params: newFormData }
+            )
+            .then((response) => {
+              console.log(response);
+              this.total = response.data.total;
+              if (this.total < 10) {
+                this.pageSize = this.total;
+                this.pageSizes = [this.total, 10, 20];
+              } else {
+                this.pageSizes = [10, 20, 50];
+              }
+              this.data1 = response.data.data;
+              this.displayData = response.data.data;
+              this.loading2_2 = false;
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              this.loading2_2 = false;
+            });
+        },
+        updateDisplayData() {
+          const FormData = {
+            datasetname: this.datasetname,
+            currentPage: this.currentPage,
+            pageSize: this.pageSize,
+            searchField: this.searchField,
+            searchKeyword: this.searchKeyword,
+            sortBy: this.sortBy,
+            sortOrder: this.sortOrder,
+          };
+          this.loading2_2 = true;
+          axios
+            .post(
+              "./interface/sample_detection_data.php",
+              {},
+              { params: FormData }
+            )
+            .then((response) => {
+              console.log(response);
+              this.data1 = response.data.data;
+              this.displayData = response.data.data;
+              this.loading2_2 = false;
+            })
+            .catch((error) => {
+              console.error("Error fetching:", error);
+              this.loading2_2 = false;
+            });
+        },
+        handleSizeChange(newSize) {
+          // 每页显示条数改变时触发
+          this.pageSize = newSize;
+          this.currentPage = 1; // 重置当前页码
+          this.updateDisplayData();
+        },
+        handleCurrentChange(newPage) {
+          // 当前页码改变时触发
+          this.currentPage = newPage;
+          this.updateDisplayData();
+        },
+        getColumnWidth(index) {
+          // 根据列的索引返回不同的宽度
+          // 例如，第一列宽200px，第二列宽300px
+          const widths = [200]; // 以此类推，根据你的列数和需求设置
+          return widths[index] ? `${widths[index]}px` : "";
+        },
+        goToDetail(row) {
+          // 这里写跳转逻辑
+          console.log(row);
+          const queryString = window.location.search;
+          const params = new URLSearchParams(queryString);
+          const datasetname = params.get("Dataset"); // 获取 id 参数的值
+          const url = `dataset_browse_circRNA.html?Dataset=${datasetname}`;
+          window.open(url, "_parent");
+        },
+        getHref(StudyID) {
+          // 这里写跳转逻辑
+          console.log(StudyID);
+          const queryString = window.location.search;
+          const params = new URLSearchParams(queryString);
+          const datasetname = params.get("Dataset"); // 获取 id 参数的值
+          const url = `studyinfo.html?Dataset=${datasetname}&StudyID=${StudyID}`;
+          return url;
+        },
+        convertSVGBase64ToUrl(base64) {
+          const byteString = atob(base64);
+          const ab = new ArrayBuffer(byteString.length);
+          const ia = new Uint8Array(ab);
+          for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+          }
+          const blob = new Blob([ia], { type: "image/svg+xml" });
+          return URL.createObjectURL(blob);
+        },
+        convertPNGBase64ToUrl(base64) {
+          const byteString = atob(base64);
+          const ab = new ArrayBuffer(byteString.length);
+          const ia = new Uint8Array(ab);
+          for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+          }
+          const blob = new Blob([ia], { type: "image/png" });
+          return URL.createObjectURL(blob);
+        },
+        getPic1() {
+          const newFormData = {
+            num: this.image1_2_num,
+            dr: this.image1_2_dr,
+            datasetname: this.datasetname,
+          };
+          axios
+            .post("./interface/circRNA_count.php", {}, { params: newFormData })
+            .then((response) => {
+              console.log(response);
+              this.image1_1 = this.convertSVGBase64ToUrl(response.data.image1);
+              this.image1_2 = this.convertPNGBase64ToUrl(response.data.image2);
+              this.loading1 = false;
+            })
+            .catch((error) => {
+              console.error("Error fetching images:", error);
+              this.image1_1 = "./images/errorpic.jpeg";
+              this.image1_2 = "./images/errorpic.jpeg";
+              this.loading1 = false;
+            });
+        },
+        getPic2(FormData) {
+          // 创建两个 axios 请求的 Promise
+          const request1 = axios.post(
+            "./interface/sample_detection.php",
+            {},
+            { params: FormData }
+          );
+          const newFormData = {
+            datasetname: this.datasetname,
+            currentPage: this.currentPage,
+            pageSize: this.pageSize,
+            searchField: this.searchField,
+            searchKeyword: this.searchKeyword,
+            sortBy: this.sortBy,
+            sortOrder: this.sortOrder,
+          };
+          const request2 = axios.post(
+            "./interface/sample_detection_data.php",
+            {},
+            { params: newFormData }
+          );
+          this.loading2_2 = true;
+          // 使用 Promise.allSettled 来同时执行两个请求
+          Promise.allSettled([request1, request2])
+            .then((results) => {
+              results.forEach((result, index) => {
+                if (result.status === "fulfilled") {
+                  if (index === 0) {
+                    console.log(result.value);
+                    this.image2_1 = this.convertSVGBase64ToUrl(
+                      result.value.data.image1
+                    );
+                    this.image2_2 = this.convertSVGBase64ToUrl(
+                      result.value.data.image2
+                    );
+                  } else if (index === 1) {
+                    console.log(result.value.data);
+                    this.total = Number(result.value.data.total);
+                    console.log(this.total);
+                    if (this.total < 10) {
+                      this.pageSize = this.total;
+                      this.pageSizes = [this.total, 10, 20];
+                    } else {
+                      console.log(this.total);
+                      console.log(this.pageSize);
+                      this.pageSizes = [10, 20, 50];
                     }
-                };
-                xhttp.open('GET', `./interface/download_samples.php?fileParam=${fileName}`, true);
-                xhttp.send();
-            },
-			handleSort(column) {
-				const { prop, order } = column;
-				console.log(column);
-				this.sortBy = prop;
-				this.sortOrder = order === 'ascending' ? 'ASC' : order === 'descending' ? 'DESC' : '';
-				this.updateDisplayData();
-			},
-			generateLinks(value) {
-				if (typeof value === 'string' && value.includes('、')) {
-					const parts = value.split('、');
-					let linksHTML = '';
-					parts.forEach((part, index) => {
-						linksHTML += `<a href="${getHref(part)}" class="title-link">${part}</a>`;
-						if (index < parts.length - 1) {
-							linksHTML += '、';
-						}
-					});
-					return linksHTML;
-				} else {
-					return `<a href="${getHref(value)}" class="title-link">${value}</a>`;
-				}
-			},
-			goToDetail2(row) {
-				// 这里写跳转逻辑
-				// 假设 row 是一个包含多个属性的对象
-				const params = new URLSearchParams({
-					BloodCircR_ID: row.BloodCircR_ID
-					// ...其他属性
-				});
-				const url = `circRNA.html?${params.toString()}`;
-				window.open(url, '_parent');
-			},
-			// 设置搜索框的默认值
-			setDefaultKeyword(value) {
-				switch (value) {
-					case 'All':
-						this.searchKeyword = ''; // "All" 不需要默认搜索词
-						break;
-					case 'Confidence':
-						this.searchKeyword = '1'; // 设置默认值为0.95
-						break;
-					case 'group':
-						this.searchKeyword = '(0.9,1]'; // 默认搜索 group 的值
-						break;
-					case 'n':
-						this.searchKeyword = '25'; // 设置默认值为 100
-						break;
-					case 'ratio':
-						this.searchKeyword = '0.98'; // 设置默认值为 1:2
-						break;
-					default:
-						this.searchKeyword = '';
-				}
-			},
-			handleSearch() {
-				const newFormData = {
-					datasetname: this.datasetname,
-					currentPage: this.currentPage,
-					pageSize: this.pageSize,
-					searchField: this.searchField,
-					searchKeyword: this.searchKeyword,
-					sortBy: this.sortBy,
-					sortOrder: this.sortOrder
-				};
-				this.loading2_2 = true;
-				axios.post('./interface/sample_detection_data.php', {}, { params: newFormData })
-					.then(response => {
-						console.log(response);
-						this.total = response.data.total;
-						if (this.total < 10) {
-							this.pageSize = this.total;
-							this.pageSizes = [this.total, 10, 20]
-						} else {
-							this.pageSizes = [10, 20, 50]
-						}
-						this.data1 = response.data.data;
-						this.displayData = response.data.data;
-						this.loading2_2 = false;
-					})
-					.catch(error => {
-						console.error('Error:', error);
-						this.loading2_2 = false;
-					});
+                    this.data1 = result.value.data.data;
+                    this.displayData = result.value.data.data; // 更新显示数据
+                  }
+                } else {
+                  console.error(`Request ${index + 1} failed:`, result.reason);
+                  if (index === 0) {
+                    this.image2_1 = "./images/errorpic.jpeg";
+                    this.image2_2 = "./images/errorpic.jpeg";
+                  }
+                }
+              });
+              // 在两个请求都完成后设置 loading 为 false
+              this.loading2 = false;
+              this.loading2_2 = false;
+            })
+            .catch((error) => {
+              console.error("Error fetching images:", error);
+              // 在请求失败的情况下也设置 loading 为 false
+              this.image2 = "./images/errorpic.jpeg";
+              this.loading2 = false;
+              this.loading2_2 = false;
+            });
+        },
 
-			},
-			updateDisplayData() {
-				const FormData = {
-					datasetname: this.datasetname,
-					currentPage: this.currentPage,
-					pageSize: this.pageSize,
-					searchField: this.searchField,
-					searchKeyword: this.searchKeyword,
-					sortBy: this.sortBy,
-					sortOrder: this.sortOrder
-				};
-				this.loading2_2 = true;
-				axios.post('./interface/sample_detection_data.php', {}, { params: FormData })
-					.then(response => {
-						console.log(response);
-						this.data1 = response.data.data;
-						this.displayData = response.data.data;
-						this.loading2_2 = false;
-					})
-					.catch(error => {
-						console.error('Error fetching:', error);
-						this.loading2_2 = false;
-					});
-			},
-			handleSizeChange(newSize) {
-				// 每页显示条数改变时触发
-				this.pageSize = newSize;
-				this.currentPage = 1; // 重置当前页码
-				this.updateDisplayData();
-			},
-			handleCurrentChange(newPage) {
-				// 当前页码改变时触发
-				this.currentPage = newPage;
-				this.updateDisplayData();
-			},
-			getColumnWidth(index) {
-				// 根据列的索引返回不同的宽度
-				// 例如，第一列宽200px，第二列宽300px
-				const widths = [200]; // 以此类推，根据你的列数和需求设置
-				return widths[index] ? `${widths[index]}px` : '';
-			},
-			goToDetail(row) {
-				// 这里写跳转逻辑
-				console.log(row);
-				const queryString = window.location.search;
-				const params = new URLSearchParams(queryString);
-				const datasetname = params.get('Dataset'); // 获取 id 参数的值
-				const url = `dataset_browse_circRNA.html?Dataset=${datasetname}`
-				window.open(url, '_parent');
-			},
-			getHref(StudyID) {
-				// 这里写跳转逻辑
-				console.log(StudyID);
-				const queryString = window.location.search;
-				const params = new URLSearchParams(queryString);
-				const datasetname = params.get('Dataset'); // 获取 id 参数的值
-				const url = `studyinfo.html?Dataset=${datasetname}&StudyID=${StudyID}`
-				return url;
-			},
-			convertSVGBase64ToUrl(base64) {
-				const byteString = atob(base64);
-				const ab = new ArrayBuffer(byteString.length);
-				const ia = new Uint8Array(ab);
-				for (let i = 0; i < byteString.length; i++) {
-					ia[i] = byteString.charCodeAt(i);
-				}
-				const blob = new Blob([ia], { type: 'image/svg+xml' });
-				return URL.createObjectURL(blob);
-			},
-			convertPNGBase64ToUrl(base64) {
-				const byteString = atob(base64);
-				const ab = new ArrayBuffer(byteString.length);
-				const ia = new Uint8Array(ab);
-				for (let i = 0; i < byteString.length; i++) {
-					ia[i] = byteString.charCodeAt(i);
-				}
-				const blob = new Blob([ia], { type: 'image/png' });
-				return URL.createObjectURL(blob);
-			},
-			getPic1() {
-				const newFormData = {
-					num: this.image1_2_num,
-					dr: this.image1_2_dr,
-					datasetname: this.datasetname
-				};
-				axios.post('./interface/circRNA_count.php', {}, { params: newFormData })
-					.then(response => {
-						console.log(response);
-						this.image1_1 = this.convertSVGBase64ToUrl(response.data.image1);
-						this.image1_2 = this.convertPNGBase64ToUrl(response.data.image2);
-						this.loading1 = false;
-					})
-					.catch(error => {
-						console.error('Error fetching images:', error);
-						this.image1_1 = './images/errorpic.jpeg';
-						this.image1_2 = './images/errorpic.jpeg';
-						this.loading1 = false;
-					});
-			},
-			getPic2(FormData) {
-				// 创建两个 axios 请求的 Promise
-				const request1 = axios.post('./interface/sample_detection.php', {}, { params: FormData });
-				const newFormData = {
-					datasetname: this.datasetname,
-					currentPage: this.currentPage,
-					pageSize: this.pageSize,
-					searchField: this.searchField,
-					searchKeyword: this.searchKeyword,
-					sortBy: this.sortBy,
-					sortOrder: this.sortOrder
-				};
-				const request2 = axios.post('./interface/sample_detection_data.php', {}, { params: newFormData });
-				this.loading2_2 = true;
-				// 使用 Promise.allSettled 来同时执行两个请求
-				Promise.allSettled([request1, request2])
-					.then(results => {
-						results.forEach((result, index) => {
-							if (result.status === 'fulfilled') {
-								if (index === 0) {
-									console.log(result.value);
-									this.image2_1 = this.convertSVGBase64ToUrl(result.value.data.image1);
-									this.image2_2 = this.convertSVGBase64ToUrl(result.value.data.image2);
-								} else if (index === 1) {
-									console.log(result.value.data);
-									this.total = Number(result.value.data.total);
-									console.log(this.total);
-									if (this.total < 10) {
-										this.pageSize = this.total;
-										this.pageSizes = [this.total, 10, 20]
-									} else {
-										console.log(this.total);
-										console.log(this.pageSize);
-										this.pageSizes = [10, 20, 50]
-									}
-									this.data1 = result.value.data.data;
-									this.displayData = result.value.data.data// 更新显示数据
-								}
-							} else {
-								console.error(`Request ${index + 1} failed:`, result.reason);
-								if (index === 0) {
-									this.image2_1 = './images/errorpic.jpeg';
-									this.image2_2 = './images/errorpic.jpeg';
-								}
-							}
-						});
-						// 在两个请求都完成后设置 loading 为 false
-						this.loading2 = false;
-						this.loading2_2 = false;
-					})
-					.catch(error => {
-						console.error('Error fetching images:', error);
-						// 在请求失败的情况下也设置 loading 为 false
-						this.image2 = './images/errorpic.jpeg';
-						this.loading2 = false;
-						this.loading2_2 = false;
-					});
-			},
+        fetchAllImages(FormData) {
+          const pic1Promise = new Promise((resolve) => {
+            this.getPic1();
+            resolve();
+          });
 
-			fetchAllImages(FormData) {
-				const pic1Promise = new Promise((resolve) => {
-					this.getPic1();
-					resolve();
-				});
+          const pic2Promise = new Promise((resolve) => {
+            this.getPic2(FormData);
+            resolve();
+          });
 
-				const pic2Promise = new Promise((resolve) => {
-					this.getPic2(FormData);
-					resolve();
-				});
-
-
-				Promise.allSettled([pic1Promise, pic2Promise])
-					.then(results => {
-						results.forEach((result, index) => {
-							if (result.status === 'fulfilled') {
-								console.log(`Function ${index + 1} completed successfully.`);
-							} else {
-								console.error(`Function ${index + 1} failed:`, result.reason);
-							}
-						});
-						// Here you can do something after all requests have been handled.
-						console.log('All requests completed.');
-					})
-					.catch(error => {
-						console.error('Error in processing requests:', error);
-					});
-			},
-			getData() {
-				const queryString = window.location.search;
-				const params = new URLSearchParams(queryString);
-				const DatasetID = params.get('DatasetID'); // 获取 id 参数的值
-				axios.post('./interface/datasetinfo_data.php', {}, { params: { DatasetID: DatasetID } })
-					.then(response => {
-						console.log('test1:', response.data);
-						this.data = [response.data];
-					})
-					.catch(error => {
-						console.error('Error fetching:', error);
-					});
-			},
-		}
-	})
-</script>
-
+          Promise.allSettled([pic1Promise, pic2Promise])
+            .then((results) => {
+              results.forEach((result, index) => {
+                if (result.status === "fulfilled") {
+                  console.log(`Function ${index + 1} completed successfully.`);
+                } else {
+                  console.error(`Function ${index + 1} failed:`, result.reason);
+                }
+              });
+              // Here you can do something after all requests have been handled.
+              console.log("All requests completed.");
+            })
+            .catch((error) => {
+              console.error("Error in processing requests:", error);
+            });
+        },
+        getData() {
+          const queryString = window.location.search;
+          const params = new URLSearchParams(queryString);
+          const DatasetID = params.get("DatasetID"); // 获取 id 参数的值
+          axios
+            .post(
+              "./interface/datasetinfo_data.php",
+              {},
+              { params: { DatasetID: DatasetID } }
+            )
+            .then((response) => {
+              console.log("test1:", response.data);
+              this.data = [response.data];
+            })
+            .catch((error) => {
+              console.error("Error fetching:", error);
+            });
+        },
+      },
+    });
+  </script>
 </html>

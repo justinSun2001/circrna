@@ -1,587 +1,764 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>BloodCircR</title>
+    <link rel="stylesheet" href="src/css/layui.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/browse.css" />
+    <link rel="stylesheet" href="css/circRNA.css" />
+    <link rel="icon" href="images/1_1.png" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/layui-v2.6.8/dist/css/layui.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="elementui/theme-chalk/index.css"
+    />
+    <script src="js/vue.js"></script>
+    <script src="js/elementui.js"></script>
+    <script src="js/header-component.js"></script>
+    <script src="js/footer-component.js"></script>
 
-<head>
-	<meta charset="utf-8">
-	<title>BloodCircR</title>
-	<link rel="stylesheet" href="src/css/layui.css">
-	<link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href="css/browse.css">
-	<link rel="stylesheet" href="css/circRNA.css">
-	<link rel="icon" href="images/1_1.png" type="image/x-icon">
-	 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/layui-v2.6.8/dist/css/layui.css">
-	<link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
-	<script src="js/vue.js"></script>
-	<script src="js/elementui.js"></script>
-	<script src="js/header-component.js"></script>
-	<script src="js/footer-component.js"></script>
+    <link rel="stylesheet" href="css/search.css" />
+    <link rel="stylesheet" href="src/animate.css" />
 
-	<link rel="stylesheet" href="css/search.css">
-	<link rel="stylesheet" href="src/animate.css">
+    <script src="src/layui.js"></script>
+    <script src="src/wow.js"></script>
+    <style>
+      td[data-field="BloodCircR_ID"] {
+        color: #b94a4a;
+        cursor: pointer; /* 鼠标悬浮时显示小手光标 */
+      }
+      td[data-field="BloodCircR_ID"]:hover {
+        text-decoration: underline; /* 添加下划线 */
+        cursor: pointer; /* 鼠标悬浮时显示小手光标 */
+      }
+      .el-button:hover {
+        color: #b94a4a;
+        border-color: #e6b7b7;
+        background-color: #e6b7b7;
+      }
 
-	<script src="src/layui.js"></script>
-	<script src="src/wow.js"></script>
-	<style>
-		td[data-field="BloodCircR_ID"] {
-			color: #B94A4A;
-			cursor: pointer; /* 鼠标悬浮时显示小手光标 */
-		}
-td[data-field="BloodCircR_ID"]:hover {
-		  text-decoration: underline; /* 添加下划线 */
-		  cursor: pointer; /* 鼠标悬浮时显示小手光标 */
-		}
-		.el-button:hover {
-			color: #B94A4A;
-			border-color: #E6B7B7;
-			background-color: #E6B7B7;
-		}
+      .el-button:active {
+        color: #b94a4a;
+        border-color: #e6b7b7;
+        background-color: #e6b7b7;
+      }
 
-		.el-button:active {
-			color: #B94A4A;
-			border-color: #E6B7B7;
-			background-color: #E6B7B7;
-		}
+      .el-button:focus {
+        color: #b94a4a;
+        border-color: #e6b7b7;
+        background-color: #e6b7b7;
+      }
+      /* 自定义按钮样式 */
+      .el-button.custom-button {
+        border-color: #dcdfe6;
+        background-color: #b94a4a;
+        color: white;
+      }
+      .el-button.custom-button:hover {
+        color: #b94a4a;
+        border-color: #e6b7b7;
+        background-color: #e6b7b7;
+      }
 
-		.el-button:focus {
-			color: #B94A4A;
-			border-color: #E6B7B7;
-			background-color: #E6B7B7;
-		}
-		/* 自定义按钮样式 */
-		.el-button.custom-button{
-			border-color: #DCDFE6;
-			background-color: #B94A4A;
-			color:white;
-		}
-		.el-button.custom-button:hover {
-		  color: #B94A4A;
-		  border-color: #E6B7B7;
-		  background-color: #E6B7B7;
-		}
-		
-		.el-button.custom-button:active {
-		    color: #B94A4A;
-		    border-color: #E6B7B7;
-		    background-color: #E6B7B7;
-		}
-		
-		.el-button.custom-button:focus {
-		  color: #B94A4A;
-		  border-color: #E6B7B7;
-		  background-color: #E6B7B7;
-		}
+      .el-button.custom-button:active {
+        color: #b94a4a;
+        border-color: #e6b7b7;
+        background-color: #e6b7b7;
+      }
 
-      
-	</style>
-	<style>
-		.accordion {
-			margin-top: 20px;
-			margin-bottom: 20px;
-			/* width: 1460px; */
-			width: calc(100% + 10px); /* 计算整个页面宽度减去 50px */
-		}
+      .el-button.custom-button:focus {
+        color: #b94a4a;
+        border-color: #e6b7b7;
+        background-color: #e6b7b7;
+      }
+    </style>
+    <style>
+      .accordion {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        /* width: 1460px; */
+        width: calc(100% + 10px); /* 计算整个页面宽度减去 50px */
+      }
 
-		.accordion article {
-			margin-top: 5px;
-			cursor: pointer;
+      .accordion article {
+        margin-top: 5px;
+        cursor: pointer;
 
-			&:first-child {
-				margin-top: 0;
-			}
-		}
+        &:first-child {
+          margin-top: 0;
+        }
+      }
 
-		.accordion input {
-			display: none;
-			padding: 0;
-			margin: 0;
+      .accordion input {
+        display: none;
+        padding: 0;
+        margin: 0;
 
-			&:nth-child(1):checked~article:nth-of-type(1) .search_body {
-				border-bottom-width: 2px;
-				/* width: 1460px; */
-				width: calc(100%); /* 计算整个页面宽度减去 50px */
-				max-height: 1600px;
-				display: block;
-			}
-		}
+        &:nth-child(1):checked ~ article:nth-of-type(1) .search_body {
+          border-bottom-width: 2px;
+          /* width: 1460px; */
+          width: calc(100%); /* 计算整个页面宽度减去 50px */
+          max-height: 1600px;
+          display: block;
+        }
+      }
 
-		.accordion label {
-			display: block;
-			padding: 0 0 0 20px;
-			height: 40px;
-			background-color: #F2F2F2;
-			cursor: pointer;
-			line-height: 40px;
-			font-size: 20px;
-			color: #333333;
-			font-weight: 600;
-			background-image: url("../images/warning.png");
-			background-position: 10px 50%;
-			background-size: auto 30px;
-			background-repeat: no-repeat;
-			text-indent: 30px;
-		}
+      .accordion label {
+        display: block;
+        padding: 0 0 0 20px;
+        height: 40px;
+        background-color: #f2f2f2;
+        cursor: pointer;
+        line-height: 40px;
+        font-size: 20px;
+        color: #333333;
+        font-weight: 600;
+        background-image: url("/images/warning.png");
+        background-position: 10px 50%;
+        background-size: auto 30px;
+        background-repeat: no-repeat;
+        text-indent: 30px;
+      }
 
-		.accordion label:hover {
-			background-color: #F0DADA;
-		}
+      .accordion label:hover {
+        background-color: #f0dada;
+      }
 
-		.accordion .search_body {
-			/* background-color: #F2F7F9; */
-			display: table-column-group;
-			/* width: 1460px; */
-			width: calc(100%); /* 计算整个页面宽度减去 50px */
-			overflow: hidden;
-			margin: 0;
-			max-height: 0;
-			line-height: 30px;
-			transition: all 500ms;
-		}
+      .accordion .search_body {
+        /* background-color: #F2F7F9; */
+        display: table-column-group;
+        /* width: 1460px; */
+        width: calc(100%); /* 计算整个页面宽度减去 50px */
+        overflow: hidden;
+        margin: 0;
+        max-height: 0;
+        line-height: 30px;
+        transition: all 500ms;
+      }
 
-		.accordion .search_body .search_way2 input{
-			display:inline;
-		}
-		.el-select .el-input .el-input__inner {
-		    color: #333333 !important; /* 更改字体颜色为 #333333 */
-		}
-	</style>
-	<style>
-		.background {
-			background-image: url(../images/u58.png);
-			background-repeat: no-repeat;
-			background-size: cover;
-			width: 100%;
-			height: 500px;
-		}
-	</style>
-	<style>
-	.image-with-text {
-			position: relative;
-		}
+      .accordion .search_body .search_way2 input {
+        display: inline;
+      }
+      .el-select .el-input .el-input__inner {
+        color: #333333 !important; /* 更改字体颜色为 #333333 */
+      }
+    </style>
+    <style>
+      .background {
+        background-image: url("/images/u58.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 100%;
+        height: 500px;
+      }
+    </style>
+    <style>
+      .image-with-text {
+        position: relative;
+      }
 
-.text-overlay {
-			position: absolute;
-			top: 15%;
-			left:15%;
-			right:15%;
-			bottom:15%;
-			
-			/* padding: 80px 20px; */
-			width: 70%;
-			height: 70%;
-		}
+      .text-overlay {
+        position: absolute;
+        top: 15%;
+        left: 15%;
+        right: 15%;
+        bottom: 15%;
 
-.text-overlay .text {
-			font-size: 1.5vw;
-			font-weight: bold;
-			color: white !important;
-		}
+        /* padding: 80px 20px; */
+        width: 70%;
+        height: 70%;
+      }
 
-	</style>
-</head>
+      .text-overlay .text {
+        font-size: 1.5vw;
+        font-weight: bold;
+        color: white !important;
+      }
+    </style>
+  </head>
 
-<body>
-	<div id="app" :class="{ loaded: isLoaded }">
-		<!-- 使用定义的 header 组件 -->
-		<app-header></app-header>
-		<div style="display: flex; flex-direction: column;min-height: 100vh; margin:0">
-			<div style="flex:1;">
-				<div class="background" style="margin-top: 100px; margin-bottom: 0;">
-					<div class="image-with-text">
-						<div class="text-overlay">
-								<div style="display: flex;justify-content: center; flex-direction: column; height: 100%; ">
-							<div class="text" style="font-size: 7.5vw;text-align: center;font-family: Arial Rounded MT Bold;color:white;margin-top: 430px;">CIRCRNAS</div>
-					
-							<div class="text" style="text-align: center;">Browser and Search the Atlas of Human Blood CircRNAs</div>
-						</div>
-					</div>
-					</div>
-				</div>
-				<div style="display: flex;flex-direction: column;align-items: center;margin-top: 20px;">
-					<div class="line">
-						Browse by
-					</div>
-					<div class="search_body" >
-						<div class="search_box">
-							<el-row style="padding-left: 0px; padding-bottom: 10px;">
-								<el-col :span="3" style="padding:0">
-									<!-- 下拉选择框 -->
-									<el-select v-model="searchColumn" placeholder="Please Select" @change="setDefaultValue()">
-										<!-- <el-option label="All circRNAs" value="All"></el-option> -->
-										<el-option label="BloodCircR ID" value="BloodCircR_ID"></el-option>
-										<el-option label="BSJ ID" value="BSJ_ID"></el-option>
-										<el-option label="chr" value="chr"></el-option>
-										<el-option label="Start" value="circRNA_start"></el-option>
-										<el-option label="End" value="circRNA_end"></el-option>
-										<el-option label="circRNA type" value="circRNA_type"></el-option>
-										<el-option label="host gene" value="host_gene"></el-option>
-										<el-option label="Ensembl ID" value="ensembl_id"></el-option>
-										<el-option label="Confidence" value="ConfidenceRank"></el-option>
-									</el-select>
-								</el-col>
-								<el-col :span="9" style="padding:0; padding-right: 50px;">
-									<!-- 搜索输入框 -->
-									<el-input v-model="searchValue" placeholder="Please input search content" clearable
-										@keyup.enter.native="handleSearch" @clear="handleClear" style="width: 100%">
-									</el-input>
-								</el-col>
-								<el-button type="primary" class="custom-button" style="width: 120px;" icon="el-icon-search"
-									@click="handleSearch">Search</el-button>
-								<el-button id="exportBtn" class="custom-button" style="width: 120px;" type="primary">Export Data</el-button>
-							</el-row>
-						</div>
-			
-						<div class="browse1">
-							<table class="layui-table" lay-even="" lay-skin="row" id="demo">
-							</table>
-							<div class="accordion">
-								<input type="checkbox" id="collapse1">
-								<article>
-									<label for="collapse1">Click here for advanced search</label>
-									<div class="search_body">
-										<div class="search_way1">
-											<p>Enter required ID </p>
-											<form action="search_result.html">
-												<textarea name="search_any" id="search_any"
-													placeholder="Please use a sign (、) to separate multiple entries. eg:circABHD2_0143、AMFR"></textarea>
-												<div class="examples">
-													<div>
-														eg：BloodCircR ID:<span>circABHD2_0143</span>,<span>circAAK1_0001</span><br>
-														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;host gene:<span>AMMECR1</span>,<span>AMFR</span><br>
-														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ensembl ID:<span>ENSG00000159461</span>,<span>ENSG00000169621</span><br>
-														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BSJ ID:<span>chr12|9071897|9072097|+</span>,<span>chr2|135748267|135755691|+</span><br>
-														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uniform ID:<span>circABHD2(S2,L3) ; ENST00000569411</span>,<span>circA2M(NE,31) ; ENST00000318602</span><br>
-														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other circRNA ID:<span>hsa-AAAS_0003</span>,<span>TC-hsa-AAAS_0005</span>,<span>chr12|53314751|53314849|-</span>,<span>hsa_circ_0026622</span>,<span>plt_circ_17938</span><br>
-															&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DatasetID:<span>BloodHCC257</span>,<span>BloodCF305</span>,<span>BloodCOVID700</span>,<span>BloodRA863</span>,<span>BloodPWMD789</span>,<span>BloodCLE589</span><br>
-													</div>
-												</div>
-												<div class="btnbox">
-													<button>search</button>
-													<button type="reset">reset</button>
-												</div>
-											</form>
-										</div>
-										<div class="search_way2">
-											<p>Advanced filter</p>
-											<form action="search_result.html">
-												<div class="row">
-													<span>Chromosome</span>
-													<select name="chr" required>
-														<option value="chr1">chr1</option>
-														<option value="chr2">chr2</option>
-														<option value="chr">chr3</option>
-														<option value="chr4">chr4</option>
-														<option value="chr5">chr5</option>
-														<option value="chr6">chr6</option>
-														<option value="chr7">chr7</option>
-														<option value="chr8">chr8</option>
-														<option value="chr9">chr9</option>
-														<option value="chr10">chr10</option>
-														<option value="chr11">chr11</option>
-														<option value="chr12">chr12</option>
-														<option value="chr13">chr13</option>
-														<option value="chr14">chr14</option>
-														<option value="chr15">chr15</option>
-														<option value="chr16">chr16</option>
-														<option value="chr17">chr17</option>
-														<option value="chr18">chr18</option>
-														<option value="chr19">chr19</option>
-														<option value="chr20">chr20</option>
-														<option value="chr21">chr21</option>
-														<option value="chr22">chr22</option>
-														<option value="chrMT">chrMT</option>
-														<option value="chrX">chrX</option>
-														<option value="chrY">chrY</option>
-													</select>
-													<span></span>
-												</div>
-												<div class="row" id="circRNA_start">
-													<span>circRNA start</span>
-													<input name="circRNA_start" required type="text" placeholder="e.g., 89113725" />
-													<span class="eg">e.g.,<em>33307351</em></span>
-												</div>
-												<div class="row" id="circRNA_end">
-													<span>circRNA end</span>
-													<input name="circRNA_end" required type="text" placeholder="e.g., 89116521" />
-													<span class="eg">e.g.,<em>33307513</em></span>
-												</div>
-												<div class="btnbox">
-													<button>search</button>
-													<button type="reset">reset</button>
-												</div>
-											</form>
-										</div>
-			
-									</div>
-								</article>
-							</div>
-						</div>
-				</div>
-				
-				</div>
-			</div>
-			<!-- 使用定义的 footer 组件 -->
-			<app-footer></app-footer>
-		</div>
-		
+  <body>
+    <div id="app" :class="{ loaded: isLoaded }">
+      <!-- 使用定义的 header 组件 -->
+      <app-header></app-header>
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+          margin: 0;
+        "
+      >
+        <div style="flex: 1">
+          <div class="background" style="margin-top: 100px; margin-bottom: 0">
+            <div class="image-with-text">
+              <div class="text-overlay">
+                <div
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    flex-direction: column;
+                    height: 100%;
+                  "
+                >
+                  <div
+                    class="text"
+                    style="
+                      font-size: 7.5vw;
+                      text-align: center;
+                      font-family: Arial Rounded MT Bold;
+                      color: white;
+                      margin-top: 430px;
+                    "
+                  >
+                    CIRCRNAS
+                  </div>
 
-	</div>
-</body>
+                  <div class="text" style="text-align: center">
+                    Browser and Search the Atlas of Human Blood CircRNAs
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              margin-top: 20px;
+            "
+          >
+            <div class="line">Browse by</div>
+            <div class="search_body">
+              <div class="search_box">
+                <el-row style="padding-left: 0px; padding-bottom: 10px">
+                  <el-col :span="3" style="padding: 0">
+                    <!-- 下拉选择框 -->
+                    <el-select
+                      v-model="searchColumn"
+                      placeholder="Please Select"
+                      @change="setDefaultValue()"
+                    >
+                      <!-- <el-option label="All circRNAs" value="All"></el-option> -->
+                      <el-option
+                        label="BloodCircR ID"
+                        value="BloodCircR_ID"
+                      ></el-option>
+                      <el-option label="BSJ ID" value="BSJ_ID"></el-option>
+                      <el-option label="chr" value="chr"></el-option>
+                      <el-option
+                        label="Start"
+                        value="circRNA_start"
+                      ></el-option>
+                      <el-option label="End" value="circRNA_end"></el-option>
+                      <el-option
+                        label="circRNA type"
+                        value="circRNA_type"
+                      ></el-option>
+                      <el-option
+                        label="host gene"
+                        value="host_gene"
+                      ></el-option>
+                      <el-option
+                        label="Ensembl ID"
+                        value="ensembl_id"
+                      ></el-option>
+                      <el-option
+                        label="Confidence"
+                        value="ConfidenceRank"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="9" style="padding: 0; padding-right: 50px">
+                    <!-- 搜索输入框 -->
+                    <el-input
+                      v-model="searchValue"
+                      placeholder="Please input search content"
+                      clearable
+                      @keyup.enter.native="handleSearch"
+                      @clear="handleClear"
+                      style="width: 100%"
+                    >
+                    </el-input>
+                  </el-col>
+                  <el-button
+                    type="primary"
+                    class="custom-button"
+                    style="width: 120px"
+                    icon="el-icon-search"
+                    @click="handleSearch"
+                    >Search</el-button
+                  >
+                  <el-button
+                    id="exportBtn"
+                    class="custom-button"
+                    style="width: 120px"
+                    type="primary"
+                    >Export Data</el-button
+                  >
+                </el-row>
+              </div>
 
-<style>
-	/* .layui-table-header {
+              <div class="browse1">
+                <table
+                  class="layui-table"
+                  lay-even=""
+                  lay-skin="row"
+                  id="demo"
+                ></table>
+                <div class="accordion">
+                  <input type="checkbox" id="collapse1" />
+                  <article>
+                    <label for="collapse1"
+                      >Click here for advanced search</label
+                    >
+                    <div class="search_body">
+                      <div class="search_way1">
+                        <p>Enter required ID</p>
+                        <form action="search_result.html">
+                          <textarea
+                            name="search_any"
+                            id="search_any"
+                            placeholder="Please use a sign (、) to separate multiple entries. eg:circABHD2_0143、AMFR"
+                          ></textarea>
+                          <div class="examples">
+                            <div>
+                              eg：BloodCircR
+                              ID:<span>circABHD2_0143</span>,<span
+                                >circAAK1_0001</span
+                              ><br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;host
+                              gene:<span>AMMECR1</span>,<span>AMFR</span><br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ensembl
+                              ID:<span>ENSG00000159461</span>,<span
+                                >ENSG00000169621</span
+                              ><br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BSJ
+                              ID:<span>chr12|9071897|9072097|+</span>,<span
+                                >chr2|135748267|135755691|+</span
+                              ><br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uniform
+                              ID:<span>circABHD2(S2,L3) ; ENST00000569411</span
+                              >,<span>circA2M(NE,31) ; ENST00000318602</span
+                              ><br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other
+                              circRNA
+                              ID:<span>hsa-AAAS_0003</span>,<span>TC-hsa-AAAS_0005</span>,<span>chr12|53314751|53314849|-</span>,<span>hsa_circ_0026622</span>,<span
+                                >plt_circ_17938</span
+                              ><br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DatasetID:<span>BloodHCC257</span>,<span>BloodCF305</span>,<span>BloodCOVID700</span>,<span>BloodRA863</span>,<span>BloodPWMD789</span>,<span
+                                >BloodCLE589</span
+                              ><br />
+                            </div>
+                          </div>
+                          <div class="btnbox">
+                            <button>search</button>
+                            <button type="reset">reset</button>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="search_way2">
+                        <p>Advanced filter</p>
+                        <form action="search_result.html">
+                          <div class="row">
+                            <span>Chromosome</span>
+                            <select name="chr" required>
+                              <option value="chr1">chr1</option>
+                              <option value="chr2">chr2</option>
+                              <option value="chr">chr3</option>
+                              <option value="chr4">chr4</option>
+                              <option value="chr5">chr5</option>
+                              <option value="chr6">chr6</option>
+                              <option value="chr7">chr7</option>
+                              <option value="chr8">chr8</option>
+                              <option value="chr9">chr9</option>
+                              <option value="chr10">chr10</option>
+                              <option value="chr11">chr11</option>
+                              <option value="chr12">chr12</option>
+                              <option value="chr13">chr13</option>
+                              <option value="chr14">chr14</option>
+                              <option value="chr15">chr15</option>
+                              <option value="chr16">chr16</option>
+                              <option value="chr17">chr17</option>
+                              <option value="chr18">chr18</option>
+                              <option value="chr19">chr19</option>
+                              <option value="chr20">chr20</option>
+                              <option value="chr21">chr21</option>
+                              <option value="chr22">chr22</option>
+                              <option value="chrMT">chrMT</option>
+                              <option value="chrX">chrX</option>
+                              <option value="chrY">chrY</option>
+                            </select>
+                            <span></span>
+                          </div>
+                          <div class="row" id="circRNA_start">
+                            <span>circRNA start</span>
+                            <input
+                              name="circRNA_start"
+                              required
+                              type="text"
+                              placeholder="e.g., 89113725"
+                            />
+                            <span class="eg">e.g.,<em>33307351</em></span>
+                          </div>
+                          <div class="row" id="circRNA_end">
+                            <span>circRNA end</span>
+                            <input
+                              name="circRNA_end"
+                              required
+                              type="text"
+                              placeholder="e.g., 89116521"
+                            />
+                            <span class="eg">e.g.,<em>33307513</em></span>
+                          </div>
+                          <div class="btnbox">
+                            <button>search</button>
+                            <button type="reset">reset</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 使用定义的 footer 组件 -->
+        <app-footer></app-footer>
+      </div>
+    </div>
+  </body>
+
+  <style>
+    /* .layui-table-header {
 		overflow: visible;
 	} */
 
-	th[data-field='circRNA_start'] {
-		position: relative;
-		overflow: visible;
-	}
-
-	th[data-field='circRNA_start']:hover::after {
-		color: #fff;
-		background: #cccccc;
-		content: 'Starting from 1';
-		border-radius: 8px;
-		position: absolute;
-		top: 30px;
-		left: 30%;
-		z-index: 99;
-		padding: 10px 8px;
-	}
-</style>
-
-<script>
-	new Vue({
-		el: '#app',
-		data() {
-			return {
-				isLoaded: false,
-				searchColumn: '', // 选择的搜索字段
-				searchValue: '', // 用户输入的搜索关键词
-				cirRNAs: '',
-				lastSortField: '', // 上一次的排序字段
-				lastSortOrder: '', // 上一次的排序顺序
-			}
-		},
-		mounted() {
-			var vm = this;
-			this.isLoaded = true;
-			console.log("aaa");
-			var width;
-			const container = document.querySelector('.browse1');
-			if (container) {
-				width = container.clientWidth;
-			}
-			layui.use(['table'], function () {
-				var table = layui.table;
-				// 定义列配置
-				var columns = [
-        { field: 'BloodCircR_ID', title: 'BloodCircR ID', event: 'go_circ', sort: true, align: 'center', width: 200 },
-        { field: 'BSJ_ID', title: 'BSJ ID', sort: true, align: 'center', width: 240 },
-        { field: 'chr', title: 'chr', sort: true, align: 'center', width: 80 },
-        { field: 'circRNA_start', title: 'Start', sort: true, align: 'center', width: 160 },
-        { field: 'circRNA_end', title: 'End', sort: true, align: 'center', width: 160 },
-        { field: 'circRNA_type', title: 'circRNA type', sort: true, align: 'center', width: 160 },
-        { field: 'host_gene', title: 'Host gene', sort: true, align: 'center', width: 130 },
-        { field: 'ensembl_id', title: 'Ensembl ID', sort: true, align: 'center', width: 180 },
-        { field: 'ConfidenceRank', title: 'Confidence', sort: true, align: 'center', width: 140 }
-    ];
-		// 计算当前总宽度
-    var totalWidth = columns.reduce((sum, col) => sum + col.width, 0)+8;
-
-    // 如果总宽度小于设定的宽度，按比例分配额外宽度
-    if (totalWidth < width) {
-        var extraWidth = width - totalWidth; // 需要增加的宽度
-        columns.forEach(col => {
-            col.width += (col.width / totalWidth) * extraWidth; // 按比例分配
-        });
+    th[data-field="circRNA_start"] {
+      position: relative;
+      overflow: visible;
     }
 
-				vm.cirRNAs = table.render({
-					elem: '#demo'
-					, page: true
-					// , width: width
-					, url: './interface/browse_circRNA_API.php'
-					, page: true //开启分页
-					, id: 'cirRNAs'
-					, limits: [10, 30, 50, 100]
-					, cols: [columns]
-					, where: {} // 初始时传递空对象，获取所有数据
-					, done: function (res, curr, count) { // res 即为请求后端接口返回的数据
-						console.log('返回的数据:', res);
-						// 如果数据在 res.data 中，根据实际情况调整
-						if (res.data) {
-							console.log('具体数据:', res.data);
-						}
-					}
-				});
-				// 监听导出按钮点击事件
-				document.getElementById('exportBtn').addEventListener('click', function () {
-					// 获取表格的所有数据
-					var allData = table.cache.cirRNAs; // 'cirRNAs' 是表格的 id
-					if (allData) {
-						// 导出数据
-						table.exportFile(vm.cirRNAs.config.id, allData, 'xls'); // 'xls' 可以改为 'csv'
-					} else {
-						alert('没有数据可以导出');
-					}
-				});
-				table.on('sort(cirRNAs)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-					console.log(obj.field); //当前排序的字段名
-					console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
-					console.log(this); //当前排序的 th 对象
+    th[data-field="circRNA_start"]:hover::after {
+      color: #fff;
+      background: #cccccc;
+      content: "Starting from 1";
+      border-radius: 8px;
+      position: absolute;
+      top: 30px;
+      left: 30%;
+      z-index: 99;
+      padding: 10px 8px;
+    }
+  </style>
 
-					// 判断是否需要重新加载数据
-					if (obj.field !== vm.lastSortField || obj.type !== vm.lastSortOrder) {
-						// 保存当前排序字段和排序顺序
-						vm.lastSortField = obj.field;
-						vm.lastSortOrder = obj.type;
-						console.log('reload');
-						// 重新加载数据
-						table.reload('cirRNAs', {
-							where: {
-								search_column: vm.searchColumn,
-								search_value: vm.searchValue,
-								field: obj.field, //排序字段
-								order: obj.type //排序方式
-							}
-						});
-					}
-				});
-				// 处理表格工具事件
-				table.on('tool(cirRNAs)', function (obj) {
-					let event = obj.event;
-					console.log(obj);
-					if (event === "go_circ") {
-						window.location.href = 'circRNA.html?BloodCircR_ID=' + encodeURIComponent(obj.data.BloodCircR_ID);
-					}
-				});
+  <script>
+    new Vue({
+      el: "#app",
+      data() {
+        return {
+          isLoaded: false,
+          searchColumn: "", // 选择的搜索字段
+          searchValue: "", // 用户输入的搜索关键词
+          cirRNAs: "",
+          lastSortField: "", // 上一次的排序字段
+          lastSortOrder: "", // 上一次的排序顺序
+        };
+      },
+      mounted() {
+        var vm = this;
+        this.isLoaded = true;
+        console.log("aaa");
+        var width;
+        const container = document.querySelector(".browse1");
+        if (container) {
+          width = container.clientWidth;
+        }
+        layui.use(["table"], function () {
+          var table = layui.table;
+          // 定义列配置
+          var columns = [
+            {
+              field: "BloodCircR_ID",
+              title: "BloodCircR ID",
+              event: "go_circ",
+              sort: true,
+              align: "center",
+              width: 200,
+            },
+            {
+              field: "BSJ_ID",
+              title: "BSJ ID",
+              sort: true,
+              align: "center",
+              width: 240,
+            },
+            {
+              field: "chr",
+              title: "chr",
+              sort: true,
+              align: "center",
+              width: 80,
+            },
+            {
+              field: "circRNA_start",
+              title: "Start",
+              sort: true,
+              align: "center",
+              width: 160,
+            },
+            {
+              field: "circRNA_end",
+              title: "End",
+              sort: true,
+              align: "center",
+              width: 160,
+            },
+            {
+              field: "circRNA_type",
+              title: "circRNA type",
+              sort: true,
+              align: "center",
+              width: 160,
+            },
+            {
+              field: "host_gene",
+              title: "Host gene",
+              sort: true,
+              align: "center",
+              width: 130,
+            },
+            {
+              field: "ensembl_id",
+              title: "Ensembl ID",
+              sort: true,
+              align: "center",
+              width: 180,
+            },
+            {
+              field: "ConfidenceRank",
+              title: "Confidence",
+              sort: true,
+              align: "center",
+              width: 140,
+            },
+          ];
+          // 计算当前总宽度
+          var totalWidth = columns.reduce((sum, col) => sum + col.width, 0) + 8;
 
-				// 移除 title 属性（使用原生 JavaScript）
-				document.querySelectorAll('[title]').forEach(function (element) {
-					element.removeAttribute('title');
-				});
-			});
-		},
-		methods: {
-			handleClear() {
-				this.cirRNAs.reload({
-					url: './interface/browse_circRNA_API.php'
-					, where: {
-					}
-					, page: {
-						curr: 1 //重新从第 1 页开始
-					}
-				});
-			},
-			handleSearch() {
-				console.log(this.searchColumn);
-				console.log(this.searchValue);
-				console.log(this.lastSortField);
-				console.log(this.lastSortOrder);
-				if (this.searchColumn !== "All" && this.searchValue !== '' && this.lastSortField !== '') {
-					console.log(this.searchColumn);
-					this.cirRNAs.reload({
-						url: './interface/browse_circRNA_API.php'
-						, where: {
-							search_column: this.searchColumn,
-							search_value: this.searchValue,
-							field: this.lastSortField, //排序字段
-							order: this.lastSortOrder //排序方式
-						}
-						, page: {
-							curr: 1 //重新从第 1 页开始
-						}
-					});
-				}
-				else if (this.searchColumn !== "All" && this.searchValue !== '') {
-					console.log(this.searchColumn);
-					// console.log(this.cirRNAs);
-					this.cirRNAs.reload({
-						url: './interface/browse_circRNA_API.php'
-						, where: {
-							search_column: this.searchColumn,
-							search_value: this.searchValue,
-						}
-						, page: {
-							curr: 1 //重新从第 1 页开始
-						}
-					});
-				} else {
-					console.log(this.searchColumn);
-					this.searchColumn = '';
-					this.searchValue = '';
-					this.cirRNAs.reload({
-						url: './interface/browse_circRNA_API.php'
-						, where: {
-						}
-						, page: {
-							curr: 1 //重新从第 1 页开始
-						}
-					});
-					this.searchColumn = '';
-				}
-			},
-			setDefaultValue() {
-				// 设置默认值
-				if (this.searchColumn === "BloodCircR_ID") {
-					this.searchValue = "circABHD2_0143";
-				} else if (this.searchColumn === "BSJ_ID") {
-					this.searchValue = "chr2|135748267|135755691|+";
-				} else if (this.searchColumn === "chr") {
-					this.searchValue = "chr2";
-				} else if (this.searchColumn === "circRNA_start") {
-					this.searchValue = "135748267";
-				} else if (this.searchColumn === "circRNA_end") {
-					this.searchValue = "135755691";
-				} else if (this.searchColumn === "circRNA_type") {
-					this.searchValue = "exon";
-				} else if (this.searchColumn === "host_gene") {
-					this.searchValue = "UBXN4";
-				} else if (this.searchColumn === "ensembl_id") {
-					this.searchValue = "ENSG00000144224";
-				} else if (this.searchColumn === "ConfidenceRank") {
-					this.searchValue = "1";
-				} else {
-					// 默认情况下清空输入框
-					this.searchValue = "";
-				}
-			}
-		}
-	})
-</script>
+          // 如果总宽度小于设定的宽度，按比例分配额外宽度
+          if (totalWidth < width) {
+            var extraWidth = width - totalWidth; // 需要增加的宽度
+            columns.forEach((col) => {
+              col.width += (col.width / totalWidth) * extraWidth; // 按比例分配
+            });
+          }
 
-<script>
-	layui.use(['table', 'form'], function () {
-		var table = layui.table, form = layui.form, $ = layui.$;
-		const examples = document.querySelectorAll('.examples span');
-		const textarea = document.getElementById('search_any');
+          vm.cirRNAs = table.render({
+            elem: "#demo",
+            page: true,
+            // , width: width
+            url: "./interface/browse_circRNA_API.php",
+            page: true, //开启分页
+            id: "cirRNAs",
+            limits: [10, 30, 50, 100],
+            cols: [columns],
+            where: {}, // 初始时传递空对象，获取所有数据
+            done: function (res, curr, count) {
+              // res 即为请求后端接口返回的数据
+              console.log("返回的数据:", res);
+              // 如果数据在 res.data 中，根据实际情况调整
+              if (res.data) {
+                console.log("具体数据:", res.data);
+              }
+            },
+          });
+          // 监听导出按钮点击事件
+          document
+            .getElementById("exportBtn")
+            .addEventListener("click", function () {
+              // 获取表格的所有数据
+              var allData = table.cache.cirRNAs; // 'cirRNAs' 是表格的 id
+              if (allData) {
+                // 导出数据
+                table.exportFile(vm.cirRNAs.config.id, allData, "xls"); // 'xls' 可以改为 'csv'
+              } else {
+                alert("没有数据可以导出");
+              }
+            });
+          table.on("sort(cirRNAs)", function (obj) {
+            //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            console.log(obj.field); //当前排序的字段名
+            console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+            console.log(this); //当前排序的 th 对象
 
-		examples.forEach((span) => {
-			span.addEventListener('click', () => {
-				const spanText = span.textContent;
-				const textareaValue = textarea.value;
+            // 判断是否需要重新加载数据
+            if (
+              obj.field !== vm.lastSortField ||
+              obj.type !== vm.lastSortOrder
+            ) {
+              // 保存当前排序字段和排序顺序
+              vm.lastSortField = obj.field;
+              vm.lastSortOrder = obj.type;
+              console.log("reload");
+              // 重新加载数据
+              table.reload("cirRNAs", {
+                where: {
+                  search_column: vm.searchColumn,
+                  search_value: vm.searchValue,
+                  field: obj.field, //排序字段
+                  order: obj.type, //排序方式
+                },
+              });
+            }
+          });
+          // 处理表格工具事件
+          table.on("tool(cirRNAs)", function (obj) {
+            let event = obj.event;
+            console.log(obj);
+            if (event === "go_circ") {
+              window.location.href =
+                "circRNA.html?BloodCircR_ID=" +
+                encodeURIComponent(obj.data.BloodCircR_ID);
+            }
+          });
 
-				if (textareaValue) {
-					// 如果textarea中已有内容，添加一个"、"号隔开
-					textarea.value = textareaValue + '、' + spanText;
-				} else {
-					// 如果textarea中没有内容，直接插入span的内容
-					textarea.value = spanText;
-				}
-			});
-		});
-		const circRNA_start_eg = document.querySelector('#circRNA_start .eg em');
-		const circRNA_start_input = document.querySelector('#circRNA_start input');
-		circRNA_start_eg.addEventListener('click', () => {
-			circRNA_start_input.value = circRNA_start_eg.textContent;
-		});
-		const circRNA_end_eg = document.querySelector('#circRNA_end .eg em');
-		const circRNA_end_input = document.querySelector('#circRNA_end input');
-		circRNA_end_eg.addEventListener('click', () => {
-			circRNA_end_input.value = circRNA_end_eg.textContent;
-		});
-	});
-</script>
+          // 移除 title 属性（使用原生 JavaScript）
+          document.querySelectorAll("[title]").forEach(function (element) {
+            element.removeAttribute("title");
+          });
+        });
+      },
+      methods: {
+        handleClear() {
+          this.cirRNAs.reload({
+            url: "./interface/browse_circRNA_API.php",
+            where: {},
+            page: {
+              curr: 1, //重新从第 1 页开始
+            },
+          });
+        },
+        handleSearch() {
+          console.log(this.searchColumn);
+          console.log(this.searchValue);
+          console.log(this.lastSortField);
+          console.log(this.lastSortOrder);
+          if (
+            this.searchColumn !== "All" &&
+            this.searchValue !== "" &&
+            this.lastSortField !== ""
+          ) {
+            console.log(this.searchColumn);
+            this.cirRNAs.reload({
+              url: "./interface/browse_circRNA_API.php",
+              where: {
+                search_column: this.searchColumn,
+                search_value: this.searchValue,
+                field: this.lastSortField, //排序字段
+                order: this.lastSortOrder, //排序方式
+              },
+              page: {
+                curr: 1, //重新从第 1 页开始
+              },
+            });
+          } else if (this.searchColumn !== "All" && this.searchValue !== "") {
+            console.log(this.searchColumn);
+            // console.log(this.cirRNAs);
+            this.cirRNAs.reload({
+              url: "./interface/browse_circRNA_API.php",
+              where: {
+                search_column: this.searchColumn,
+                search_value: this.searchValue,
+              },
+              page: {
+                curr: 1, //重新从第 1 页开始
+              },
+            });
+          } else {
+            console.log(this.searchColumn);
+            this.searchColumn = "";
+            this.searchValue = "";
+            this.cirRNAs.reload({
+              url: "./interface/browse_circRNA_API.php",
+              where: {},
+              page: {
+                curr: 1, //重新从第 1 页开始
+              },
+            });
+            this.searchColumn = "";
+          }
+        },
+        setDefaultValue() {
+          // 设置默认值
+          if (this.searchColumn === "BloodCircR_ID") {
+            this.searchValue = "circABHD2_0143";
+          } else if (this.searchColumn === "BSJ_ID") {
+            this.searchValue = "chr2|135748267|135755691|+";
+          } else if (this.searchColumn === "chr") {
+            this.searchValue = "chr2";
+          } else if (this.searchColumn === "circRNA_start") {
+            this.searchValue = "135748267";
+          } else if (this.searchColumn === "circRNA_end") {
+            this.searchValue = "135755691";
+          } else if (this.searchColumn === "circRNA_type") {
+            this.searchValue = "exon";
+          } else if (this.searchColumn === "host_gene") {
+            this.searchValue = "UBXN4";
+          } else if (this.searchColumn === "ensembl_id") {
+            this.searchValue = "ENSG00000144224";
+          } else if (this.searchColumn === "ConfidenceRank") {
+            this.searchValue = "1";
+          } else {
+            // 默认情况下清空输入框
+            this.searchValue = "";
+          }
+        },
+      },
+    });
+  </script>
 
+  <script>
+    layui.use(["table", "form"], function () {
+      var table = layui.table,
+        form = layui.form,
+        $ = layui.$;
+      const examples = document.querySelectorAll(".examples span");
+      const textarea = document.getElementById("search_any");
+
+      examples.forEach((span) => {
+        span.addEventListener("click", () => {
+          const spanText = span.textContent;
+          const textareaValue = textarea.value;
+
+          if (textareaValue) {
+            // 如果textarea中已有内容，添加一个"、"号隔开
+            textarea.value = textareaValue + "、" + spanText;
+          } else {
+            // 如果textarea中没有内容，直接插入span的内容
+            textarea.value = spanText;
+          }
+        });
+      });
+      const circRNA_start_eg = document.querySelector("#circRNA_start .eg em");
+      const circRNA_start_input = document.querySelector(
+        "#circRNA_start input"
+      );
+      circRNA_start_eg.addEventListener("click", () => {
+        circRNA_start_input.value = circRNA_start_eg.textContent;
+      });
+      const circRNA_end_eg = document.querySelector("#circRNA_end .eg em");
+      const circRNA_end_input = document.querySelector("#circRNA_end input");
+      circRNA_end_eg.addEventListener("click", () => {
+        circRNA_end_input.value = circRNA_end_eg.textContent;
+      });
+    });
+  </script>
 </html>

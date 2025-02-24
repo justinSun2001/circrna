@@ -1,9 +1,6 @@
 <?php
 // 数据库配置
-$host = '10.120.53.201:3306';
-$dbname = 'dbatlas';
-$user = 'root';
-$pass = '123456';
+
 
 // 创建数据库连接
 try {
