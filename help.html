@@ -1,463 +1,558 @@
 ﻿<!DOCTYPE html>
 <html>
-
-<head>
-  <meta charset="utf-8">
-  <title>BloodCircR</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/help.css">
-  <link rel="icon" href="images/1_1.png" type="image/x-icon">
-  <!-- 引入elementui样式 -->
-  <link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
+  <head>
+    <meta charset="utf-8" />
+    <title>BloodCircR</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/help.css" />
+    <link rel="icon" href="images/1_1.png" type="image/x-icon" />
+    <!-- 引入elementui样式 -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="elementui/theme-chalk/index.css"
+    />
+    <style></style>
+    <script src="js/vue.js"></script>
+    <script src="js/elementui.js"></script>
+    <script src="js/header-component.js"></script>
+    <script src="js/footer-component.js"></script>
+  </head>
   <style>
-
-  </style>
-  <script src="js/vue.js"></script>
-  <script src="js/elementui.js"></script>
-  <script src="js/header-component.js"></script>
-  <script src="js/footer-component.js"></script>
-</head>
-<style>
-  .background {
-    background-image: url(../images/u61.png);
-    background-repeat: no-repeat;
-    background-size: cover;
-    width: 100%;
-    height: 500px;
-  }
-</style>
-<style>
-  .image-with-text {
-    position: relative;
-}
-.text-overlay {
-			position: absolute;
-			top: 15%;
-			left:15%;
-			right:15%;
-			bottom:15%;
-			
-			/* padding: 80px 20px; */
-			width: 70%;
-			height: 70%;
-		}
-
-.text-overlay .text {
-			font-size: 1.5vw;
-			font-weight: bold;
-			color: white !important;
-		}
-</style>
-<body>
-  <div id="app" :class="{ loaded: isLoaded }">
-    <!-- 使用定义的 header 组件 -->
-    <app-header></app-header>
-    <div class="background" style="margin-top: 100px; margin-bottom: 0;">
-      <div class="image-with-text">
-        <div class="text-overlay">
-			<div style="display: flex;justify-content: center; flex-direction: column; height: 100%; ">
-          <div class="text" style="font-size: 7.5vw;text-align: center;font-family: Arial Rounded MT Bold;color:white;margin-top: 430px;">HELP</div>
-       <div class="text" style="text-align: center;">
-           A comprehensive manual for navigating and utilizing the <span style="font-style: italic;color:white;">BloodCircR</span> platform
-       </div>
-
-        </div>
-      </div>
-    </div>
-   </div>
-    
-    <div class="bottom">
-      <div class="left">
-        <ul>
-			<li>
-			  <a href="#10" style="font-weight: bold;"> Resources</a>
-			  <ul style="padding-left: 10px;">
-			    <li><a href="#11">Study / Dataset</a></li>
-			  </ul>
-			</li>
-          <li>
-            <a href="#1" style="font-weight: bold;">circRNAs</a>
-            <ul style="padding-left: 10px;">
-              <li><a href="#2">Browse circRNA</a></li>
-              <li><a href="#3">Advanced search</a></li>
-			   <li><a href="#22">Standardized naming</a></li>
-              <li><a href="#4">General information</a></li>
-              <li><a href="#5">Structure</a></li>
-              <li><a href="#6">Alias for circRNA</a></li>
-              <li><a href="#7">Supporting evidence</a></li>
-              <li><a href="#8">Functions</a></li>
-              <li><a href="#9">Expression</a></li>
-            </ul>
-          </li>
-        
-          <li>
-            <a href="#12" style="font-weight: bold;">Expressions</a>
-            <ul style="padding-left: 10px;">
-              <li><a href="#13">Landscape</a></li>
-              <li><a href="#14">Expression</a></li>
-              <li><a href="#15">Differential expression</a></li>
-         
-            </ul>
-          </li>
-		  <li>
-		    <a href="#18" style="font-weight: bold;">Pipeline</a>
-		    <ul style="padding-left: 10px;">
-		      <li><a href="#20">AQUARIUM_HB</a></li>
-		     
-		    </ul>
-		  </li>
-          <li>
-            <a href="#17" style="font-weight: bold;">Server</a>
-            <ul style="padding-left: 10px;">
-              <li><a href="#18">Manage data</a></li>
-              <li><a href="#19">Manage account</a></li>    
-            </ul>
-          </li>
-        </ul>
-      </div>
-      <div class="right">
-		  <div class="header" id="10">
-		    Resources
-		  </div>
-		  <el-card>
-		    <div class="title" id="11">·Study / Dataset</div>
-		    <div class="content" style=" padding-right: 0;text-align: justify;"><i>BloodCircR</i> offers a comprehensive collection of human blood transcriptome studies and datasets. 
-			Users can filter studies by selecting different disease categories of interest.</div>
-		    <img src="images/u87.png" style="width:100%;" />
-			<div class="content" style=" padding-right: 0;margin-top: 10px;margin-right: 10px;">Additionally, datasets can be filtered based on specific disease phenotypes and 
-			sequencing platforms. The number in parentheses next to each phenotype name indicates the total number of samples associated with that phenotype.</div>
-			 <img src="images/u87-dataset.png" style="width:100%;" />
-		  </el-card>
-        <div class="header" id="1">
-          circRNAs
-        </div>
-        <el-card>
-          <div class="title" id="2">·Browse circRNA</div>
-          <div class="content" style=" padding-right: 0;">Users can browse all circRNAs or filter by specific conditions to search for circRNAs of interest. Detailed information for each circRNA 
-		  can be assessed by clicking on its <i>BloodCircR ID</i>.</div>
-          <img src="images/u20.png" style="width:100%;" />
-          <div class="title" id="22">·Standardized Naming</div>
-         <div class="content" style="padding-right: 0;">
-             CircRNAs are named according to the order of their circular exons, with an appended numerical ID to distinguish circRNAs that share the same exon annotation 
-             <a href="https://doi.org/10.1038/s41556-022-01066-9" target="_blank" 
-                style="color: #B94A4A; text-decoration: none;"
-                onmouseover="this.style.textDecoration='underline';" 
-                onmouseout="this.style.textDecoration='none';">
-                (Chen et al. Nature Cell Biology 2023)</a>.
-         </div>
-
-		   <img src="images/u20-doi.png" style="width:100%;" />
-        </el-card>
-        <el-card>
-          <div class="title" id="3">·Advanced Search</div>
-        
-          <div class="content" style=" padding-right: 0;">Users can search for circRNAs in <i>BloodCircR</i> by various identifiers, including <i>BloodCircR ID</i>, host gene, 
-		  <i>Ensemble ID</i>, BSJ ID, Uniform ID, Dataset ID and chromosome position.</div>
-          <img src="images/u49.png" style="width:100%;" />
-        </el-card>
-        <el-card>
-          <div class="title" id="4">·General information</div>
-        <div class="content" style="padding-right: 0;">
-            Users can view detailed information about a specific circRNA, including its Uniform ID, BSJ ID, chromosome, strand, start and end positions, 
-			type, host gene,  <i>Ensemble ID</i>, genomic length, spliced sequence length, isoform state, source, and confidence level. 
-          
-        </div>
-
-          <img src="images/u55.jpg" style="width:100%;" />
-          <div class="content">1.Clicking on the host gene will direct the <i>GeneCards</i> website.</div>
-          <div class="content">2.Cliking on the ‘Full’ link will lead to the supporting evidence module.</div>
-        </el-card>
-        <el-card>
-          <div class="title" id="5">·Structure</div>
-          <div class="content" style=" padding-right: 0;">Users can explore the sequence, exons, and exon positions of a specific circRNA. Additionally, clicking on an exon will display its sequence.</div>
-          <img src="images/u59.png" style="width:100%;" />
-        </el-card>
-        <el-card>
-          <div class="title" id="6">·Alias for circRNA</div>
-          <div class="content" style=" padding-right: 0;"><i>BloodCircR</i> provides alternate circRNA IDs from different databases. Users can click on these IDs to be redirected to corresponding databases.</div>
-          <img src="images/u63.png" style="width:100%;" />
-        </el-card>
-        <el-card>
-          <div class="title" id="7">·Supporting evidence</div>
-          <div class="content" style=" padding-right: 0;">Users can select different samples from various datasets to view visualization plots in circRNA reconstruction.</div>
-          <img src="images/u67.png" style="width:100%;" />
-        </el-card>
-        <el-card>
-          <div class="title" id="8">·Functions</div>
-          <div class="content" style=" padding-right: 0;"><B>RBP Binding: </B>Users can explore RBPs predicted to bind a specific circRNA using the <i>RBPmap</i> tool.</div>
-          <img src="images/u71.png" style="width:100%;" />
-		  <div class="content" style=" padding-right: 0;"><B>miRNA Binding: </B>Users can explore miRNAs predicted to bind a specific circRNA using the <i>TargetScan</i> tool.</div>
-		  <img src="images/u72.png" style="width:100%;" />
-          <div class="content" style=" padding-right: 0;"><B>Regulatory network: </B>Users can view the regulatory network involving a circRNA, RBPs, miRNAs, mRNA, or protein-protein interactions of host genes, 
-		  as well as the results of enrichment analyses.</div>
-          <img src="images/u75.png" style="width:100%;" />
-		  <div class="content" style=" padding-right: 0;"><B>Protein-protein interaction network: </B>Users can explore the protein-protein interaction network of host genes and predicted binding genes, as well as the results of enrichment analyses..</div>
-		  <img src="images/u76.png" style="width:100%;" />
-        </el-card>
-        <el-card>
-          <div class="title" id="9">·Expression</div>
-          <div class="content" style=" padding-right: 0;"><i>BloodCircR</i> provides circRNA and host gene expression profiles across 16 disease categories. In addition to expression abundance, the platform displays the junction ratio at the BSJ site for each circRNA, 
-		  enabling exploration of the splicing strength of back-splicing events.</div>
-          <img src="images/u80.png" style="width:100%;" />
-		   <img src="images/u80-1.png" style="width:100%;" />
-		   <img src="images/u80-2.png" style="width:100%;" />
-        </el-card>
-
-   
-
-        <div class="header" id="12">
-          Expressions
-        </div>
-        <el-card>
-          <div class="title" id="13">·circRNA Expression across Groups</div>
-          <div class="content" style=" padding-right: 0;">Users can view the expression (TPM) of circRNAs across groups in human diseases or phenotypes.</div>
-          <div style="display: flex;">
-            <img src="images/u100.jpg" style="width:100%;" />
-          </div>
-          <div class="content">
-            1. Choose at least one disease type;
-            <br>    
-			2. Select at least one phenotype.
-			<br>
-            3. Choose at least one dataset.
-            <br>
-            4. Submit your selections.
-			<br>
-			5. View the chart generated from all selected datasets or from a single dataset.
-		   <br>
-		  6. Export the image or data if needed.
-		  <br>
-		  7. Click for a detailed description of methods and results.
-			
-	
-          </div>
-        </el-card>
-        <el-card>
-          <div class="title" id="14">·Isoform / BSJ / Gene Expression Analysis</div>
-          <div class="content" style=" padding-right: 0;">Users can view circRNA expression (TPM) across groups at the isoform, BSJ, or gene level in human diseases or phenotypes.</div>
-          <div style="display: flex;">
-            <img src="images/u100_1.jpg" style="width:20%;"/>
-            <img src="images/u99.jpg" style="width:80%;" />
-          </div>
-          <div class="content">
-          1. Select at least one disease type.
-            <br>
-           
-     2. Select at least one phenotype.
-            <br>
-            3. Choose at least one dataset.
-            <br>
-          4. Submit your selections.
-            <br>
-        5. Select isoform, BSJ, or host gene level for analysis.
-			<br>
-		6. Press the Tab key to fill in isoforms/BSJs/genes in the selected samples, or enter the isoforms/BSJs/genes of interest, then click the Submit button.
-			<br>
-			7. View the plot generated from all selected datasets or from a single dataset.
-			<br>
-			8. Select one of the inputted isoforms/BSJs/genes to view the plot and submit your choice.
-			<br>
-			9. Export the image or data if needed.
-          </div>
-        </el-card>
-        <el-card>
-          <div class="title" id="15">·Differential Expression</div>
-          <div class="content" style=" padding-right: 0;">Users can view differential expression across groups in human diseases or phenotypes at the isoform, BSJ, or gene level.</div>
-          <div style="display: flex;">
-            <img src="images/u100_2.jpg" style="width:20%;" />
-            <img src="images/u108.jpg" style="width:80%;" />
-          </div>
-          <div class="content">
-         1. Select at least one disease type.
-            <br>
-
-         2. Select at least one phenotype.
-            <br>
-           3. Choose at least one dataset.
-			<br>
-		4. Submit your selections.
-		<br>
-		5. Select the isoform, BSJ, or gene level.
-			<br>
-				6. Select one of comparisons.
-				<br>
-		7. View the plot generated from one of the selected datasets and comparisons.
-			<br>
-8. Adjust P-value and fold-change parameters to regenerate the plot.
-		<br>
-		9. Export the image or data if needed.
-          </div>
-		  
-		  <div class="title" id="15">·Enrichment analysis</div>
-		  <div class="content" style=" padding-right: 0;">Users can assess enrichment analysis results for <i>GO</i>, <i>KEGG</i>, <i>Reactome</i> pathways and <i>Hallmark</i> gene sets across groups at the isoform, BSJ, or gene level.</div>
-		  <div style="display: flex;">
-		    <img src="images/u100_2.jpg" style="width:20%;" />
-		    <img src="images/u133.jpg" style="width:80%;" />
-		  </div>
-		  <div class="content">
-	1. Select at least one disease type.
-	<br>
-	2. Select at least one phenotype.
-	<br>
-	3. Choose at least one dataset.
-	<br>
-	4. Submit your selections.
-	<br>
-	5. Select isoform, BSJ, or gene level.
-	<br>
-	6. Choose one of the following categories to view enrichment analysis results: Biological Process (BP), Cellular Component (CC), Molecular Function (MF), Reactome pathway, or Gene Set Enrichment Analysis (GSEA).
-	<br>
-	7. Select one of comparisons.
-	<br>
-	8.View the plot generated from one of the selected datasets and comparisons.
-	<br>
-	9. Adjust the P-value and fold-change parameters to examine up-regulated and down-regulated genes.
-	<br>
-	10. Export the image or data if needed.
-
-
-		         
-		  </div>
-		
-        </el-card>
-   
-  <el-card>
-         <div class="title" id="15">·Differential Expression Comparison</div>
-         <div class="content" style=" padding-right: 0;">Users can view circRNA expression (TPM) vs mRNA expression across group in human diseases or phenotypes.</div>
-         <div style="display: flex;">
-           <img src="images/u100_2.jpg" style="width:20%;" />
-           <img src="images/u128.jpg" style="width:80%;" />
-         </div>
-         <div class="content">
-       1. Select at least one disease type.
-       <br>
-       2. Select at least one phenotype.
-       <br>
-       3. Choose at least one dataset.
-       <br>
-       4. Submit your selections.
-       <br>
-	   5. Select one of comparisons.
-	   <br>
-       6. View the plot generated from one of the selected datasets and comparison.
-       <br>
-       7. Adjust P-value and fold-change parameters to regenerate the plot.
-       <br>
-       8. Export the image or data if needed.
-         			
-         </div>
-		  <div class="title" id="15">·Enrichment analysis (circular versus linear transcripts))</div>
-		  <div class="content" style=" padding-right: 0;">Users can compare enrichment analysis results for <i>GO</i>, <i>KEGG</i>, <i>Reactome</i> pathways and <i>Hallmark</i> gene sets between circular and linear transcripts.</div>
-		  <div style="display: flex;">
-		    <img src="images/u100_2.jpg" style="width:20%;" />
-		    <img src="images/u140.jpg" style="width:80%;" />
-		  </div>
-		  <div class="content">
-		1. Select at least one disease type.
-		<br>
-		2. Select at least one phenotype.
-			<br>
-		3. Choose at least one dataset.
-			<br>
-		4. Submit your selections.
-			<br>
-		5. Select one of comparisons.
-			<br>
-		6. Choose one of the following categories to view enrichment analysis results: Biological Process (BP), Cellular Component (CC), Molecular Function (MF), Reactome pathway, or Gene Set Enrichment Analysis (GSEA).
-			<br>
-		7. View the plot generated from one of the selected datasets and comparison.
-		<br>
-		8. Adjust the parameters to regenerate the enrichment analysis results.
-			<br>
-		9. Export the image or data if needed.
-
-		
-
-		  </div>
-        </el-card>
-		
-		<div class="header" id="18">
-		Pipeline
-		</div>
-		<el-card>
-		  <div class="title" id="20">·AQUARIUM_HB</div>
-		  <div class="content" style=" padding-right: 0;">Click on the <i>AQUARIUM_HB</i> link to navigate to the GitHub page. The GitHub page contains the necessary data processing workflows and code.</div>
-		  <div style="display: flex;">
-		    <img src="images/hb.jpg" style="width:100%;" />
-		    
-		  </div>
-		  <div class="content">
-		  
-		  </div>
-		</el-card>
-			 
-        <div class="header" id="17">
-          Server
-        </div>
-        <el-card>
-          <div class="title" id="18">·Manage Data</div>
-          <div class="content" style=" padding-right: 0;">Users can upload their own dataset and fill in the form. Uploaded datasets will be analyzed in Expression module.</div>
-          <div style="display: flex;">
-            <img src="images/u150.jpg" style="width:100%;" />
-        
-          </div>
-          <div class="content">
-          1. Upload datasets or download the example directly.
-		  <br>
-          2. Complete the form.
-		  <br>
-          3. Submit the form.
-		  <br>
-          4. Search the uploaded datasets by content or time.
-		  <br>
-          5. Modify or delete the uploaded datasets.
-
-           
-			
-		
-          </div>
-        </el-card>
-		
-        <el-card>
-          <div class="title" id="19">·Manage Account</div>
-          <div class="content" style=" padding-right: 0;">Users can update personal details and change the account password by filling out the form.</div>
-          <div style="display: flex;">
-            <img src="images/u151.jpg" style="width:100%;" />
-            
-          </div>
-          <div class="content">
-          
-          </div>
-        </el-card>
-       
-        
-      </div>
-    </div>
-    <!-- 滚动到顶部的按钮 -->
-    <el-backtop visibility-height="100" :bottom="20" :right="10"></el-backtop>
-    <app-footer></app-footer>
-  </div>
-</body>
-
-<!-- vue相关js -->
-<script>
-  new Vue({
-    el: '#app',
-    data() {
-      return {
-        isLoaded: false,
-      }
-    },
-    mounted() {
-      this.isLoaded = true;
-
-    },
-    methods: {
-      scrollToTop() {
-        window.scrollTo(0, 0);
-      },
+    .background {
+      background-image: url(./images/u61.png);
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 100%;
+      height: 500px;
     }
-  })
-</script>
+  </style>
+  <style>
+    .image-with-text {
+      position: relative;
+    }
+    .text-overlay {
+      position: absolute;
+      top: 15%;
+      left: 15%;
+      right: 15%;
+      bottom: 15%;
 
+      /* padding: 80px 20px; */
+      width: 70%;
+      height: 70%;
+    }
+
+    .text-overlay .text {
+      font-size: 1.5vw;
+      font-weight: bold;
+      color: white !important;
+    }
+  </style>
+  <body>
+    <div id="app" :class="{ loaded: isLoaded }">
+      <!-- 使用定义的 header 组件 -->
+      <app-header></app-header>
+      <div class="background" style="margin-top: 100px; margin-bottom: 0">
+        <div class="image-with-text">
+          <div class="text-overlay">
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+                height: 100%;
+              "
+            >
+              <div
+                class="text"
+                style="
+                  font-size: 7.5vw;
+                  text-align: center;
+                  font-family: Arial Rounded MT Bold;
+                  color: white;
+                  margin-top: 430px;
+                "
+              >
+                HELP
+              </div>
+              <div class="text" style="text-align: center">
+                A comprehensive manual for navigating and utilizing the
+                <span style="font-style: italic; color: white">BloodCircR</span>
+                platform
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom">
+        <div class="left">
+          <ul>
+            <li>
+              <a href="#10" style="font-weight: bold"> Resources</a>
+              <ul style="padding-left: 10px">
+                <li><a href="#11">Study / Dataset</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#1" style="font-weight: bold">circRNAs</a>
+              <ul style="padding-left: 10px">
+                <li><a href="#2">Browse circRNA</a></li>
+                <li><a href="#3">Advanced search</a></li>
+                <li><a href="#22">Standardized naming</a></li>
+                <li><a href="#4">General information</a></li>
+                <li><a href="#5">Structure</a></li>
+                <li><a href="#6">Alias for circRNA</a></li>
+                <li><a href="#7">Supporting evidence</a></li>
+                <li><a href="#8">Functions</a></li>
+                <li><a href="#9">Expression</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="#12" style="font-weight: bold">Expressions</a>
+              <ul style="padding-left: 10px">
+                <li><a href="#13">Landscape</a></li>
+                <li><a href="#14">Expression</a></li>
+                <li><a href="#15">Differential expression</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#18" style="font-weight: bold">Pipeline</a>
+              <ul style="padding-left: 10px">
+                <li><a href="#20">AQUARIUM_HB</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#17" style="font-weight: bold">Server</a>
+              <ul style="padding-left: 10px">
+                <li><a href="#18">Manage data</a></li>
+                <li><a href="#19">Manage account</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="right">
+          <div class="header" id="10">Resources</div>
+          <el-card>
+            <div class="title" id="11">·Study / Dataset</div>
+            <div class="content" style="padding-right: 0; text-align: justify">
+              <i>BloodCircR</i> offers a comprehensive collection of human blood
+              transcriptome studies and datasets. Users can filter studies by
+              selecting different disease categories of interest.
+            </div>
+            <img src="images/u87.png" style="width: 100%" />
+            <div
+              class="content"
+              style="padding-right: 0; margin-top: 10px; margin-right: 10px"
+            >
+              Additionally, datasets can be filtered based on specific disease
+              phenotypes and sequencing platforms. The number in parentheses
+              next to each phenotype name indicates the total number of samples
+              associated with that phenotype.
+            </div>
+            <img src="images/u87-dataset.png" style="width: 100%" />
+          </el-card>
+          <div class="header" id="1">circRNAs</div>
+          <el-card>
+            <div class="title" id="2">·Browse circRNA</div>
+            <div class="content" style="padding-right: 0">
+              Users can browse all circRNAs or filter by specific conditions to
+              search for circRNAs of interest. Detailed information for each
+              circRNA can be assessed by clicking on its <i>BloodCircR ID</i>.
+            </div>
+            <img src="images/u20.png" style="width: 100%" />
+            <div class="title" id="22">·Standardized Naming</div>
+            <div class="content" style="padding-right: 0">
+              CircRNAs are named according to the order of their circular exons,
+              with an appended numerical ID to distinguish circRNAs that share
+              the same exon annotation
+              <a
+                href="https://doi.org/10.1038/s41556-022-01066-9"
+                target="_blank"
+                style="color: #b94a4a; text-decoration: none"
+                onmouseover="this.style.textDecoration='underline';"
+                onmouseout="this.style.textDecoration='none';"
+              >
+                (Chen et al. Nature Cell Biology 2023)</a
+              >.
+            </div>
+
+            <img src="images/u20-doi.png" style="width: 100%" />
+          </el-card>
+          <el-card>
+            <div class="title" id="3">·Advanced Search</div>
+
+            <div class="content" style="padding-right: 0">
+              Users can search for circRNAs in <i>BloodCircR</i> by various
+              identifiers, including <i>BloodCircR ID</i>, host gene,
+              <i>Ensemble ID</i>, BSJ ID, Uniform ID, Dataset ID and chromosome
+              position.
+            </div>
+            <img src="images/u49.png" style="width: 100%" />
+          </el-card>
+          <el-card>
+            <div class="title" id="4">·General information</div>
+            <div class="content" style="padding-right: 0">
+              Users can view detailed information about a specific circRNA,
+              including its Uniform ID, BSJ ID, chromosome, strand, start and
+              end positions, type, host gene, <i>Ensemble ID</i>, genomic
+              length, spliced sequence length, isoform state, source, and
+              confidence level.
+            </div>
+
+            <img src="images/u55.jpg" style="width: 100%" />
+            <div class="content">
+              1.Clicking on the host gene will direct the
+              <i>GeneCards</i> website.
+            </div>
+            <div class="content">
+              2.Cliking on the ‘Full’ link will lead to the supporting evidence
+              module.
+            </div>
+          </el-card>
+          <el-card>
+            <div class="title" id="5">·Structure</div>
+            <div class="content" style="padding-right: 0">
+              Users can explore the sequence, exons, and exon positions of a
+              specific circRNA. Additionally, clicking on an exon will display
+              its sequence.
+            </div>
+            <img src="images/u59.png" style="width: 100%" />
+          </el-card>
+          <el-card>
+            <div class="title" id="6">·Alias for circRNA</div>
+            <div class="content" style="padding-right: 0">
+              <i>BloodCircR</i> provides alternate circRNA IDs from different
+              databases. Users can click on these IDs to be redirected to
+              corresponding databases.
+            </div>
+            <img src="images/u63.png" style="width: 100%" />
+          </el-card>
+          <el-card>
+            <div class="title" id="7">·Supporting evidence</div>
+            <div class="content" style="padding-right: 0">
+              Users can select different samples from various datasets to view
+              visualization plots in circRNA reconstruction.
+            </div>
+            <img src="images/u67.png" style="width: 100%" />
+          </el-card>
+          <el-card>
+            <div class="title" id="8">·Functions</div>
+            <div class="content" style="padding-right: 0">
+              <b>RBP Binding: </b>Users can explore RBPs predicted to bind a
+              specific circRNA using the <i>RBPmap</i> tool.
+            </div>
+            <img src="images/u71.png" style="width: 100%" />
+            <div class="content" style="padding-right: 0">
+              <b>miRNA Binding: </b>Users can explore miRNAs predicted to bind a
+              specific circRNA using the <i>TargetScan</i> tool.
+            </div>
+            <img src="images/u72.png" style="width: 100%" />
+            <div class="content" style="padding-right: 0">
+              <b>Regulatory network: </b>Users can view the regulatory network
+              involving a circRNA, RBPs, miRNAs, mRNA, or protein-protein
+              interactions of host genes, as well as the results of enrichment
+              analyses.
+            </div>
+            <img src="images/u75.png" style="width: 100%" />
+            <div class="content" style="padding-right: 0">
+              <b>Protein-protein interaction network: </b>Users can explore the
+              protein-protein interaction network of host genes and predicted
+              binding genes, as well as the results of enrichment analyses..
+            </div>
+            <img src="images/u76.png" style="width: 100%" />
+          </el-card>
+          <el-card>
+            <div class="title" id="9">·Expression</div>
+            <div class="content" style="padding-right: 0">
+              <i>BloodCircR</i> provides circRNA and host gene expression
+              profiles across 16 disease categories. In addition to expression
+              abundance, the platform displays the junction ratio at the BSJ
+              site for each circRNA, enabling exploration of the splicing
+              strength of back-splicing events.
+            </div>
+            <img src="images/u80.png" style="width: 100%" />
+            <img src="images/u80-1.png" style="width: 100%" />
+            <img src="images/u80-2.png" style="width: 100%" />
+          </el-card>
+
+          <div class="header" id="12">Expressions</div>
+          <el-card>
+            <div class="title" id="13">·circRNA Expression across Groups</div>
+            <div class="content" style="padding-right: 0">
+              Users can view the expression (TPM) of circRNAs across groups in
+              human diseases or phenotypes.
+            </div>
+            <div style="display: flex">
+              <img src="images/u100.jpg" style="width: 100%" />
+            </div>
+            <div class="content">
+              1. Choose at least one disease type;
+              <br />
+              2. Select at least one phenotype.
+              <br />
+              3. Choose at least one dataset.
+              <br />
+              4. Submit your selections.
+              <br />
+              5. View the chart generated from all selected datasets or from a
+              single dataset.
+              <br />
+              6. Export the image or data if needed.
+              <br />
+              7. Click for a detailed description of methods and results.
+            </div>
+          </el-card>
+          <el-card>
+            <div class="title" id="14">
+              ·Isoform / BSJ / Gene Expression Analysis
+            </div>
+            <div class="content" style="padding-right: 0">
+              Users can view circRNA expression (TPM) across groups at the
+              isoform, BSJ, or gene level in human diseases or phenotypes.
+            </div>
+            <div style="display: flex">
+              <img src="images/u100_1.jpg" style="width: 20%" />
+              <img src="images/u99.jpg" style="width: 80%" />
+            </div>
+            <div class="content">
+              1. Select at least one disease type.
+              <br />
+
+              2. Select at least one phenotype.
+              <br />
+              3. Choose at least one dataset.
+              <br />
+              4. Submit your selections.
+              <br />
+              5. Select isoform, BSJ, or host gene level for analysis.
+              <br />
+              6. Press the Tab key to fill in isoforms/BSJs/genes in the
+              selected samples, or enter the isoforms/BSJs/genes of interest,
+              then click the Submit button.
+              <br />
+              7. View the plot generated from all selected datasets or from a
+              single dataset.
+              <br />
+              8. Select one of the inputted isoforms/BSJs/genes to view the plot
+              and submit your choice.
+              <br />
+              9. Export the image or data if needed.
+            </div>
+          </el-card>
+          <el-card>
+            <div class="title" id="15">·Differential Expression</div>
+            <div class="content" style="padding-right: 0">
+              Users can view differential expression across groups in human
+              diseases or phenotypes at the isoform, BSJ, or gene level.
+            </div>
+            <div style="display: flex">
+              <img src="images/u100_2.jpg" style="width: 20%" />
+              <img src="images/u108.jpg" style="width: 80%" />
+            </div>
+            <div class="content">
+              1. Select at least one disease type.
+              <br />
+
+              2. Select at least one phenotype.
+              <br />
+              3. Choose at least one dataset.
+              <br />
+              4. Submit your selections.
+              <br />
+              5. Select the isoform, BSJ, or gene level.
+              <br />
+              6. Select one of comparisons.
+              <br />
+              7. View the plot generated from one of the selected datasets and
+              comparisons.
+              <br />
+              8. Adjust P-value and fold-change parameters to regenerate the
+              plot.
+              <br />
+              9. Export the image or data if needed.
+            </div>
+
+            <div class="title" id="15">·Enrichment analysis</div>
+            <div class="content" style="padding-right: 0">
+              Users can assess enrichment analysis results for <i>GO</i>,
+              <i>KEGG</i>, <i>Reactome</i> pathways and <i>Hallmark</i> gene
+              sets across groups at the isoform, BSJ, or gene level.
+            </div>
+            <div style="display: flex">
+              <img src="images/u100_2.jpg" style="width: 20%" />
+              <img src="images/u133.jpg" style="width: 80%" />
+            </div>
+            <div class="content">
+              1. Select at least one disease type.
+              <br />
+              2. Select at least one phenotype.
+              <br />
+              3. Choose at least one dataset.
+              <br />
+              4. Submit your selections.
+              <br />
+              5. Select isoform, BSJ, or gene level.
+              <br />
+              6. Choose one of the following categories to view enrichment
+              analysis results: Biological Process (BP), Cellular Component
+              (CC), Molecular Function (MF), Reactome pathway, or Gene Set
+              Enrichment Analysis (GSEA).
+              <br />
+              7. Select one of comparisons.
+              <br />
+              8.View the plot generated from one of the selected datasets and
+              comparisons.
+              <br />
+              9. Adjust the P-value and fold-change parameters to examine
+              up-regulated and down-regulated genes.
+              <br />
+              10. Export the image or data if needed.
+            </div>
+          </el-card>
+
+          <el-card>
+            <div class="title" id="15">·Differential Expression Comparison</div>
+            <div class="content" style="padding-right: 0">
+              Users can view circRNA expression (TPM) vs mRNA expression across
+              group in human diseases or phenotypes.
+            </div>
+            <div style="display: flex">
+              <img src="images/u100_2.jpg" style="width: 20%" />
+              <img src="images/u128.jpg" style="width: 80%" />
+            </div>
+            <div class="content">
+              1. Select at least one disease type.
+              <br />
+              2. Select at least one phenotype.
+              <br />
+              3. Choose at least one dataset.
+              <br />
+              4. Submit your selections.
+              <br />
+              5. Select one of comparisons.
+              <br />
+              6. View the plot generated from one of the selected datasets and
+              comparison.
+              <br />
+              7. Adjust P-value and fold-change parameters to regenerate the
+              plot.
+              <br />
+              8. Export the image or data if needed.
+            </div>
+            <div class="title" id="15">
+              ·Enrichment analysis (circular versus linear transcripts))
+            </div>
+            <div class="content" style="padding-right: 0">
+              Users can compare enrichment analysis results for <i>GO</i>,
+              <i>KEGG</i>, <i>Reactome</i> pathways and <i>Hallmark</i> gene
+              sets between circular and linear transcripts.
+            </div>
+            <div style="display: flex">
+              <img src="images/u100_2.jpg" style="width: 20%" />
+              <img src="images/u140.jpg" style="width: 80%" />
+            </div>
+            <div class="content">
+              1. Select at least one disease type.
+              <br />
+              2. Select at least one phenotype.
+              <br />
+              3. Choose at least one dataset.
+              <br />
+              4. Submit your selections.
+              <br />
+              5. Select one of comparisons.
+              <br />
+              6. Choose one of the following categories to view enrichment
+              analysis results: Biological Process (BP), Cellular Component
+              (CC), Molecular Function (MF), Reactome pathway, or Gene Set
+              Enrichment Analysis (GSEA).
+              <br />
+              7. View the plot generated from one of the selected datasets and
+              comparison.
+              <br />
+              8. Adjust the parameters to regenerate the enrichment analysis
+              results.
+              <br />
+              9. Export the image or data if needed.
+            </div>
+          </el-card>
+
+          <div class="header" id="18">Pipeline</div>
+          <el-card>
+            <div class="title" id="20">·AQUARIUM_HB</div>
+            <div class="content" style="padding-right: 0">
+              Click on the <i>AQUARIUM_HB</i> link to navigate to the GitHub
+              page. The GitHub page contains the necessary data processing
+              workflows and code.
+            </div>
+            <div style="display: flex">
+              <img src="images/hb.jpg" style="width: 100%" />
+            </div>
+            <div class="content"></div>
+          </el-card>
+
+          <div class="header" id="17">Server</div>
+          <el-card>
+            <div class="title" id="18">·Manage Data</div>
+            <div class="content" style="padding-right: 0">
+              Users can upload their own dataset and fill in the form. Uploaded
+              datasets will be analyzed in Expression module.
+            </div>
+            <div style="display: flex">
+              <img src="images/u150.jpg" style="width: 100%" />
+            </div>
+            <div class="content">
+              1. Upload datasets or download the example directly.
+              <br />
+              2. Complete the form.
+              <br />
+              3. Submit the form.
+              <br />
+              4. Search the uploaded datasets by content or time.
+              <br />
+              5. Modify or delete the uploaded datasets.
+            </div>
+          </el-card>
+
+          <el-card>
+            <div class="title" id="19">·Manage Account</div>
+            <div class="content" style="padding-right: 0">
+              Users can update personal details and change the account password
+              by filling out the form.
+            </div>
+            <div style="display: flex">
+              <img src="images/u151.jpg" style="width: 100%" />
+            </div>
+            <div class="content"></div>
+          </el-card>
+        </div>
+      </div>
+      <!-- 滚动到顶部的按钮 -->
+      <el-backtop visibility-height="100" :bottom="20" :right="10"></el-backtop>
+      <app-footer></app-footer>
+    </div>
+  </body>
+
+  <!-- vue相关js -->
+  <script>
+    new Vue({
+      el: "#app",
+      data() {
+        return {
+          isLoaded: false,
+        };
+      },
+      mounted() {
+        this.isLoaded = true;
+      },
+      methods: {
+        scrollToTop() {
+          window.scrollTo(0, 0);
+        },
+      },
+    });
+  </script>
 </html>

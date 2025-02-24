@@ -1,20 +1,19 @@
 body {
-    margin: 0;
-    padding: 0;
-    background-image: url('../images/Login.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: white;
-	font-family: Helvetica;
-
+  margin: 0;
+  padding: 0;
+  background-image: url("./images/Login.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  font-family: Helvetica;
 }
 #app.loaded {
-    opacity: 1;
-    transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
 }
 #app:not(.loaded) {
-    opacity: 0;
+  opacity: 0;
 }
 /* 使用 CSS 来更改所有标签的字体颜色 */
 /* .el-form--label-top .el-form-item .el-form-item__label {
@@ -23,88 +22,88 @@ body {
 
 /* 整体容器布局 */
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: auto;
-    flex-direction: column;
-    /* 隐藏子容器溢出部分 */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: auto;
+  flex-direction: column;
+  /* 隐藏子容器溢出部分 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 .header {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    flex-wrap: nowrap;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: nowrap;
+  align-items: center;
 }
 .header .logo img {
-    height: 100px;;
+  height: 100px;
 }
 .header .title {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-left: 10px;
-    color: #333;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-left: 10px;
+  color: #333;
 }
 .box {
-    text-align: center;
-    max-width: 80%;
-    min-width: 300px;
-    /* background-color: rgba(0, 0, 0, 0.7); */
-    border-radius: 5px;
-    max-height: 80%;
-    padding: 0 5%;
-    /* 子容器的最大高度等于父容器的高度 */
-    overflow-y: auto;
-    overflow-x: auto;
-    /* 允许子容器在超过父容器高度时出现滚动条 */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  text-align: center;
+  max-width: 80%;
+  min-width: 300px;
+  /* background-color: rgba(0, 0, 0, 0.7); */
+  border-radius: 5px;
+  max-height: 80%;
+  padding: 0 5%;
+  /* 子容器的最大高度等于父容器的高度 */
+  overflow-y: auto;
+  overflow-x: auto;
+  /* 允许子容器在超过父容器高度时出现滚动条 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 .inner_box {
-    width:100%;
+  width: 100%;
 }
 .box_title {
-    height: 100px;
-   
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-	background-size: contain;
-		background-repeat: no-repeat; /* 确保图片不会重复 */
+  height: 100px;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-repeat: no-repeat; /* 确保图片不会重复 */
 }
 .box_main_container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 .box_main {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 /* label标签布局 */
 .el-form-item__label {
-    width: 100%;
-    white-space: nowrap;
+  width: 100%;
+  white-space: nowrap;
 }
 .label-wrapper {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    white-space: nowrap;
-    padding-top: 10%;
-    padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  white-space: nowrap;
+  padding-top: 10%;
+  padding-bottom: 10px;
 }
 .left-label {
-    flex: 1;
-    text-align: left;
+  flex: 1;
+  text-align: left;
 }
 .right-label {
-    flex: 1;
-    text-align: right;
+  flex: 1;
+  text-align: right;
 }

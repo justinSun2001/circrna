@@ -1,323 +1,382 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>BloodCircR</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/studyinfo.css" />
+    <link rel="icon" href="images/1_1.png" type="image/x-icon" />
+    <!-- 引入elementui样式 -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="elementui/theme-chalk/index.css"
+    />
+    <script src="js/vue.js"></script>
+    <script src="js/elementui.js"></script>
+    <script src="js/header-component.js"></script>
+    <script src="js/footer-component.js"></script>
+    <script src="js/axios.min.js"></script>
+  </head>
+  <style>
+    a:hover {
+      text-decoration: underline;
+    }
 
-<head>
-	<meta charset="utf-8">
-	<title>BloodCircR</title>
-	<link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href="css/studyinfo.css">
-	<link rel="icon" href="images/1_1.png" type="image/x-icon">
-	<!-- 引入elementui样式 -->
-	<link rel="stylesheet" type="text/css" href="elementui/theme-chalk/index.css" />
-	<script src="js/vue.js"></script>
-	<script src="js/elementui.js"></script>
-	<script src="js/header-component.js"></script>
-	<script src="js/footer-component.js"></script>
-	<script src="js/axios.min.js"></script>
-</head>
-<style>
-	a:hover {
-		text-decoration: underline;
-	}
+    .title-link {
+      text-decoration: none;
+      color: #b94a4a;
+    }
 
-	.title-link {
-		text-decoration: none;
-		color: #B94A4A;
-	}
+    .el-table .cell,
+    .el-table th,
+    .el-table td {
+      color: #333333 !important;
+      /* 更改文字颜色为 #333333 */
+      white-space: normal !important;
+      /* 允许文字换行 */
+      word-wrap: break-word !important;
+      /* 长单词换行处理 */
+      overflow-wrap: break-word !important;
+      /* 处理其他换行情况 */
+      word-break: keep-all !important;
+      /* 保持单词完整，不随意断开 */
+    }
 
-	.el-table .cell,
-	.el-table th,
-	.el-table td {
-		color: #333333 !important;
-		/* 更改文字颜色为 #333333 */
-		white-space: normal !important;
-		/* 允许文字换行 */
-		word-wrap: break-word !important;
-		/* 长单词换行处理 */
-		overflow-wrap: break-word !important;
-		/* 处理其他换行情况 */
-		word-break: keep-all !important;
-		/* 保持单词完整，不随意断开 */
-	}
+    .title-link:hover {
+      text-decoration: underline;
+      /* 其他悬停时的样式 */
+    }
 
-	.title-link:hover {
-		text-decoration: underline;
-		/* 其他悬停时的样式 */
-	}
+    .el-button:hover {
+      color: #b94a4a;
+      border-color: #e6b7b7;
+      background-color: #e6b7b7;
+    }
 
-	.el-button:hover {
-		color: #B94A4A;
-		border-color: #E6B7B7;
-		background-color: #E6B7B7;
-	}
+    .el-button:active {
+      color: #b94a4a;
+      border-color: #e6b7b7;
+      background-color: #e6b7b7;
+    }
 
-	.el-button:active {
-		color: #B94A4A;
-		border-color: #E6B7B7;
-		background-color: #E6B7B7;
-	}
+    .el-button:focus {
+      color: #b94a4a;
+      border-color: #e6b7b7;
+      background-color: #e6b7b7;
+    }
 
-	.el-button:focus {
-		color: #B94A4A;
-		border-color: #E6B7B7;
-		background-color: #E6B7B7;
-	}
+    .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
+      background-color: #f7efef;
+    }
+  </style>
+  <style>
+    .background {
+      background-image: url(./images/studyinfo.jpg);
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 100%;
+      height: 500px;
+    }
+  </style>
+  <style>
+    .image-with-text {
+      position: relative;
+    }
 
-	.el-table--enable-row-hover .el-table__body tr:hover>td.el-table__cell {
-		background-color: #F7EFEF;
-	}
-	
+    .text-overlay {
+      position: absolute;
+      top: 15%;
+      left: 15%;
+      right: 15%;
+      bottom: 15%;
 
-</style>
-<style>
-	.background {
-		background-image: url(../images/studyinfo.jpg);
-		background-repeat: no-repeat;
-		background-size: cover;
-		width: 100%;
-		height: 500px;
-	}
-</style>
-<style>
-	.image-with-text {
-		position: relative;
-	}
+      /* padding: 80px 20px; */
+      width: 70%;
+      height: 70%;
+    }
 
-.text-overlay {
-			position: absolute;
-			top: 15%;
-			left:15%;
-			right:15%;
-			bottom:15%;
-			
-			/* padding: 80px 20px; */
-			width: 70%;
-			height: 70%;
-		}
+    .text-overlay .text {
+      font-size: 1.5vw;
+      font-weight: bold;
+      color: white !important;
+    }
+  </style>
 
-.text-overlay .text {
-			font-size: 1.5vw;
-			font-weight: bold;
-			color: white !important;
-		}
-</style>
+  <body>
+    <div id="app" :class="{ loaded: isLoaded }">
+      <!-- 使用定义的 header 组件 -->
+      <app-header></app-header>
+      <div class="background" style="margin-top: 100px; margin-bottom: 0">
+        <div class="image-with-text">
+          <div class="text-overlay">
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+                height: 100%;
+              "
+            >
+              <div
+                class="text"
+                style="
+                  font-size: 7.5vw;
+                  text-align: center;
+                  font-family: Arial Rounded MT Bold;
+                  color: white;
+                  margin-top: 430px;
+                "
+              >
+                STUDY DETAILS
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="main" style="margin-top: 30px">
+        <div class="sec1">
+          <p
+            style="
+              font-family: Helvetica, sans-serif;
+              color: #333333;
+              text-align: center;
+            "
+          >
+            {{title}}
+          </p>
+          <div></div>
+        </div>
 
-<body>
-	<div id="app" :class="{ loaded: isLoaded }">
-		<!-- 使用定义的 header 组件 -->
-		<app-header></app-header>
-		<div class="background" style="margin-top: 100px; margin-bottom: 0;">
-			<div class="image-with-text">
-				<div class="text-overlay">
-						<div style="display: flex;justify-content: center; flex-direction: column; height: 100%; ">
-					<div class="text" style="font-size: 7.5vw;text-align: center;font-family: Arial Rounded MT Bold;color:white;margin-top: 430px;">STUDY DETAILS</div>
-				
-				</div>
-			</div>
-			</div>
-		</div>
-		<div class="main" style="margin-top: 30px;">
-			<div class="sec1">
-				<p style="font-family:  Helvetica, sans-serif;color:#333333;text-align: center;">{{title}}</p>
-				<div></div>
-			</div>
+        <div class="sec2">
+          <div class="header">
+            <span>Study information</span>
+          </div>
+          <el-card style="padding: 20px">
+            <!-- 表格显示主体 -->
+            <el-table
+              :data="getValues"
+              :show-header="false"
+              style="width: 100%"
+              stripe
+              border
+            >
+              <el-table-column
+                v-for="(item, index) in getHeaders"
+                :key="index"
+                :prop="item"
+                :width="getColumnWidth(index)"
+              >
+                <template slot-scope="scope">
+                  <div v-if="index === 0" :style="{ fontWeight: 'bold' }">
+                    {{ scope.row[item] }}
+                  </div>
+                  <!-- 检查是否是第二行且列索引为 1 -->
+                  <div v-else-if="index === 1 && scope.$index === 2">
+                    <span
+                      v-if="scope.row[item] && scope.row[item].includes('、')"
+                    >
+                      <!-- 使用 JavaScript 函数生成 DOM -->
+                      <span v-html="generateLinks1(scope.row[item])"></span>
+                    </span>
+                    <span v-else>
+                      <a :href="getHref1(scope.row[item])" class="title-link"
+                        >{{ scope.row[item] }}</a
+                      >
+                    </span>
+                  </div>
+                  <div v-else-if="index === 1 && scope.$index === 7">
+                    <a
+                      :href="generateDoiLink(scope.row[item])"
+                      class="title-link"
+                      target="_blank"
+                      >{{ scope.row[item] }}</a
+                    >
+                  </div>
+                  <div v-else v-html="scope.row[item]"></div>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-card>
+        </div>
+      </div>
+      <!-- 使用定义的 footer 组件 -->
+      <app-footer></app-footer>
+    </div>
+  </body>
 
-			<div class="sec2">
-				<div class="header">
-					<span>Study
-						information</span>
-				</div>
-				<el-card style="padding:20px;">
-					<!-- 表格显示主体 -->
-					<el-table :data="getValues" :show-header="false" style="width: 100%" stripe border>
-						<el-table-column v-for="(item, index) in getHeaders" :key="index" :prop="item"
-							:width="getColumnWidth(index)" >
-							<template slot-scope="scope">
-								<div v-if="index === 0" :style="{ fontWeight: 'bold' }">{{ scope.row[item] }}</div>
-								<!-- 检查是否是第二行且列索引为 1 -->
-								<div v-else-if="index === 1 && scope.$index === 2">
-									<span v-if="scope.row[item] && scope.row[item].includes('、')">
-										<!-- 使用 JavaScript 函数生成 DOM -->
-										<span v-html="generateLinks1(scope.row[item])"></span>
-									</span>
-									<span v-else>
-										<a :href="getHref1(scope.row[item])" class="title-link">{{ scope.row[item]
-											}}</a>
-									</span>
-								</div>
-								<div v-else-if="index === 1 && scope.$index === 7">
-																	<a :href="generateDoiLink(scope.row[item])" class="title-link" target="_blank">{{ scope.row[item] }}</a>
-																</div>
-								<div v-else v-html="scope.row[item]"></div>
-							</template>
-						</el-table-column>
-					</el-table>
-				</el-card>
-			</div>
-		</div>
-		<!-- 使用定义的 footer 组件 -->
-		<app-footer></app-footer>
-	</div>
-</body>
+  <script>
+    function getHref1(DatasetID) {
+      // 根据单元格的值或其他逻辑生成 URL
+      // 例如，如果单元格的值是一个 ID，你可能需要构造一个带有该 ID 的 URL
+      console.log(DatasetID);
+      const queryString = window.location.search;
+      const params = new URLSearchParams(queryString);
+      const datasetname = params.get("Dataset"); // 获取 id 参数的值
+      return `datasetinfo.html?DatasetID=${DatasetID}&Dataset=${datasetname}`;
+    }
+  </script>
+  <!-- vue相关js -->
+  <script>
+    new Vue({
+      el: "#app",
+      data() {
+        return {
+          isLoaded: false,
+          title: "",
+          data: [],
+          headers: [
+            {
+              prop: "StudyID",
+              label: "StudyID",
+            },
+            {
+              prop: "Title",
+              label: "Title",
+            },
+            {
+              prop: "DatasetID",
+              label: "DatasetID",
+            },
+            {
+              prop: "Publish_time",
+              label: "Publish time",
+            },
+            {
+              prop: "Journal",
+              label: "Journal",
+            },
+            {
+              prop: "type2",
+              label: "Type",
+            },
+            {
+              prop: "Technology",
+              label: "Technology",
+            },
+            {
+              prop: "DOI",
+              label: "DOI",
+            },
+            {
+              prop: "Conclusion",
+              label: "Conclusion",
+            },
+            {
+              prop: "Summary",
+              label: "Summary",
+            },
+          ],
+        };
+      },
+      computed: {
+        getHeaders() {
+          return this.data.reduce(
+            (pre, cur, index) => pre.concat(`value${index}`),
+            ["title"]
+          );
+        },
+        getValues() {
+          return this.headers.map((item) => {
+            return this.data.reduce(
+              (pre, cur, index) =>
+                Object.assign(pre, { ["value" + index]: cur[item.prop] }),
+              { title: item.label }
+            );
+          });
+        },
+      },
+      mounted() {
+        this.isLoaded = true;
+        this.getData();
+      },
+      methods: {
+        generateDoiLink(doiValue) {
+          // 对 doiValue 进行验证和清理，如果需要的话
+          return `https://doi.org/${doiValue}`;
+        },
 
-<script>
-	function getHref1(DatasetID) {
-		// 根据单元格的值或其他逻辑生成 URL
-		// 例如，如果单元格的值是一个 ID，你可能需要构造一个带有该 ID 的 URL
-		console.log(DatasetID);
-		const queryString = window.location.search;
-		const params = new URLSearchParams(queryString);
-		const datasetname = params.get('Dataset'); // 获取 id 参数的值
-		return `datasetinfo.html?DatasetID=${DatasetID}&Dataset=${datasetname}`;
+        generateLinks1(value) {
+          if (typeof value === "string" && value.includes("、")) {
+            const parts = value.split("、");
+            let linksHTML = "";
+            parts.forEach((part, index) => {
+              linksHTML += `<a href="${getHref1(
+                part
+              )}" class="title-link">${part}</a>`;
+              if (index < parts.length - 1) {
+                linksHTML += "、";
+              }
+            });
+            return linksHTML;
+          } else {
+            return `<a href="${getHref1(
+              value
+            )}" class="title-link">${value}</a>`;
+          }
+        },
+        getHref1(DatasetID) {
+          // 根据单元格的值或其他逻辑生成 URL
+          // 例如，如果单元格的值是一个 ID，你可能需要构造一个带有该 ID 的 URL
+          console.log(DatasetID);
+          const queryString = window.location.search;
+          const params = new URLSearchParams(queryString);
+          const datasetname = params.get("Dataset"); // 获取 id 参数的值
+          return `datasetinfo.html?DatasetID=${DatasetID}&Dataset=${datasetname}`;
+        },
+        addClass({ row, column, rowIndex, columnIndex }) {
+          if (columnIndex == 1) {
+            return "font-weight:700;";
+          }
+        },
 
-	}
-</script>
-<!-- vue相关js -->
-<script>
-	new Vue({
-		el: '#app',
-		data() {
-			return {
-				isLoaded: false,
-				title: '',
-				data: [],
-				headers: [
-					{
-						prop: 'StudyID',
-						label: 'StudyID',
-					},
-					{
-						prop: 'Title',
-						label: 'Title',
-					},
-					{
-						prop: 'DatasetID',
-						label: 'DatasetID',
-					},
-					{
-						prop: 'Publish_time',
-						label: 'Publish time',
-					},
-					{
-						prop: 'Journal',
-						label: 'Journal',
-					},
-					{
-						prop: 'type2',
-						label: 'Type',
-					},
-					{
-						prop: 'Technology',
-						label: 'Technology',
-					},
-					{
-						prop: 'DOI',
-						label: 'DOI',
-					},
-					{
-						prop: 'Conclusion',
-						label: 'Conclusion',
-					},
-					{
-						prop: 'Summary',
-						label: 'Summary',
-					}
-				]
-			}
-		},
-		computed: {
+        getColumnWidth(index) {
+          // 根据列的索引返回不同的宽度
+          // 例如，第一列宽200px，第二列宽300px
+          const widths = [200]; // 以此类推，根据你的列数和需求设置
+          return widths[index] ? `${widths[index]}px` : "";
+        },
+        convertDescription(description) {
+          // return description.replace(/\·/g, '·<br>');
+          console.log(description);
+          if (description !== "undefined") {
+            // 找到第一个点号的索引
+            const firstDotIndex = description.indexOf("·");
 
-			getHeaders() {
-				return this.data.reduce((pre, cur, index) => pre.concat(`value${index}`), ['title'])
-			},
-			getValues() {
-				return this.headers.map(item => {
-					return this.data.reduce((pre, cur, index) => Object.assign(pre, { ['value' + index]: cur[item.prop] }), { 'title': item.label, });
-				});
-			}
-		},
-		mounted() {
-			this.isLoaded = true;
-			this.getData();
-		},
-		methods: {
-			generateDoiLink(doiValue) {
-							// 对 doiValue 进行验证和清理，如果需要的话
-							return `https://doi.org/${doiValue}`;
-						},
-	
-			generateLinks1(value) {
-				if (typeof value === 'string' && value.includes('、')) {
-					const parts = value.split('、');
-					let linksHTML = '';
-					parts.forEach((part, index) => {
-						linksHTML += `<a href="${getHref1(part)}" class="title-link">${part}</a>`;
-						if (index < parts.length - 1) {
-							linksHTML += '、';
-						}
-					});
-					return linksHTML;
-				} else {
-					return `<a href="${getHref1(value)}" class="title-link">${value}</a>`;
-				}
-			},
-			getHref1(DatasetID) {
-				// 根据单元格的值或其他逻辑生成 URL
-				// 例如，如果单元格的值是一个 ID，你可能需要构造一个带有该 ID 的 URL
-				console.log(DatasetID);
-				const queryString = window.location.search;
-				const params = new URLSearchParams(queryString);
-				const datasetname = params.get('Dataset'); // 获取 id 参数的值
-				return `datasetinfo.html?DatasetID=${DatasetID}&Dataset=${datasetname}`;
-			},
-			addClass({ row, column, rowIndex, columnIndex }) {
-				if (columnIndex == 1) {
-					return 'font-weight:700;';
-				}
-			},
+            // 如果第一个字符就是点号，则直接在开头添加点号和换行
+            if (firstDotIndex === 0) {
+              return "·" + description.substring(1).replace(/\·/g, "<br>·");
+            }
+          }
 
-			getColumnWidth(index) {
-				// 根据列的索引返回不同的宽度
-				// 例如，第一列宽200px，第二列宽300px
-				const widths = [200]; // 以此类推，根据你的列数和需求设置
-				return widths[index] ? `${widths[index]}px` : '';
-			},
-			convertDescription(description) {
-				// return description.replace(/\·/g, '·<br>');
-				console.log(description);
-				if (description !== 'undefined') {
-					// 找到第一个点号的索引
-					const firstDotIndex = description.indexOf('·');
+          // 如果没有点号，就不做任何替换
+          return description;
+        },
+        getData() {
+          const queryString = window.location.search;
+          const params = new URLSearchParams(queryString);
 
-					// 如果第一个字符就是点号，则直接在开头添加点号和换行
-					if (firstDotIndex === 0) {
-						return '·' + description.substring(1).replace(/\·/g, '<br>·');
-					}
-				}
-
-				// 如果没有点号，就不做任何替换
-				return description;
-			},
-			getData() {
-				const queryString = window.location.search;
-				const params = new URLSearchParams(queryString);
-
-				// 现在你可以获取查询参数中的值
-				const StudyID = params.get('StudyID'); // 获取 id 参数的值
-				axios.post('./interface/studyinfo_data.php', {}, { params: { StudyID: StudyID } })
-					.then(response => {
-						console.log('test1:', response.data);
-						this.data = [response.data];
-						this.data[0].Conclusion = this.convertDescription(this.data[0].Conclusion);
-						this.title = this.data[0].Title;
-					})
-					.catch(error => {
-						console.error('Error fetching:', error);
-					});
-
-			},
-		}
-	})
-</script>
-
+          // 现在你可以获取查询参数中的值
+          const StudyID = params.get("StudyID"); // 获取 id 参数的值
+          axios
+            .post(
+              "./interface/studyinfo_data.php",
+              {},
+              { params: { StudyID: StudyID } }
+            )
+            .then((response) => {
+              console.log("test1:", response.data);
+              this.data = [response.data];
+              this.data[0].Conclusion = this.convertDescription(
+                this.data[0].Conclusion
+              );
+              this.title = this.data[0].Title;
+            })
+            .catch((error) => {
+              console.error("Error fetching:", error);
+            });
+        },
+      },
+    });
+  </script>
 </html>
